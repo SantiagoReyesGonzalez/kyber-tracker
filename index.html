@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kyber Tracker // Control Diario de Hábitos</title>
+  
+  <meta name="color-scheme" content="dark light" />
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('KYBER_THEME_MODE_V1');
+        var theme = saved || 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+  
+  <!-- Modern Clean Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body class="app-theme">
+  <div class="app-layout">
+    <!-- Header Principal -->
+    <header class="app-header">
+      <div class="header-left">
+        <div class="app-logo-badge">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 8.5 12 15 22 8.5 12 2"/><polygon points="2 15.5 12 22 22 15.5 12 9 2 15.5"/></svg>
+        </div>
+        <div class="logo-titles">
+          <h1 class="app-title">Kyber Tracker</h1>
+          <span class="app-subtitle">Inglés & Data Engineering</span>
+        </div>
+      </div>
+
+      <!-- Navegador de Mes -->
+      <nav class="month-navigator">
+        <button id="prev-month-btn" class="nav-arrow-btn" title="Mes Anterior">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+        <div class="month-label-wrap">
+          <span id="current-month-display" class="month-name">AGOSTO</span>
+          <span id="current-year-display" class="year-name">2026</span>
+        </div>
+        <button id="next-month-btn" class="nav-arrow-btn" title="Mes Siguiente">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </nav>
+
+      <!-- Botones de Acción -->
+      <div class="header-actions">
+        <button id="today-jump-btn" class="pill-action-btn" title="Ir a hoy">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Hoy</span>
+        </button>
+        <button id="theme-toggle-btn" class="pill-action-btn theme-toggle-btn" title="Alternar tema oscuro / claro">
+          <span id="theme-icon">🌙</span>
+          <span id="theme-label">Oscuro</span>
+        </button>
+        <button id="audio-toggle-btn" class="pill-action-btn active" title="Sonido">
+          <span id="audio-icon">🔊</span>
+          <span id="audio-label">Audio</span>
+        </button>
+        <button id="open-history-btn" class="pill-action-btn" title="Historial y Opciones">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+          <span>Historial</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Contenedor con Layout de 2 Columnas en Pantallas Grandes -->
+    <div class="app-body-layout">
+      <!-- Columna Lateral Izquierda: Métricas & Rachas (Vertical en Desktop) -->
+      <aside class="sidebar-metrics">
+        <div class="sidebar-sticky-wrap">
+          <div class="sidebar-header">
+            <div class="sidebar-header-top">
+              <span class="section-badge">MÉTRICAS</span>
+              <h3 class="sidebar-title">Progreso</h3>
+            </div>
+
+            <!-- Selector de Alcance: Semana | Mes | General -->
+            <div class="metrics-scope-selector" role="tablist" aria-label="Alcance de Métricas">
+              <button class="metrics-scope-btn" data-scope="week" title="Métricas de esta semana">Semana</button>
+              <button class="metrics-scope-btn active" data-scope="month" title="Métricas del mes actual">Mes</button>
+              <button class="metrics-scope-btn" data-scope="all" title="Métricas históricas generales">General</button>
+            </div>
+          </div>
+
+          <div class="metrics-vertical-list">
+            <!-- Inglés -->
+            <div class="metric-ribbon-card card-english-ribbon">
+              <div class="ribbon-card-header">
+                <span class="status-dot teal-dot"></span>
+                <span class="ribbon-label">Inglés</span>
+              </div>
+              <div class="ribbon-stat-row">
+                <div class="stat-block">
+                  <span class="big-metric" id="stats-english-days">0</span>
+                  <span class="sub-label" id="stats-english-sublabel">DÍAS (MES)</span>
+                </div>
+                <div class="stat-block align-right">
+                  <div class="badge-streak">
+                    <span class="streak-num" id="stats-english-streak">0</span>
+                    <span class="streak-icon">⚡</span>
+                  </div>
+                  <span class="sub-label">RACHA</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Data Engineering -->
+            <div class="metric-ribbon-card card-de-ribbon">
+              <div class="ribbon-card-header">
+                <span class="status-dot purple-dot"></span>
+                <span class="ribbon-label">Data Engineering</span>
+              </div>
+              <div class="ribbon-stat-row">
+                <div class="stat-block">
+                  <span class="big-metric" id="stats-de-days">0</span>
+                  <span class="sub-label" id="stats-de-sublabel">DÍAS (MES)</span>
+                </div>
+                <div class="stat-block align-right">
+                  <div class="badge-streak purple-streak">
+                    <span class="streak-num" id="stats-de-streak">0</span>
+                    <span class="streak-icon">⚡</span>
+                  </div>
+                  <span class="sub-label">RACHA</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dual Master -->
+            <div class="metric-ribbon-card card-dual-ribbon">
+              <div class="ribbon-card-header">
+                <span class="status-dot gold-dot"></span>
+                <span class="ribbon-label">Dual Master</span>
+              </div>
+              <div class="ribbon-stat-row">
+                <div class="stat-block">
+                  <span class="big-metric" id="stats-dual-days">0</span>
+                  <span class="sub-label" id="stats-dual-sublabel">DÍAS (2H)</span>
+                </div>
+                <div class="stat-block align-right">
+                  <div class="badge-streak gold-streak">
+                    <span class="streak-num" id="stats-month-progress">0%</span>
+                    <span class="streak-icon">⭐</span>
+                  </div>
+                  <span class="sub-label" id="stats-coverage-sublabel">COBERTURA</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Consistencia Global / Horas Totales -->
+            <div class="metric-ribbon-card card-streak-ribbon">
+              <div class="ribbon-card-header">
+                <span class="status-dot red-dot"></span>
+                <span class="ribbon-label">Horas Totales</span>
+              </div>
+              <div class="ribbon-stat-row">
+                <div class="stat-block">
+                  <span class="big-metric" id="stats-total-hours">0h</span>
+                  <span class="sub-label" id="stats-hours-sublabel">HORAS (MES)</span>
+                </div>
+                <div class="stat-block align-right">
+                  <div class="badge-streak fire-streak">
+                    <span class="streak-num" id="stats-combined-streak">0</span>
+                    <span class="streak-icon">🔥</span>
+                  </div>
+                  <span class="sub-label">RACHA TOTAL</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Columna Principal Derecha -->
+      <main class="app-main-content">
+        <!-- 1. Registro Rápido de Hoy -->
+        <section class="quick-checkin-card">
+          <div class="checkin-header">
+            <div class="checkin-date-info">
+              <span class="section-badge">REGISTRO DIARIO</span>
+              <h2 id="today-readable-date" class="checkin-date-title">Hoy</h2>
+            </div>
+            <span id="today-status-summary" class="today-status-chip">Sin registrar</span>
+          </div>
+
+          <form id="quick-checkin-form" class="checkin-form">
+            <div class="checkin-habits-row">
+              <!-- Hábito: Inglés -->
+              <label class="checkin-habit-box" data-habit="english">
+                <input type="checkbox" id="quick-english-check" />
+                <div class="habit-box-content">
+                  <div class="habit-box-top">
+                    <div class="habit-icon-pill english-pill">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <div class="habit-titles">
+                      <span class="habit-name">Inglés</span>
+                    </div>
+                    <div class="custom-checkbox"></div>
+                  </div>
+                  <div class="quick-tags-group">
+                    <span class="tag-chip" data-for="english" data-tag="Speaking">#Speaking</span>
+                    <span class="tag-chip" data-for="english" data-tag="Listening">#Listening</span>
+                    <span class="tag-chip" data-for="english" data-tag="Reading">#Reading</span>
+                    <span class="tag-chip" data-for="english" data-tag="Grammar">#Grammar</span>
+                  </div>
+                </div>
+              </label>
+
+              <!-- Hábito: Data Engineering -->
+              <label class="checkin-habit-box" data-habit="de">
+                <input type="checkbox" id="quick-de-check" />
+                <div class="habit-box-content">
+                  <div class="habit-box-top">
+                    <div class="habit-icon-pill de-pill">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                    </div>
+                    <div class="habit-titles">
+                      <span class="habit-name">Data Engineering</span>
+                    </div>
+                    <div class="custom-checkbox"></div>
+                  </div>
+                  <div class="quick-tags-group">
+                    <span class="tag-chip" data-for="de" data-tag="SQL">#SQL</span>
+                    <span class="tag-chip" data-for="de" data-tag="Python">#Python</span>
+                    <span class="tag-chip" data-for="de" data-tag="Spark">#Spark</span>
+                    <span class="tag-chip" data-for="de" data-tag="Modeling">#Modeling</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+
+            <!-- Input de notas y botón de guardar -->
+            <div class="checkin-submit-row">
+              <div class="input-with-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                <input type="text" id="quick-topics-input" class="quick-input" placeholder="Temas de hoy (opcional)..." />
+              </div>
+              <button type="submit" id="save-today-btn" class="save-today-button">
+                <span>Guardar Registro</span>
+              </button>
+            </div>
+          </form>
+        </section>
+
+      <!-- 3. Contenedor de Vistas: Calendario, Heatmap y Consistencia -->
+      <section class="views-section">
+        <div class="views-header">
+          <div class="view-tabs">
+            <button class="view-tab-btn active" data-view="calendar">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Calendario Mensual</span>
+            </button>
+            <button class="view-tab-btn" data-view="heatmap">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              <span>Heatmap Anual</span>
+            </button>
+            <button class="view-tab-btn" data-view="weekly">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              <span>Consistencia Semanal</span>
+            </button>
+          </div>
+
+          <button id="open-plan-modal-btn" class="primary-action-pill">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Registrar Otra Fecha</span>
+          </button>
+        </div>
+
+        <!-- Vista 1: Calendario Mensual -->
+        <div id="view-calendar-panel" class="view-panel active">
+          <div id="monthly-calendar-grid" class="monthly-calendar-grid">
+            <!-- Poblado dinámicamente -->
+          </div>
+        </div>
+
+        <!-- Vista 2: Heatmap Anual -->
+        <div id="view-heatmap-panel" class="view-panel hidden">
+          <div class="heatmap-panel-header">
+            <div class="heatmap-title-group">
+              <h3>Mapa Anual de Consistencia (<span id="heatmap-year-label">2026</span>)</h3>
+              <p>52 semanas de estudio continuo.</p>
+            </div>
+            <div class="heatmap-filter-tabs">
+              <button class="hm-filter-btn active" data-hmfilter="all">Todos</button>
+              <button class="hm-filter-btn" data-hmfilter="english">Inglés</button>
+              <button class="hm-filter-btn" data-hmfilter="de">Data Eng</button>
+              <button class="hm-filter-btn" data-hmfilter="both">Dual Master</button>
+            </div>
+          </div>
+          <div id="annual-heatmap-grid" class="annual-heatmap-container">
+            <!-- Poblado dinámicamente -->
+          </div>
+          <div class="heatmap-legend-footer">
+            <span class="legend-note">Futuro</span>
+            <span class="legend-cell cell-empty" title="Futuro o Vacío"></span>
+            <span class="legend-note">Sin registro</span>
+            <span class="legend-cell cell-missed" title="Sin registro (Día pasado)"></span>
+            <span class="legend-cell cell-english" title="Inglés (1h)"></span>
+            <span class="legend-cell cell-de" title="Data Eng (1h)"></span>
+            <span class="legend-cell cell-both" title="Dual Master (2h)"></span>
+            <span class="legend-note">Dual Master</span>
+          </div>
+        </div>
+
+        <!-- Vista 3: Consistencia Semanal -->
+        <div id="view-weekly-panel" class="view-panel hidden">
+          <div class="weekly-panel-header">
+            <h3>Distribución Semanal de Estudio</h3>
+            <p>Frecuencia de sesiones según el día de la semana.</p>
+          </div>
+          <div id="weekly-chart-bars" class="weekly-chart-container">
+            <!-- Poblado dinámicamente -->
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Bitácora de Sesiones -->
+      <section class="journal-section">
+        <div class="journal-header">
+          <div class="journal-title-group">
+            <h3>Bitácora de Sesiones</h3>
+            <p>Registro histórico ordenado cronológicamente.</p>
+          </div>
+          <div class="journal-search-wrap">
+            <input type="text" id="journal-search-input" class="search-input" placeholder="Buscar por tema o apunte..." />
+          </div>
+        </div>
+
+        <div id="journal-feed-list" class="journal-cards-list">
+          <!-- Poblado dinámicamente -->
+        </div>
+      </section>
+    </main>
+    </div>
+  </div>
+
+  <!-- Modal de Edición de Fecha -->
+  <dialog id="day-modal" class="modern-dialog">
+    <div class="dialog-card">
+      <div class="dialog-header">
+        <div>
+          <span class="dialog-badge">SESIÓN</span>
+          <h2 id="modal-dialog-date" class="dialog-title">Fecha</h2>
+        </div>
+        <button id="close-dialog-btn" class="dialog-close-icon">&times;</button>
+      </div>
+
+      <form id="dialog-form" class="dialog-body">
+        <input type="hidden" id="dialog-date-hidden" />
+
+        <div class="dialog-form-group">
+          <label class="group-label">HÁBITOS COMPLETADOS</label>
+          <div class="dialog-habits-grid">
+            <label class="dialog-habit-toggle">
+              <input type="checkbox" id="modal-english-check" />
+              <div class="toggle-box">
+                <div class="habit-icon-pill english-pill">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                </div>
+                <div class="toggle-text">
+                  <span class="t-main">Inglés</span>
+                </div>
+                <div class="toggle-switch"></div>
+              </div>
+            </label>
+
+            <label class="dialog-habit-toggle">
+              <input type="checkbox" id="modal-de-check" />
+              <div class="toggle-box">
+                <div class="habit-icon-pill de-pill">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                </div>
+                <div class="toggle-text">
+                  <span class="t-main">Data Engineering</span>
+                </div>
+                <div class="toggle-switch"></div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div class="dialog-form-group">
+          <label for="modal-topics-input" class="group-label">TEMAS</label>
+          <input type="text" id="modal-topics-input" class="dialog-input" placeholder="Temas o actividad (opcional)..." />
+        </div>
+
+        <div class="dialog-form-group">
+          <label for="modal-notes-textarea" class="group-label">NOTAS</label>
+          <textarea id="modal-notes-textarea" class="dialog-textarea" rows="3" placeholder="Notas personales (opcional)..."></textarea>
+        </div>
+
+        <div class="dialog-actions">
+          <button type="button" id="modal-delete-btn" class="btn-danger-ghost hidden">
+            <span>Eliminar</span>
+          </button>
+          <div class="flex-spacer"></div>
+          <button type="button" id="modal-cancel-btn" class="btn-secondary">Cancelar</button>
+          <button type="submit" id="modal-save-btn" class="btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- Drawer: Historial & Respaldos -->
+  <aside id="history-drawer" class="history-drawer hidden">
+    <div class="drawer-header">
+      <h3>HISTORIAL Y DATOS</h3>
+      <button id="close-drawer-btn" class="dialog-close-icon">&times;</button>
+    </div>
+
+    <div class="drawer-filter-tabs">
+      <button class="tab-btn active" data-filter="all">TODOS</button>
+      <button class="tab-btn" data-filter="english">INGLÉS</button>
+      <button class="tab-btn" data-filter="data-engineering">DATA ENG</button>
+      <button class="tab-btn" data-filter="both">DUAL</button>
+    </div>
+
+    <div id="history-list" class="history-list-scroll">
+      <!-- Poblado dinámicamente -->
+    </div>
+
+    <div class="drawer-footer">
+      <div class="drawer-data-actions">
+        <button id="export-json-btn" class="pill-action-btn" title="Exportar JSON">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar
+        </button>
+        <label class="pill-action-btn" style="cursor: pointer;" title="Importar JSON">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Importar
+          <input type="file" id="import-json-input" accept=".json" style="display:none" />
+        </label>
+        <button id="clear-all-data-btn" class="pill-action-btn danger-btn" title="Limpiar todos los datos">
+          Limpiar Todo
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
