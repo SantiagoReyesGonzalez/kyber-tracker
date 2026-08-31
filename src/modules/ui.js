@@ -1316,13 +1316,21 @@ export class UIManager {
         playHover();
       });
 
-      // Cerrar al hacer clic fuera
-      document.addEventListener('click', (e) => {
-        if (!this.soundscapeDropdownMenu.classList.contains('hidden') &&
-            !this.soundscapeDropdownMenu.contains(e.target) &&
-            !this.soundscapeDropdownBtn.contains(e.target)) {
+      // Cerrar al hacer clic fuera (en fase de captura para garantizar respuesta instantánea)
+      window.addEventListener('click', (e) => {
+        if (this.soundscapeDropdownMenu && !this.soundscapeDropdownMenu.classList.contains('hidden')) {
+          if (!this.soundscapeDropdownMenu.contains(e.target) && !this.soundscapeDropdownBtn.contains(e.target)) {
+            this.soundscapeDropdownMenu.classList.add('hidden');
+            if (this.soundscapeDropdownBtn) this.soundscapeDropdownBtn.setAttribute('aria-expanded', 'false');
+          }
+        }
+      }, true);
+
+      // Cerrar al presionar tecla Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.soundscapeDropdownMenu && !this.soundscapeDropdownMenu.classList.contains('hidden')) {
           this.soundscapeDropdownMenu.classList.add('hidden');
-          this.soundscapeDropdownBtn.setAttribute('aria-expanded', 'false');
+          if (this.soundscapeDropdownBtn) this.soundscapeDropdownBtn.setAttribute('aria-expanded', 'false');
         }
       });
     }

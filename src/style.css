@@ -3674,7 +3674,8 @@ body.app-theme {
   gap: 1.25rem;
   transition: all 0.25s ease;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  z-index: 10;
 }
 
 .focus-card::before {
@@ -3686,6 +3687,7 @@ body.app-theme {
   height: 3px;
   background: linear-gradient(90deg, var(--color-english), var(--color-de), var(--color-dual));
   opacity: 0.85;
+  border-radius: 24px 24px 0 0;
 }
 
 .focus-header {
@@ -3694,6 +3696,8 @@ body.app-theme {
   justify-content: space-between;
   gap: 1rem;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 50;
 }
 
 .focus-title {
@@ -3713,12 +3717,15 @@ body.app-theme {
   align-items: center;
   gap: 0.75rem;
   flex-wrap: wrap;
+  position: relative;
+  z-index: 60;
 }
 
 /* Contenedor del Dropdown de Sonido */
 .soundscape-dropdown-container {
   position: relative;
   display: inline-flex;
+  z-index: 100;
 }
 
 .soundscape-selector-pill {
@@ -3784,9 +3791,9 @@ body.app-theme {
   -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
   padding: 0.75rem;
-  z-index: 1000;
+  z-index: 9999;
   animation: dropdownSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   display: flex;
   flex-direction: column;
