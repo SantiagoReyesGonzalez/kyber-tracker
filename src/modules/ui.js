@@ -59,6 +59,7 @@ export class UIManager {
     this.updateAudioButtonState();
     this.updateThemeButtonState();
     this.updateMetricsScopeButtonState();
+    this.initFocusTimer();
   }
 
   cacheDOMElements() {
@@ -85,6 +86,37 @@ export class UIManager {
     this.quickDeCheck = document.getElementById('quick-de-check');
     this.quickTopicsInput = document.getElementById('quick-topics-input');
     this.tagChips = document.querySelectorAll('.tag-chip');
+
+    // Focus Mode & Soundscape Elements
+    this.soundscapeSelect = document.getElementById('soundscape-select');
+    this.soundscapeVolume = document.getElementById('soundscape-volume');
+    this.toggleZenBtn = document.getElementById('toggle-zen-btn');
+    this.focusHabitBtns = document.querySelectorAll('.focus-habit-btn');
+    this.focusGoalInput = document.getElementById('focus-goal-input');
+    this.focusTimerDigits = document.getElementById('focus-timer-digits');
+    this.focusModeLabel = document.getElementById('focus-mode-label');
+    this.focusProgressFill = document.getElementById('focus-progress-fill');
+    this.start5minBtn = document.getElementById('start-5min-btn');
+    this.start60minBtn = document.getElementById('start-60min-btn');
+    this.focusRunningControls = document.getElementById('focus-running-controls');
+    this.focusPauseBtn = document.getElementById('focus-pause-btn');
+    this.focusPauseLabel = document.getElementById('focus-pause-label');
+    this.focusPauseIcon = document.getElementById('focus-pause-icon');
+    this.focusStopBtn = document.getElementById('focus-stop-btn');
+
+    // Zen Mode Overlay
+    this.zenOverlay = document.getElementById('zen-overlay');
+    this.closeZenBtn = document.getElementById('close-zen-btn');
+    this.zenHabitPill = document.getElementById('zen-habit-pill');
+    this.zenGoalText = document.getElementById('zen-goal-text');
+    this.zenTimerDigits = document.getElementById('zen-timer-digits');
+    this.zenModePill = document.getElementById('zen-mode-pill');
+    this.zenProgressFill = document.getElementById('zen-progress-fill');
+    this.zenSoundscapeStatus = document.getElementById('zen-soundscape-status');
+    this.zenPauseBtn = document.getElementById('zen-pause-btn');
+    this.zenPauseText = document.getElementById('zen-pause-text');
+    this.zenPauseIcon = document.getElementById('zen-pause-icon');
+    this.zenStopBtn = document.getElementById('zen-stop-btn');
 
     // Metrics Ribbon & Scope Selector
     this.metricsScopeBtns = document.querySelectorAll('.metrics-scope-btn');
@@ -1100,6 +1132,204 @@ export class UIManager {
         }
       }, 350);
     }, duration);
+  }
+
+  /**
+   * ==========================================================================
+   * CONTROL DEL MOTOR DE ENFOQUE (FOCUS TIMER & ZEN MODE)
+   * ==========================================================================
+   */
+  initFocusTimer() {
+    if (!this.ctx || !this.ctx.focusTimer) return;
+
+    // 1. Suscribirse a cambios de estado del temporizador
+    this.ctx.focusTimer.subscribe((state) => {
+      this.renderFocusTimerState(state);
+    });
+
+    // 2. Selección de Hábito para Foco (Inglés / Data Eng / Dual)
+    this.focusHabitBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        this.focusHabitBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const habit = btn.dataset.focushabit;
+        this.ctx.focusTimer.setHabit(habit);
+        playHover();
+      });
+    });
+
+    // 3. Misión / Objetivo
+    if (this.focusGoalInput) {
+      this.focusGoalInput.addEventListener('input', (e) => {
+        this.ctx.focusTimer.setGoal(e.target.value.trim());
+      });
+    }
+
+    // 4. Selector de Paisaje Sonoro & Volumen
+    if (this.soundscapeSelect) {
+      this.soundscapeSelect.addEventListener('change', (e) => {
+        this.ctx.focusTimer.setSoundscape(e.target.value);
+        playSelect();
+      });
+    }
+
+    if (this.soundscapeVolume) {
+      this.soundscapeVolume.addEventListener('input', (e) => {
+        this.ctx.focusTimer.setVolume(parseFloat(e.target.value));
+      });
+    }
+
+    // 5. Botón ⚡ Arrancar 5 min (Anti-Inercia)
+    if (this.start5minBtn) {
+      this.start5minBtn.addEventListener('click', () => {
+        if (this.focusGoalInput) this.ctx.focusTimer.setGoal(this.focusGoalInput.value.trim());
+        this.ctx.focusTimer.start5MinJumpstart();
+      });
+    }
+
+    // 6. Botón 🎯 Hora Completa (60 min)
+    if (this.start60minBtn) {
+      this.start60minBtn.addEventListener('click', () => {
+        if (this.focusGoalInput) this.ctx.focusTimer.setGoal(this.focusGoalInput.value.trim());
+        this.ctx.focusTimer.start60MinSession();
+      });
+    }
+
+    // 7. Pausar / Reanudar
+    if (this.focusPauseBtn) {
+      this.focusPauseBtn.addEventListener('click', () => {
+        const state = this.ctx.focusTimer.getState();
+        if (state.state === 'running') {
+          this.ctx.focusTimer.pause();
+        } else if (state.state === 'paused') {
+          this.ctx.focusTimer.resume();
+        }
+      });
+    }
+
+    // 8. Detener
+    if (this.focusStopBtn) {
+      this.focusStopBtn.addEventListener('click', async () => {
+        const confirmed = await this.showConfirm({
+          title: 'Detener Sesión',
+          message: '¿Deseas detener la sesión de concentración actual?',
+          confirmText: 'Detener',
+          cancelText: 'Continuar',
+          type: 'warning'
+        });
+        if (confirmed) {
+          this.ctx.focusTimer.stop();
+        }
+      });
+    }
+
+    // 9. Modo Zen (Pantalla Completa)
+    if (this.toggleZenBtn && this.zenOverlay) {
+      this.toggleZenBtn.addEventListener('click', () => {
+        this.openZenMode();
+      });
+    }
+
+    if (this.closeZenBtn) {
+      this.closeZenBtn.addEventListener('click', () => {
+        this.closeZenMode();
+      });
+    }
+
+    if (this.zenPauseBtn) {
+      this.zenPauseBtn.addEventListener('click', () => {
+        const state = this.ctx.focusTimer.getState();
+        if (state.state === 'running') {
+          this.ctx.focusTimer.pause();
+        } else if (state.state === 'paused') {
+          this.ctx.focusTimer.resume();
+        }
+      });
+    }
+
+    if (this.zenStopBtn) {
+      this.zenStopBtn.addEventListener('click', async () => {
+        const confirmed = await this.showConfirm({
+          title: 'Detener Sesión',
+          message: '¿Deseas detener la sesión de concentración actual?',
+          confirmText: 'Detener',
+          cancelText: 'Continuar',
+          type: 'warning'
+        });
+        if (confirmed) {
+          this.ctx.focusTimer.stop();
+          this.closeZenMode();
+        }
+      });
+    }
+  }
+
+  openZenMode() {
+    if (!this.zenOverlay) return;
+    this.zenOverlay.classList.remove('hidden');
+    playSelect();
+  }
+
+  closeZenMode() {
+    if (!this.zenOverlay) return;
+    this.zenOverlay.classList.add('hidden');
+    playSelect();
+  }
+
+  renderFocusTimerState(state) {
+    // 1. Actualizar Dígitos y Barra de Progreso
+    if (this.focusTimerDigits) this.focusTimerDigits.textContent = state.timeFormatted;
+    if (this.zenTimerDigits) this.zenTimerDigits.textContent = state.timeFormatted;
+    if (this.focusProgressFill) this.focusProgressFill.style.width = `${state.progressPercent}%`;
+    if (this.zenProgressFill) this.zenProgressFill.style.width = `${state.progressPercent}%`;
+
+    // 2. Actualizar Etiquetas de Modo
+    const modeText = state.mode === 'friction_5' ? '⚡ Superar Inercia (5 min)' : '🎯 Hora Completa (60 min)';
+    if (this.focusModeLabel) this.focusModeLabel.textContent = modeText;
+    if (this.zenModePill) this.zenModePill.textContent = state.mode === 'friction_5' ? '⚡ Superar Inercia' : '🎯 Hora Completa';
+
+    // 3. Controles según Estado (idle / running / paused / completed)
+    const isRunningOrPaused = state.state === 'running' || state.state === 'paused';
+    if (this.start5minBtn) this.start5minBtn.classList.toggle('hidden', isRunningOrPaused);
+    if (this.start60minBtn) this.start60minBtn.classList.toggle('hidden', isRunningOrPaused);
+    if (this.focusRunningControls) this.focusRunningControls.classList.toggle('hidden', !isRunningOrPaused);
+
+    // 4. Botón de Pausa / Reanudar
+    const isPaused = state.state === 'paused';
+    if (this.focusPauseLabel) this.focusPauseLabel.textContent = isPaused ? 'Reanudar' : 'Pausa';
+    if (this.zenPauseText) this.zenPauseText.textContent = isPaused ? 'Reanudar' : 'Pausar';
+
+    if (this.focusPauseIcon) {
+      this.focusPauseIcon.innerHTML = isPaused
+        ? `<polygon points="5 3 19 12 5 21 5 3"/>`
+        : `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`;
+    }
+
+    if (this.zenPauseIcon) {
+      this.zenPauseIcon.innerHTML = isPaused
+        ? `<polygon points="5 3 19 12 5 21 5 3"/>`
+        : `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`;
+    }
+
+    // 5. Zen labels
+    if (this.zenHabitPill) {
+      this.zenHabitPill.textContent = state.selectedHabit === 'english' ? 'Inglés' :
+                                      state.selectedHabit === 'de' ? 'Data Engineering' : 'Dual Master';
+    }
+
+    if (this.zenGoalText) {
+      this.zenGoalText.textContent = state.singleGoal || 'Sesión de Concentración Activa';
+    }
+
+    if (this.zenSoundscapeStatus) {
+      const soundLabels = {
+        brown: '🌊 Paisaje sonoro activo: Ruido Marrón',
+        rain: '🌧️ Paisaje sonoro activo: Lluvia Suave',
+        binaural: '🌌 Paisaje sonoro activo: Frecuencia Alfa 10Hz',
+        none: '🔇 Silencio'
+      };
+      this.zenSoundscapeStatus.textContent = soundLabels[state.selectedSoundscape] || 'Sonido Ambiente';
+    }
   }
 }
 

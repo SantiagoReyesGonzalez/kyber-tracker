@@ -6,6 +6,7 @@
 import './style.css';
 import { Calendar2D } from './modules/calendar2D.js';
 import { UIManager } from './modules/ui.js';
+import { FocusTimer } from './modules/focusTimer.js';
 
 class KyberApp {
   constructor() {
@@ -14,6 +15,7 @@ class KyberApp {
     this.currentMonth = today.getMonth(); // 0-indexado (0: Enero .. 11: Diciembre)
 
     this.calendar2D = new Calendar2D();
+    this.focusTimer = new FocusTimer(this);
     this.ui = new UIManager(this);
 
     this.refreshAll();

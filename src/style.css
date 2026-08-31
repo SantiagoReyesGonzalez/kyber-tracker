@@ -3655,4 +3655,454 @@ body.app-theme {
   transform: translateY(-1px);
 }
 
+/* ==========================================================================
+   KYBER FOCUS ENGINE & SOUNDSCAPE STYLES
+   ========================================================================== */
+.focus-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 24px;
+  padding: 1.85rem 2.25rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.focus-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-english), var(--color-de), var(--color-dual));
+  opacity: 0.85;
+}
+
+.focus-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.focus-title {
+  font-family: var(--font-title);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+
+.focus-badge {
+  color: var(--color-dual-text);
+}
+
+.focus-header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.soundscape-selector-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-main);
+  padding: 0.35rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.soundscape-selector-pill:hover {
+  border-color: var(--border-focus);
+}
+
+.soundscape-select {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+}
+
+.sound-volume-slider {
+  width: 60px;
+  height: 4px;
+  accent-color: var(--color-english);
+  cursor: pointer;
+}
+
+.zen-btn {
+  background: var(--surface-subtle);
+  color: var(--text-main);
+}
+
+.zen-btn:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+}
+
+.focus-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.focus-session-config {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.focus-habit-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.focus-habit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-main);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.focus-habit-btn.active {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+  color: var(--text-main);
+  box-shadow: 0 0 0 1px var(--border-focus);
+}
+
+.focus-goal-input-wrap {
+  flex: 1;
+  min-width: 240px;
+}
+
+.focus-timer-display-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: var(--surface-subtle);
+  border-radius: 18px;
+  border: 1px solid var(--border-subtle);
+  gap: 0.75rem;
+}
+
+.focus-time-center {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.focus-digits {
+  font-family: var(--font-title);
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--text-main);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.focus-mode-pill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--color-dual-light);
+  color: var(--color-dual-text);
+  border: 1px solid rgba(255, 149, 0, 0.25);
+  letter-spacing: 0.02em;
+}
+
+.focus-progress-track {
+  width: 100%;
+  max-width: 480px;
+  height: 6px;
+  background: var(--border-main);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.focus-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-english), var(--color-de));
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.focus-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.focus-btn-jumpstart {
+  flex: 1;
+  min-width: 220px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #ff9500 0%, #ff5e3a 100%);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 149, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.focus-btn-jumpstart:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 149, 0, 0.4);
+}
+
+.focus-btn-full {
+  flex: 1;
+  min-width: 200px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 14px;
+  background: var(--surface-hover);
+  color: var(--text-main);
+  border: 1px solid var(--border-main);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.focus-btn-full:hover {
+  background: var(--surface-active);
+  border-color: var(--border-focus);
+  transform: translateY(-2px);
+}
+
+.focus-running-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.focus-ctrl-btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.75rem 1.2rem;
+  border-radius: 12px;
+  background: var(--surface-subtle);
+  color: var(--text-main);
+  border: 1px solid var(--border-main);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.focus-ctrl-btn:hover {
+  background: var(--surface-hover);
+}
+
+.focus-ctrl-btn.ctrl-stop {
+  color: var(--danger);
+  border-color: rgba(255, 59, 48, 0.25);
+}
+
+.focus-ctrl-btn.ctrl-stop:hover {
+  background: var(--color-missed-light);
+}
+
+/* ==========================================================================
+   MODO ZEN (PANTALLA COMPLETA)
+   ========================================================================== */
+.zen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 11000;
+  background: var(--bg-app);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: kyberScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.zen-container {
+  width: 100%;
+  max-width: 680px;
+  min-height: 100vh;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+}
+
+.zen-top-bar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.zen-badge {
+  font-family: var(--font-title);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--color-dual-text);
+}
+
+.zen-close-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-main);
+  padding: 0.4rem 0.85rem;
+  border-radius: 9999px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.zen-close-btn:hover {
+  color: var(--text-main);
+  background: var(--surface-hover);
+}
+
+.zen-center-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  margin: auto 0;
+}
+
+.zen-habit-pill {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-english);
+  background: var(--color-english-light);
+  padding: 0.35rem 1rem;
+  border-radius: 9999px;
+}
+
+.zen-goal-text {
+  font-family: var(--font-title);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  max-width: 500px;
+}
+
+.zen-digits {
+  font-family: var(--font-title);
+  font-size: 6rem;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: var(--text-main);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.zen-progress-wrap {
+  width: 100%;
+  max-width: 440px;
+  height: 8px;
+  background: var(--border-main);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.zen-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-english), var(--color-de));
+  border-radius: 9999px;
+  transition: width 0.4s ease;
+}
+
+.zen-status-quote {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  font-style: italic;
+}
+
+.zen-bottom-controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.zen-ctrl-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  padding: 0.65rem 1.5rem;
+  border-radius: 9999px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.18s ease;
+}
+
+.zen-ctrl-pill:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+}
+
+.zen-stop-pill {
+  color: var(--danger);
+  border-color: rgba(255, 59, 48, 0.2);
+}
+
+.zen-stop-pill:hover {
+  background: var(--color-missed-light);
+}
+
+
 
