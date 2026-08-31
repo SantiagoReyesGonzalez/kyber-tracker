@@ -70,6 +70,39 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
           <span>Historial</span>
         </button>
+
+        <!-- Componente de Perfil / Usuario -->
+        <div class="user-profile-menu-container">
+          <button id="user-profile-btn" class="user-pill-btn" title="Perfil de usuario" aria-expanded="false">
+            <span class="user-avatar-badge" id="header-user-avatar">KT</span>
+            <span class="user-name-label" id="header-user-name">Usuario</span>
+            <svg class="user-dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+          </button>
+          
+          <div id="user-profile-dropdown" class="user-dropdown-menu hidden">
+            <div class="user-dropdown-header">
+              <div class="user-dropdown-avatar" id="dropdown-user-avatar">KT</div>
+              <div class="user-dropdown-details">
+                <span class="user-dropdown-name" id="dropdown-user-name">Usuario</span>
+                <span class="user-dropdown-email" id="dropdown-user-email">usuario@correo.com</span>
+              </div>
+            </div>
+            <div class="user-dropdown-divider"></div>
+            <button id="dropdown-history-btn" class="user-dropdown-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+              <span>Mi Historial y Respaldos</span>
+            </button>
+            <button id="dropdown-export-btn" class="user-dropdown-item">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <span>Exportar mis Datos (JSON)</span>
+            </button>
+            <div class="user-dropdown-divider"></div>
+            <button id="logout-btn" class="user-dropdown-item logout-action">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <span>Cerrar Sesión</span>
+            </button>
+          </div>
+        </div>
       </div>
     </header>
 
@@ -446,6 +479,109 @@
       </div>
     </div>
   </aside>
+ 
+  <!-- Overlay / Modal de Autenticación (Login & Registro) -->
+  <div id="auth-overlay" class="auth-overlay">
+    <div class="auth-card" role="dialog" aria-labelledby="auth-card-title">
+      <!-- Encabezado de la Tarjeta Auth -->
+      <div class="auth-header">
+        <div class="auth-logo-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 8.5 12 15 22 8.5 12 2"/><polygon points="2 15.5 12 22 22 15.5 12 9 2 15.5"/></svg>
+        </div>
+        <h2 id="auth-card-title" class="auth-title">Kyber Tracker</h2>
+        <p class="auth-subtitle">Ingresa tus credenciales para acceder a tus hábitos y métricas</p>
+      </div>
+
+      <!-- Pestañas Conmutables: Iniciar Sesión / Crear Cuenta -->
+      <div class="auth-tabs-row" role="tablist">
+        <button id="tab-login-btn" class="auth-tab-btn active" role="tab" aria-selected="true">
+          Iniciar Sesión
+        </button>
+        <button id="tab-register-btn" class="auth-tab-btn" role="tab" aria-selected="false">
+          Crear Cuenta
+        </button>
+      </div>
+
+      <!-- Alerta de Error / Éxito -->
+      <div id="auth-alert-message" class="auth-alert hidden" role="alert"></div>
+
+      <!-- Formulario de Iniciar Sesión -->
+      <form id="login-form" class="auth-form active">
+        <div class="auth-form-group">
+          <label for="login-email-input" class="auth-label">CORREO ELECTRÓNICO</label>
+          <div class="auth-input-wrapper">
+            <svg class="auth-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" id="login-email-input" class="auth-input" placeholder="tu@correo.com" required autocomplete="email" />
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label for="login-password-input" class="auth-label">CONTRASEÑA</label>
+          <div class="auth-input-wrapper">
+            <svg class="auth-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="login-password-input" class="auth-input" placeholder="••••••••" required autocomplete="current-password" />
+            <button type="button" class="password-toggle-btn" data-target="login-password-input" title="Mostrar contraseña">
+              <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="auth-options-row">
+          <label class="remember-checkbox-label">
+            <input type="checkbox" id="login-remember-check" checked />
+            <span class="custom-chk"></span>
+            <span>Recordarme</span>
+          </label>
+        </div>
+
+        <button type="submit" id="login-submit-btn" class="auth-submit-btn">
+          <span>Acceder a Kyber</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+
+      <!-- Formulario de Crear Cuenta -->
+      <form id="register-form" class="auth-form hidden">
+        <div class="auth-form-group">
+          <label for="register-name-input" class="auth-label">NOMBRE COMPLETO</label>
+          <div class="auth-input-wrapper">
+            <svg class="auth-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <input type="text" id="register-name-input" class="auth-input" placeholder="Santiago Reyes" required autocomplete="name" />
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label for="register-email-input" class="auth-label">CORREO ELECTRÓNICO</label>
+          <div class="auth-input-wrapper">
+            <svg class="auth-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <input type="email" id="register-email-input" class="auth-input" placeholder="tu@correo.com" required autocomplete="email" />
+          </div>
+        </div>
+
+        <div class="auth-form-group">
+          <label for="register-password-input" class="auth-label">CONTRASEÑA (MÍNIMO 6 CARACTERES)</label>
+          <div class="auth-input-wrapper">
+            <svg class="auth-input-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="register-password-input" class="auth-input" placeholder="••••••••" minlength="6" required autocomplete="new-password" />
+            <button type="button" class="password-toggle-btn" data-target="register-password-input" title="Mostrar contraseña">
+              <svg class="eye-open" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <button type="submit" id="register-submit-btn" class="auth-submit-btn">
+          <span>Crear mi Cuenta</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </form>
+
+      <!-- Pie de página de seguridad -->
+      <div class="auth-footer-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        <span>Encriptación segura client-side mediante SHA-256 Web Crypto</span>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="./src/main.js"></script>
 </body>

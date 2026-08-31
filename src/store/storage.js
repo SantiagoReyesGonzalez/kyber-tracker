@@ -2,10 +2,23 @@
 // KYBER STORAGE MANAGER - Persistencia LocalStorage y Respaldo JSON
 // ==========================================================================
 
-const STORAGE_KEY = 'KYBER_STUDY_TRACKER_DATA_V2';
+import { getCurrentUser } from './auth.js';
+
+const LEGACY_STORAGE_KEY = 'KYBER_STUDY_TRACKER_DATA_V2';
 const AUDIO_KEY = 'KYBER_AUDIO_ENABLED_V1';
 const THEME_KEY = 'KYBER_THEME_MODE_V1';
 const METRICS_SCOPE_KEY = 'KYBER_METRICS_SCOPE_V1';
+
+/**
+ * Obtiene la clave de almacenamiento adecuada para el usuario en sesión
+ */
+function getStorageKey() {
+  const user = getCurrentUser();
+  if (user && user.id) {
+    return `KYBER_USER_DATA_${user.id}`;
+  }
+  return LEGACY_STORAGE_KEY;
+}
 
 export function getAudioEnabled() {
   const val = localStorage.getItem(AUDIO_KEY);
@@ -94,7 +107,8 @@ export function normalizeSession(session) {
  */
 export function loadStudyData() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const key = getStorageKey();
+    const raw = localStorage.getItem(key);
     if (!raw) {
       return {}; // Completamente limpio por defecto
     }
@@ -115,7 +129,8 @@ export function loadStudyData() {
  */
 export function saveStudyData(data) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    const key = getStorageKey();
+    localStorage.setItem(key, JSON.stringify(data));
     return true;
   } catch (err) {
     console.error('Error al persistir datos:', err);
@@ -164,7 +179,8 @@ export function deleteSession(dateStr) {
  * Limpia todos los datos almacenados
  */
 export function clearAllData() {
-  localStorage.removeItem(STORAGE_KEY);
+  const key = getStorageKey();
+  localStorage.removeItem(key);
   return {};
 }
 

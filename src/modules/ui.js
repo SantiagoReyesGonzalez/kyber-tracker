@@ -38,6 +38,14 @@ import {
   playDeactivate
 } from './audio.js';
 
+import {
+  getCurrentUser,
+  registerUser,
+  loginUser,
+  logoutUser,
+  onAuthStateChanged
+} from '../store/auth.js';
+
 export class UIManager {
   constructor(appContext) {
     this.ctx = appContext;
@@ -47,6 +55,7 @@ export class UIManager {
 
     this.cacheDOMElements();
     this.bindEvents();
+    this.initAuth();
     this.updateAudioButtonState();
     this.updateThemeButtonState();
     this.updateMetricsScopeButtonState();
@@ -128,6 +137,33 @@ export class UIManager {
     this.exportJsonBtn = document.getElementById('export-json-btn');
     this.importJsonInput = document.getElementById('import-json-input');
     this.clearAllDataBtn = document.getElementById('clear-all-data-btn');
+
+    // Elementos de Autenticación & Perfil
+    this.authOverlay = document.getElementById('auth-overlay');
+    this.tabLoginBtn = document.getElementById('tab-login-btn');
+    this.tabRegisterBtn = document.getElementById('tab-register-btn');
+    this.loginForm = document.getElementById('login-form');
+    this.registerForm = document.getElementById('register-form');
+    this.authAlertMessage = document.getElementById('auth-alert-message');
+    this.loginEmailInput = document.getElementById('login-email-input');
+    this.loginPasswordInput = document.getElementById('login-password-input');
+    this.loginRememberCheck = document.getElementById('login-remember-check');
+    this.registerNameInput = document.getElementById('register-name-input');
+    this.registerEmailInput = document.getElementById('register-email-input');
+    this.registerPasswordInput = document.getElementById('register-password-input');
+    this.passwordToggleBtns = document.querySelectorAll('.password-toggle-btn');
+    this.loginSubmitBtn = document.getElementById('login-submit-btn');
+    this.registerSubmitBtn = document.getElementById('register-submit-btn');
+
+    // Header Profile & Dropdown
+    this.userProfileBtn = document.getElementById('user-profile-btn');
+    this.userProfileDropdown = document.getElementById('user-profile-dropdown');
+    this.headerUserAvatar = document.getElementById('header-user-avatar');
+    this.headerUserName = document.getElementById('header-user-name');
+    this.dropdownUserAvatar = document.getElementById('dropdown-user-avatar');
+    this.dropdownUserName = document.getElementById('dropdown-user-name');
+    this.dropdownUserEmail = document.getElementById('dropdown-user-email');
+    this.logoutBtn = document.getElementById('logout-btn');
   }
 
   bindEvents() {
@@ -291,6 +327,9 @@ export class UIManager {
         }
       });
     }
+
+    // 10. Eventos del Sistema de Autenticación
+    this.bindAuthEvents();
   }
 
   updateAudioButtonState() {
@@ -648,4 +687,242 @@ export class UIManager {
       this.historyList.appendChild(card);
     });
   }
+
+  /**
+   * ==========================================================================
+   * GESTIÓN DE AUTENTICACIÓN Y PERFIL DE USUARIO
+   * ==========================================================================
+   */
+
+  initAuth() {
+    onAuthStateChanged((user) => {
+      this.handleAuthStateChange(user);
+    });
+  }
+
+  handleAuthStateChange(user) {
+    if (user) {
+      // Usuario autenticado
+      if (this.authOverlay) this.authOverlay.classList.add('hidden');
+      this.renderUserHeader(user);
+      // Refrescar todos los componentes con los datos del usuario activo
+      this.ctx.refreshAll();
+    } else {
+      // No hay sesión: mostrar modal de login obligatorio
+      if (this.authOverlay) {
+        this.authOverlay.classList.remove('hidden');
+        this.clearAuthAlert();
+      }
+      this.renderUserHeader(null);
+    }
+  }
+
+  renderUserHeader(user) {
+    if (!this.userProfileBtn) return;
+
+    if (user) {
+      this.userProfileBtn.style.display = 'inline-flex';
+      const initials = user.initials || 'KT';
+      const firstName = (user.name || 'Usuario').split(' ')[0];
+
+      if (this.headerUserAvatar) this.headerUserAvatar.textContent = initials;
+      if (this.headerUserName) this.headerUserName.textContent = firstName;
+      if (this.dropdownUserAvatar) this.dropdownUserAvatar.textContent = initials;
+      if (this.dropdownUserName) this.dropdownUserName.textContent = user.name;
+      if (this.dropdownUserEmail) this.dropdownUserEmail.textContent = user.email;
+    } else {
+      this.userProfileBtn.style.display = 'none';
+      if (this.userProfileDropdown) this.userProfileDropdown.classList.add('hidden');
+    }
+  }
+
+  bindAuthEvents() {
+    // 1. Alternar pestañas Login / Registro
+    if (this.tabLoginBtn && this.tabRegisterBtn) {
+      this.tabLoginBtn.addEventListener('click', () => {
+        this.switchAuthTab('login');
+      });
+
+      this.tabRegisterBtn.addEventListener('click', () => {
+        this.switchAuthTab('register');
+      });
+    }
+
+    // 2. Alternar visibilidad de contraseñas
+    this.passwordToggleBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.dataset.target;
+        const input = document.getElementById(targetId);
+        if (input) {
+          const isPassword = input.type === 'password';
+          input.type = isPassword ? 'text' : 'password';
+          btn.title = isPassword ? 'Ocultar contraseña' : 'Mostrar contraseña';
+          btn.style.opacity = isPassword ? '1' : '0.6';
+        }
+      });
+    });
+
+    // 3. Envío de Formulario de Login
+    if (this.loginForm) {
+      this.loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await this.handleLoginSubmit();
+      });
+    }
+
+    // 4. Envío de Formulario de Registro
+    if (this.registerForm) {
+      this.registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        await this.handleRegisterSubmit();
+      });
+    }
+
+    // 5. Dropdown de Perfil en Header
+    if (this.userProfileBtn && this.userProfileDropdown) {
+      this.userProfileBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isClosed = this.userProfileDropdown.classList.contains('hidden');
+        this.userProfileDropdown.classList.toggle('hidden', !isClosed);
+        this.userProfileBtn.setAttribute('aria-expanded', String(isClosed));
+        playHover();
+      });
+
+      // Cerrar dropdown al hacer click fuera
+      document.addEventListener('click', (e) => {
+        if (!this.userProfileDropdown.classList.contains('hidden') &&
+            !this.userProfileDropdown.contains(e.target) &&
+            !this.userProfileBtn.contains(e.target)) {
+          this.userProfileDropdown.classList.add('hidden');
+          this.userProfileBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // 6. Botones de Acción del Dropdown
+    const dropdownHistoryBtn = document.getElementById('dropdown-history-btn');
+    if (dropdownHistoryBtn) {
+      dropdownHistoryBtn.addEventListener('click', () => {
+        this.userProfileDropdown.classList.add('hidden');
+        this.userProfileBtn.setAttribute('aria-expanded', 'false');
+        playSelect();
+        this.openHistoryDrawer();
+      });
+    }
+
+    const dropdownExportBtn = document.getElementById('dropdown-export-btn');
+    if (dropdownExportBtn) {
+      dropdownExportBtn.addEventListener('click', () => {
+        this.userProfileDropdown.classList.add('hidden');
+        this.userProfileBtn.setAttribute('aria-expanded', 'false');
+        exportDataAsJSON();
+        playSelect();
+      });
+    }
+
+    // 7. Botón de Cerrar Sesión
+    if (this.logoutBtn) {
+      this.logoutBtn.addEventListener('click', () => {
+        if (confirm('¿Deseas cerrar tu sesión actual?')) {
+          playDeactivate();
+          logoutUser();
+        }
+      });
+    }
+  }
+
+  switchAuthTab(tab) {
+    playSelect();
+    this.clearAuthAlert();
+
+    if (tab === 'login') {
+      this.tabLoginBtn.classList.add('active');
+      this.tabLoginBtn.setAttribute('aria-selected', 'true');
+      this.tabRegisterBtn.classList.remove('active');
+      this.tabRegisterBtn.setAttribute('aria-selected', 'false');
+
+      this.loginForm.classList.remove('hidden');
+      this.registerForm.classList.add('hidden');
+    } else {
+      this.tabRegisterBtn.classList.add('active');
+      this.tabRegisterBtn.setAttribute('aria-selected', 'true');
+      this.tabLoginBtn.classList.remove('active');
+      this.tabLoginBtn.setAttribute('aria-selected', 'false');
+
+      this.registerForm.classList.remove('hidden');
+      this.loginForm.classList.add('hidden');
+    }
+  }
+
+  async handleLoginSubmit() {
+    const email = this.loginEmailInput.value;
+    const password = this.loginPasswordInput.value;
+    const rememberMe = this.loginRememberCheck.checked;
+
+    this.loginSubmitBtn.disabled = true;
+    this.loginSubmitBtn.style.opacity = '0.7';
+
+    try {
+      const result = await loginUser(email, password, rememberMe);
+      if (result.success) {
+        this.showAuthAlert('¡Bienvenido de vuelta!', 'success');
+        playKyberIgnite();
+        setTimeout(() => {
+          this.loginPasswordInput.value = '';
+          this.clearAuthAlert();
+        }, 500);
+      } else {
+        this.showAuthAlert(result.error || 'Credenciales inválidas', 'error');
+        playDeactivate();
+      }
+    } catch (err) {
+      this.showAuthAlert('Ocurrió un error inesperado al iniciar sesión', 'error');
+    } finally {
+      this.loginSubmitBtn.disabled = false;
+      this.loginSubmitBtn.style.opacity = '1';
+    }
+  }
+
+  async handleRegisterSubmit() {
+    const name = this.registerNameInput.value;
+    const email = this.registerEmailInput.value;
+    const password = this.registerPasswordInput.value;
+
+    this.registerSubmitBtn.disabled = true;
+    this.registerSubmitBtn.style.opacity = '0.7';
+
+    try {
+      const result = await registerUser(name, email, password);
+      if (result.success) {
+        this.showAuthAlert('¡Cuenta creada con éxito! Inicializando tu tracker...', 'success');
+        playMasteryCelebration();
+        setTimeout(() => {
+          this.registerPasswordInput.value = '';
+          this.clearAuthAlert();
+        }, 600);
+      } else {
+        this.showAuthAlert(result.error || 'No se pudo crear la cuenta', 'error');
+        playDeactivate();
+      }
+    } catch (err) {
+      this.showAuthAlert('Ocurrió un error al procesar el registro', 'error');
+    } finally {
+      this.registerSubmitBtn.disabled = false;
+      this.registerSubmitBtn.style.opacity = '1';
+    }
+  }
+
+  showAuthAlert(message, type = 'error') {
+    if (!this.authAlertMessage) return;
+    this.authAlertMessage.textContent = message;
+    this.authAlertMessage.className = `auth-alert alert-${type}`;
+    this.authAlertMessage.classList.remove('hidden');
+  }
+
+  clearAuthAlert() {
+    if (!this.authAlertMessage) return;
+    this.authAlertMessage.textContent = '';
+    this.authAlertMessage.className = 'auth-alert hidden';
+  }
 }
+
