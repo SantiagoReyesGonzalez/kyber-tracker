@@ -282,9 +282,15 @@ export class UIManager {
           const tag = chip.dataset.tag;
           const forHabit = chip.dataset.for;
 
-          // Activar el checkbox correspondiente
-          if (forHabit === 'english' && this.quickEnglishCheck) this.quickEnglishCheck.checked = true;
-          if (forHabit === 'de' && this.quickDeCheck) this.quickDeCheck.checked = true;
+          // Activar el checkbox correspondiente y emitir change
+          if (forHabit === 'english' && this.quickEnglishCheck) {
+            this.quickEnglishCheck.checked = true;
+            this.quickEnglishCheck.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+          if (forHabit === 'de' && this.quickDeCheck) {
+            this.quickDeCheck.checked = true;
+            this.quickDeCheck.dispatchEvent(new Event('change', { bubbles: true }));
+          }
 
           // Añadir etiqueta al input si no existe
           if (this.quickTopicsInput) {
@@ -558,6 +564,7 @@ export class UIManager {
     if (!isEng && !isDE) {
       deleteSession(activeDateStr);
       playDeactivate();
+      this.showToast(`Registro de ${formatReadableDate(activeDateStr)} borrado.`, 'info');
     } else {
       saveSession(activeDateStr, {
         date: activeDateStr,
@@ -571,8 +578,11 @@ export class UIManager {
 
       if (isEng && isDE) {
         playMasteryCelebration();
+        this.showToast(`¡Doble estudio guardado para ${formatReadableDate(activeDateStr)}! (2h)`, 'success');
       } else {
         playKyberIgnite();
+        const habitName = isEng ? 'Inglés' : 'Data Engineering';
+        this.showToast(`¡Sesión de ${habitName} guardada para ${formatReadableDate(activeDateStr)}! (1h)`, 'success');
       }
     }
 
@@ -632,6 +642,7 @@ export class UIManager {
     if (!isEng && !isDE) {
       deleteSession(dateStr);
       playDeactivate();
+      this.showToast(`Registro del ${formatReadableDate(dateStr)} borrado.`, 'info');
     } else {
       saveSession(dateStr, {
         date: dateStr,
@@ -645,8 +656,11 @@ export class UIManager {
 
       if (isEng && isDE) {
         playMasteryCelebration();
+        this.showToast(`¡Doble estudio guardado para ${formatReadableDate(dateStr)}! (2h)`, 'success');
       } else {
         playKyberIgnite();
+        const habitName = isEng ? 'Inglés' : 'Data Engineering';
+        this.showToast(`¡Sesión de ${habitName} guardada para ${formatReadableDate(dateStr)}! (1h)`, 'success');
       }
     }
 
