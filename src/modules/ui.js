@@ -487,21 +487,6 @@ export class UIManager {
         return;
       }
 
-      // 11d. Botón Pausar / Reanudar (#focus-pause-btn / #zen-pause-btn)
-      const pauseBtn = e.target.closest('#focus-pause-btn, #zen-pause-btn');
-      if (pauseBtn) {
-        e.preventDefault();
-        if (this.ctx && this.ctx.focusTimer) {
-          const state = this.ctx.focusTimer.getState();
-          if (state.state === 'running') {
-            this.ctx.focusTimer.pause();
-          } else if (state.state === 'paused') {
-            this.ctx.focusTimer.resume();
-          }
-        }
-        return;
-      }
-
       // 11e. Botón Modo Zen (#toggle-zen-btn)
       const zenBtn = e.target.closest('#toggle-zen-btn');
       if (zenBtn) {
@@ -1350,7 +1335,8 @@ export class UIManager {
 
     // 7. Pausar / Reanudar
     if (this.focusPauseBtn) {
-      this.focusPauseBtn.addEventListener('click', () => {
+      this.focusPauseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const state = this.ctx.focusTimer.getState();
         if (state.state === 'running') {
           this.ctx.focusTimer.pause();
@@ -1362,7 +1348,8 @@ export class UIManager {
 
     // 8. Detener
     if (this.focusStopBtn) {
-      this.focusStopBtn.addEventListener('click', async () => {
+      this.focusStopBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
         const confirmed = await this.showConfirm({
           title: 'Detener Sesión',
           message: '¿Deseas detener la sesión de concentración actual?',
@@ -1378,13 +1365,15 @@ export class UIManager {
 
     // 9. Modo Zen (Pantalla Completa)
     if (this.toggleZenBtn && this.zenOverlay) {
-      this.toggleZenBtn.addEventListener('click', () => {
+      this.toggleZenBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         this.openZenMode();
       });
     }
 
     if (this.closeZenBtn) {
-      this.closeZenBtn.addEventListener('click', () => {
+      this.closeZenBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         this.closeZenMode();
       });
     }
@@ -1397,7 +1386,8 @@ export class UIManager {
     });
 
     if (this.zenPauseBtn) {
-      this.zenPauseBtn.addEventListener('click', () => {
+      this.zenPauseBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
         const state = this.ctx.focusTimer.getState();
         if (state.state === 'running') {
           this.ctx.focusTimer.pause();

@@ -3738,9 +3738,24 @@ body.app-theme {
   color: var(--text-main);
   font-family: var(--font-body);
   font-size: 0.82rem;
-  font-weight: 500;
+  font-weight: 600;
   outline: none;
   cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 8px;
+}
+
+.soundscape-select option {
+  background-color: #121214 !important;
+  color: #f1f5f9 !important;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  padding: 10px 14px;
+}
+
+[data-theme="light"] .soundscape-select option {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
 }
 
 .sound-volume-slider {
