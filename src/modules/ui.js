@@ -76,8 +76,9 @@ export class UIManager {
     this.audioLabel = document.getElementById('audio-label');
     this.openHistoryBtn = document.getElementById('open-history-btn');
 
-    // Quick Check-in Widget (Hoy)
+    // Quick Check-in Widget (Hoy / Fecha seleccionada)
     this.todayReadableDate = document.getElementById('today-readable-date');
+    this.quickDateInput = document.getElementById('quick-date-input');
     this.todayStatusSummary = document.getElementById('today-status-summary');
     this.quickForm = document.getElementById('quick-checkin-form');
     this.quickEnglishCheck = document.getElementById('quick-english-check');
@@ -120,6 +121,7 @@ export class UIManager {
     this.dayModal = document.getElementById('day-modal');
     this.modalDialogDate = document.getElementById('modal-dialog-date');
     this.dialogDateHidden = document.getElementById('dialog-date-hidden');
+    this.modalDateInput = document.getElementById('modal-date-input');
     this.modalEnglishCheck = document.getElementById('modal-english-check');
     this.modalDeCheck = document.getElementById('modal-de-check');
     this.modalTopicsInput = document.getElementById('modal-topics-input');
@@ -206,7 +208,14 @@ export class UIManager {
       });
     });
 
-    // 4. Quick Check-In de Hoy
+    // 4. Quick Check-In (Soporta Hoy o Día Pasado Seleccionado)
+    if (this.quickDateInput) {
+      this.quickDateInput.addEventListener('change', () => {
+        this.updateTodayWidget(this.quickDateInput.value);
+        playSelect();
+      });
+    }
+
     this.quickForm.addEventListener('submit', (e) => {
       e.preventDefault();
       this.handleQuickCheckinSubmit();
@@ -232,7 +241,7 @@ export class UIManager {
       });
     });
 
-    // 4. View Switcher Tabs (Calendario | Heatmap | Semanal)
+    // 4b. View Switcher Tabs (Calendario | Heatmap | Semanal)
     this.viewTabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const view = btn.dataset.view;
@@ -255,13 +264,19 @@ export class UIManager {
     // 5. Botón Planificar Otra Fecha
     this.openPlanModalBtn.addEventListener('click', () => {
       playSelect();
-      const todayStr = getTodayStr();
-      this.openDayModal({ dateStr: todayStr, session: getSession(todayStr) });
+      const targetDate = (this.quickDateInput && this.quickDateInput.value) ? this.quickDateInput.value : getTodayStr();
+      this.openDayModal({ dateStr: targetDate, session: getSession(targetDate) });
     });
 
     // 6. Modal de Día
     this.closeDialogBtn.addEventListener('click', () => this.closeDayModal());
     this.modalCancelBtn.addEventListener('click', () => this.closeDayModal());
+
+    if (this.modalDateInput) {
+      this.modalDateInput.addEventListener('change', () => {
+        this.handleModalDateChange(this.modalDateInput.value);
+      });
+    }
 
     this.dialogForm.addEventListener('submit', (e) => {
       e.preventDefault();
@@ -399,13 +414,23 @@ export class UIManager {
   }
 
   /**
-   * Actualiza el widget de Registro de Hoy
+   * Actualiza el widget de Registro Diario para la fecha activa (Hoy por defecto o fecha elegida)
    */
-  updateTodayWidget() {
+  updateTodayWidget(targetDateStr) {
     const todayStr = getTodayStr();
-    this.todayReadableDate.textContent = formatReadableDate(todayStr);
+    const activeDateStr = targetDateStr || (this.quickDateInput && this.quickDateInput.value) || todayStr;
 
-    const session = getSession(todayStr);
+    if (this.quickDateInput && this.quickDateInput.value !== activeDateStr) {
+      this.quickDateInput.value = activeDateStr;
+    }
+
+    if (activeDateStr === todayStr) {
+      this.todayReadableDate.textContent = `Hoy (${formatReadableDate(todayStr)})`;
+    } else {
+      this.todayReadableDate.textContent = formatReadableDate(activeDateStr);
+    }
+
+    const session = getSession(activeDateStr);
     if (session) {
       this.quickEnglishCheck.checked = Boolean(session.englishCompleted);
       this.quickDeCheck.checked = Boolean(session.dataEngCompleted);
@@ -435,17 +460,17 @@ export class UIManager {
   }
 
   handleQuickCheckinSubmit() {
-    const todayStr = getTodayStr();
+    const activeDateStr = (this.quickDateInput && this.quickDateInput.value) ? this.quickDateInput.value : getTodayStr();
     const isEng = this.quickEnglishCheck.checked;
     const isDE = this.quickDeCheck.checked;
     const topics = this.quickTopicsInput.value.trim();
 
     if (!isEng && !isDE) {
-      deleteSession(todayStr);
+      deleteSession(activeDateStr);
       playDeactivate();
     } else {
-      saveSession(todayStr, {
-        date: todayStr,
+      saveSession(activeDateStr, {
+        date: activeDateStr,
         englishCompleted: isEng,
         dataEngCompleted: isDE,
         englishHours: isEng ? 1 : 0,
@@ -469,10 +494,18 @@ export class UIManager {
    */
   openDayModal(dayData) {
     if (!dayData) return;
-    const dateStr = dayData.dateStr;
-    const session = getSession(dateStr) || dayData.session;
+    const dateStr = dayData.dateStr || getTodayStr();
+    this.populateModalForDate(dateStr, dayData.session);
+
+    playSelect();
+    this.dayModal.showModal();
+  }
+
+  populateModalForDate(dateStr, sessionData = null) {
+    const session = sessionData || getSession(dateStr);
 
     this.dialogDateHidden.value = dateStr;
+    if (this.modalDateInput) this.modalDateInput.value = dateStr;
     this.modalDialogDate.textContent = formatReadableDate(dateStr);
 
     if (session) {
@@ -488,9 +521,11 @@ export class UIManager {
       this.modalNotesTextarea.value = '';
       this.modalDeleteBtn.classList.add('hidden');
     }
+  }
 
-    playSelect();
-    this.dayModal.showModal();
+  handleModalDateChange(newDateStr) {
+    if (!newDateStr) return;
+    this.populateModalForDate(newDateStr);
   }
 
   closeDayModal() {
@@ -498,7 +533,7 @@ export class UIManager {
   }
 
   handleModalFormSubmit() {
-    const dateStr = this.dialogDateHidden.value;
+    const dateStr = (this.modalDateInput && this.modalDateInput.value) || this.dialogDateHidden.value;
     const isEng = this.modalEnglishCheck.checked;
     const isDE = this.modalDeCheck.checked;
     const topics = this.modalTopicsInput.value.trim();
@@ -530,7 +565,7 @@ export class UIManager {
   }
 
   handleModalDelete() {
-    const dateStr = this.dialogDateHidden.value;
+    const dateStr = (this.modalDateInput && this.modalDateInput.value) || this.dialogDateHidden.value;
     if (confirm(`¿Eliminar el registro del día ${dateStr}?`)) {
       deleteSession(dateStr);
       playDeactivate();

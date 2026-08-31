@@ -699,6 +699,48 @@ body.app-theme {
   letter-spacing: -0.02em;
 }
 
+.date-selector-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.date-picker-input {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-main);
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-main);
+  border-radius: 10px;
+  padding: 0.35rem 0.65rem;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.date-picker-input:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-focus);
+}
+
+.date-picker-input:focus {
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.15);
+}
+
+.date-picker-input::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.6);
+  opacity: 0.85;
+  transition: opacity 0.15s ease;
+}
+
+.date-picker-input::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
 .today-status-chip {
   font-size: 0.75rem;
   font-weight: 600;

@@ -232,7 +232,10 @@
           <div class="checkin-header">
             <div class="checkin-date-info">
               <span class="section-badge">REGISTRO DIARIO</span>
-              <h2 id="today-readable-date" class="checkin-date-title">Hoy</h2>
+              <div class="date-selector-wrap">
+                <h2 id="today-readable-date" class="checkin-date-title">Hoy</h2>
+                <input type="date" id="quick-date-input" class="date-picker-input" title="Cambiar fecha a registrar o editar" />
+              </div>
             </div>
             <span id="today-status-summary" class="today-status-chip">Sin registrar</span>
           </div>
@@ -402,6 +405,11 @@
 
       <form id="dialog-form" class="dialog-body">
         <input type="hidden" id="dialog-date-hidden" />
+
+        <div class="dialog-form-group">
+          <label for="modal-date-input" class="group-label">FECHA DE LA SESIÓN</label>
+          <input type="date" id="modal-date-input" class="dialog-input date-picker-input" title="Seleccionar fecha" required />
+        </div>
 
         <div class="dialog-form-group">
           <label class="group-label">HÁBITOS COMPLETADOS</label>
