@@ -441,6 +441,102 @@ export class UIManager {
 
     // 10. Eventos del Sistema de Autenticación
     this.bindAuthEvents();
+
+    // 11. Delegación Global para Garantizar Respuesta Inmediata de Todos los Botones
+    document.addEventListener('click', (e) => {
+      // 11a. Chips de Hábito en Modo Enfoque (.focus-habit-btn)
+      const habitBtn = e.target.closest('.focus-habit-btn');
+      if (habitBtn) {
+        e.preventDefault();
+        document.querySelectorAll('.focus-habit-btn').forEach(b => b.classList.remove('active'));
+        habitBtn.classList.add('active');
+        const habit = habitBtn.dataset.focushabit;
+        if (this.ctx && this.ctx.focusTimer) {
+          this.ctx.focusTimer.setHabit(habit);
+        }
+        playHover();
+        return;
+      }
+
+      // 11b. Botón ⚡ Arrancar 5 min (#start-5min-btn)
+      const start5Btn = e.target.closest('#start-5min-btn');
+      if (start5Btn) {
+        e.preventDefault();
+        const goalInput = document.getElementById('focus-goal-input');
+        if (goalInput && this.ctx && this.ctx.focusTimer) {
+          this.ctx.focusTimer.setGoal(goalInput.value.trim());
+        }
+        if (this.ctx && this.ctx.focusTimer) {
+          this.ctx.focusTimer.start5MinJumpstart();
+        }
+        return;
+      }
+
+      // 11c. Botón 🎯 Hora Completa (#start-60min-btn)
+      const start60Btn = e.target.closest('#start-60min-btn');
+      if (start60Btn) {
+        e.preventDefault();
+        const goalInput = document.getElementById('focus-goal-input');
+        if (goalInput && this.ctx && this.ctx.focusTimer) {
+          this.ctx.focusTimer.setGoal(goalInput.value.trim());
+        }
+        if (this.ctx && this.ctx.focusTimer) {
+          this.ctx.focusTimer.start60MinSession();
+        }
+        return;
+      }
+
+      // 11d. Botón Pausar / Reanudar (#focus-pause-btn / #zen-pause-btn)
+      const pauseBtn = e.target.closest('#focus-pause-btn, #zen-pause-btn');
+      if (pauseBtn) {
+        e.preventDefault();
+        if (this.ctx && this.ctx.focusTimer) {
+          const state = this.ctx.focusTimer.getState();
+          if (state.state === 'running') {
+            this.ctx.focusTimer.pause();
+          } else if (state.state === 'paused') {
+            this.ctx.focusTimer.resume();
+          }
+        }
+        return;
+      }
+
+      // 11e. Botón Modo Zen (#toggle-zen-btn)
+      const zenBtn = e.target.closest('#toggle-zen-btn');
+      if (zenBtn) {
+        e.preventDefault();
+        this.openZenMode();
+        return;
+      }
+
+      // 11f. Botón Salir Zen (#close-zen-btn)
+      const closeZenBtn = e.target.closest('#close-zen-btn');
+      if (closeZenBtn) {
+        e.preventDefault();
+        this.closeZenMode();
+        return;
+      }
+
+      // 11g. Clic en Día del Calendario (.calendar-day-card:not(.empty-offset))
+      const dayCard = e.target.closest('.calendar-day-card:not(.empty-offset)');
+      if (dayCard) {
+        const dateStr = dayCard.dataset.date;
+        if (dateStr) {
+          this.openDayModal({ dateStr, session: getSession(dateStr) });
+        }
+        return;
+      }
+
+      // 11h. Botón Registrar Otra Fecha (#open-plan-modal-btn)
+      const openPlanBtn = e.target.closest('#open-plan-modal-btn');
+      if (openPlanBtn) {
+        e.preventDefault();
+        const quickDateInput = document.getElementById('quick-date-input');
+        const targetDate = (quickDateInput && quickDateInput.value) ? quickDateInput.value : getTodayStr();
+        this.openDayModal({ dateStr: targetDate, session: getSession(targetDate) });
+        return;
+      }
+    });
   }
 
   updateAudioButtonState() {
