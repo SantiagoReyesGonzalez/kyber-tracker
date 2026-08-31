@@ -49,17 +49,18 @@ import {
 export class UIManager {
   constructor(appContext) {
     this.ctx = appContext;
+    this.ctx.ui = this; // Vincular de inmediato al contexto de la app
     this.historyFilter = 'all';
     this.currentView = 'calendar'; // 'calendar', 'heatmap', 'weekly'
     this.currentMetricsScope = getMetricsScope(); // 'week', 'month', 'all'
 
     this.cacheDOMElements();
     this.bindEvents();
-    this.initAuth();
+    this.initFocusTimer();
     this.updateAudioButtonState();
     this.updateThemeButtonState();
     this.updateMetricsScopeButtonState();
-    this.initFocusTimer();
+    this.initAuth();
   }
 
   cacheDOMElements() {
@@ -788,23 +789,25 @@ export class UIManager {
    */
   updateMetricsDisplay() {
     const scope = this.currentMetricsScope || 'month';
-    const metrics = calculateMetrics(this.ctx.currentYear, this.ctx.currentMonth, scope);
+    const currentY = (this.ctx && this.ctx.currentYear) || new Date().getFullYear();
+    const currentM = (this.ctx && this.ctx.currentMonth !== undefined) ? this.ctx.currentMonth : new Date().getMonth();
+    const metrics = calculateMetrics(currentY, currentM, scope);
 
     // Inglés
-    this.statsEnglishDays.textContent = metrics.english.days;
-    this.statsEnglishStreak.textContent = metrics.english.streak;
+    if (this.statsEnglishDays) this.statsEnglishDays.textContent = metrics.english.days;
+    if (this.statsEnglishStreak) this.statsEnglishStreak.textContent = metrics.english.streak;
 
     // Data Engineering
-    this.statsDeDays.textContent = metrics.dataEngineering.days;
-    this.statsDeStreak.textContent = metrics.dataEngineering.streak;
+    if (this.statsDeDays) this.statsDeDays.textContent = metrics.dataEngineering.days;
+    if (this.statsDeStreak) this.statsDeStreak.textContent = metrics.dataEngineering.streak;
 
     // Dual Master & Cobertura
-    this.statsDualDays.textContent = metrics.global.dualDays;
-    this.statsMonthProgress.textContent = `${metrics.global.coveragePercent}%`;
+    if (this.statsDualDays) this.statsDualDays.textContent = metrics.global.dualDays;
+    if (this.statsMonthProgress) this.statsMonthProgress.textContent = `${metrics.global.coveragePercent}%`;
 
     // Horas Totales y Racha Combinada
-    this.statsTotalHours.textContent = `${metrics.global.totalHours}h`;
-    this.statsCombinedStreak.textContent = metrics.global.combinedStreak;
+    if (this.statsTotalHours) this.statsTotalHours.textContent = `${metrics.global.totalHours}h`;
+    if (this.statsCombinedStreak) this.statsCombinedStreak.textContent = metrics.global.combinedStreak;
 
     // Actualizar etiquetas dinámicas de período
     const suffix = metrics.periodLabel; // 'SEMANA' | 'MES' | 'TOTAL'
@@ -817,9 +820,9 @@ export class UIManager {
     if (this.statsHoursSublabel) this.statsHoursSublabel.textContent = `HORAS (${suffix})`;
 
     // Header Display
-    this.monthDisplay.textContent = MONTH_NAMES_ES[this.ctx.currentMonth];
-    this.yearDisplay.textContent = this.ctx.currentYear;
-    this.heatmapYearLabel.textContent = this.ctx.currentYear;
+    if (this.monthDisplay && MONTH_NAMES_ES[currentM]) this.monthDisplay.textContent = MONTH_NAMES_ES[currentM];
+    if (this.yearDisplay) this.yearDisplay.textContent = currentY;
+    if (this.heatmapYearLabel) this.heatmapYearLabel.textContent = currentY;
   }
 
   /**

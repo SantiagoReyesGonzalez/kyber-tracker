@@ -42,26 +42,26 @@ class KyberApp {
 
   refreshAll() {
     // 1. Renderizar Cuadrícula del Calendario Mensual 2D
-    this.calendar2D.renderMonth(this.currentYear, this.currentMonth, (day) => {
-      this.ui.openDayModal(day);
-    });
+    if (this.calendar2D) {
+      this.calendar2D.renderMonth(this.currentYear, this.currentMonth, (day) => {
+        if (this.ui) this.ui.openDayModal(day);
+      });
 
-    // 2. Renderizar Heatmap Anual de 52 Semanas
-    this.calendar2D.renderHeatmap(this.currentYear, (day) => {
-      this.ui.openDayModal(day);
-    });
+      // 2. Renderizar Heatmap Anual de 52 Semanas
+      this.calendar2D.renderHeatmap(this.currentYear, (day) => {
+        if (this.ui) this.ui.openDayModal(day);
+      });
 
-    // 3. Renderizar Gráfico de Consistencia Semanal
-    this.calendar2D.renderWeeklyChart();
+      // 3. Renderizar Gráfico de Consistencia Semanal
+      this.calendar2D.renderWeeklyChart();
+    }
 
-    // 4. Actualizar Widget Superior de Registro de Hoy
-    this.ui.updateTodayWidget();
-
-    // 5. Actualizar Métricas y Rachas
-    this.ui.updateMetricsDisplay();
-
-    // 6. Actualizar Bitácora de Sesiones Recientes
-    this.ui.renderJournalFeed();
+    // 4. Actualizar componentes UI
+    if (this.ui) {
+      this.ui.updateTodayWidget();
+      this.ui.updateMetricsDisplay();
+      this.ui.renderJournalFeed();
+    }
   }
 }
 
