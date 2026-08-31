@@ -140,6 +140,15 @@ export class UIManager {
     this.importJsonInput = document.getElementById('import-json-input');
     this.clearAllDataBtn = document.getElementById('clear-all-data-btn');
 
+    // Modal de Confirmación Personalizado & Toast Container
+    this.confirmModal = document.getElementById('confirm-modal');
+    this.confirmTitle = document.getElementById('confirm-dialog-title');
+    this.confirmMessage = document.getElementById('confirm-dialog-message');
+    this.confirmOkBtn = document.getElementById('confirm-ok-btn');
+    this.confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+    this.confirmIconWrap = document.getElementById('confirm-icon-wrap');
+    this.toastContainer = document.getElementById('toast-container');
+
     // Elementos de Autenticación & Perfil
     this.authOverlay = document.getElementById('auth-overlay');
     this.tabLoginBtn = document.getElementById('tab-login-btn');
@@ -325,20 +334,29 @@ export class UIManager {
           await importDataFromJSON(file);
           playMasteryCelebration();
           this.ctx.refreshAll();
-          alert('¡Datos de estudio importados con éxito!');
+          this.showToast('¡Datos de estudio importados con éxito!', 'success');
         } catch (err) {
-          alert('Error al importar el archivo JSON.');
+          this.showToast('Error al importar el archivo JSON.', 'error');
         }
       }
     });
 
     if (this.clearAllDataBtn) {
-      this.clearAllDataBtn.addEventListener('click', () => {
-        if (confirm('¿Estás seguro de que deseas limpiar y reiniciar todos tus registros?')) {
+      this.clearAllDataBtn.addEventListener('click', async () => {
+        const confirmed = await this.showConfirm({
+          title: 'Limpiar Todo',
+          message: '¿Estás seguro de que deseas limpiar y reiniciar todos tus registros? Esta acción no se puede deshacer.',
+          confirmText: 'Limpiar Datos',
+          cancelText: 'Cancelar',
+          type: 'danger'
+        });
+
+        if (confirmed) {
           clearAllData();
           playDeactivate();
           this.ctx.refreshAll();
           this.closeHistoryDrawer();
+          this.showToast('Todos tus registros han sido eliminados.', 'info');
         }
       });
     }
@@ -564,13 +582,22 @@ export class UIManager {
     this.ctx.refreshAll();
   }
 
-  handleModalDelete() {
+  async handleModalDelete() {
     const dateStr = (this.modalDateInput && this.modalDateInput.value) || this.dialogDateHidden.value;
-    if (confirm(`¿Eliminar el registro del día ${dateStr}?`)) {
+    const confirmed = await this.showConfirm({
+      title: 'Eliminar Registro',
+      message: `¿Deseas eliminar el registro del día ${dateStr}?`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (confirmed) {
       deleteSession(dateStr);
       playDeactivate();
       this.closeDayModal();
       this.ctx.refreshAll();
+      this.showToast(`Registro del día ${dateStr} eliminado.`, 'info');
     }
   }
 
@@ -863,10 +890,19 @@ export class UIManager {
 
     // 7. Botón de Cerrar Sesión
     if (this.logoutBtn) {
-      this.logoutBtn.addEventListener('click', () => {
-        if (confirm('¿Deseas cerrar tu sesión actual?')) {
+      this.logoutBtn.addEventListener('click', async () => {
+        const confirmed = await this.showConfirm({
+          title: 'Cerrar Sesión',
+          message: '¿Deseas cerrar tu sesión actual?',
+          confirmText: 'Cerrar Sesión',
+          cancelText: 'Cancelar',
+          type: 'warning'
+        });
+
+        if (confirmed) {
           playDeactivate();
           logoutUser();
+          this.showToast('Sesión cerrada correctamente.', 'info');
         }
       });
     }
@@ -964,6 +1000,106 @@ export class UIManager {
     if (!this.authAlertMessage) return;
     this.authAlertMessage.textContent = '';
     this.authAlertMessage.className = 'auth-alert hidden';
+  }
+
+  /**
+   * Muestra un modal de confirmación personalizado estilizado
+   */
+  showConfirm({
+    title = 'Confirmación',
+    message = '¿Estás seguro de realizar esta acción?',
+    confirmText = 'Confirmar',
+    cancelText = 'Cancelar',
+    type = 'warning'
+  } = {}) {
+    return new Promise((resolve) => {
+      if (!this.confirmModal) {
+        resolve(window.confirm(message));
+        return;
+      }
+
+      this.confirmTitle.textContent = title;
+      this.confirmMessage.textContent = message;
+      this.confirmOkBtn.textContent = confirmText;
+      this.confirmCancelBtn.textContent = cancelText;
+
+      // Estilo de icono y botón según tipo ('danger', 'warning', 'info')
+      this.confirmIconWrap.className = `confirm-icon-wrap icon-${type}`;
+      if (type === 'danger') {
+        this.confirmIconWrap.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>`;
+        this.confirmOkBtn.className = 'btn-danger-primary';
+      } else if (type === 'warning') {
+        this.confirmIconWrap.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`;
+        this.confirmOkBtn.className = 'btn-primary';
+      } else {
+        this.confirmIconWrap.innerHTML = `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
+        this.confirmOkBtn.className = 'btn-primary';
+      }
+
+      const cleanup = () => {
+        this.confirmOkBtn.removeEventListener('click', onOk);
+        this.confirmCancelBtn.removeEventListener('click', onCancel);
+        this.confirmModal.close();
+      };
+
+      const onOk = () => {
+        cleanup();
+        playSelect();
+        resolve(true);
+      };
+
+      const onCancel = () => {
+        cleanup();
+        playHover();
+        resolve(false);
+      };
+
+      this.confirmOkBtn.addEventListener('click', onOk);
+      this.confirmCancelBtn.addEventListener('click', onCancel);
+
+      playHover();
+      this.confirmModal.showModal();
+    });
+  }
+
+  /**
+   * Muestra una notificación flotante tipo Toast
+   */
+  showToast(message, type = 'info', duration = 3500) {
+    if (!this.toastContainer) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast-item toast-${type}`;
+
+    let iconSvg = '';
+    if (type === 'success') {
+      iconSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    } else if (type === 'error') {
+      iconSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>`;
+    } else {
+      iconSvg = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>`;
+    }
+
+    toast.innerHTML = `
+      <div class="toast-icon">${iconSvg}</div>
+      <span class="toast-message">${message}</span>
+    `;
+
+    this.toastContainer.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      toast.classList.add('toast-show');
+    });
+
+    setTimeout(() => {
+      toast.classList.remove('toast-show');
+      toast.classList.add('toast-hide');
+      setTimeout(() => {
+        if (toast.parentNode) {
+          toast.parentNode.removeChild(toast);
+        }
+      }, 350);
+    }, duration);
   }
 }
 
