@@ -38,7 +38,7 @@ export class FocusTimer {
   notify() {
     const data = this.getState();
     this.listeners.forEach(cb => {
-      try { cb(data); } catch (e) { console.error(e); }
+      try { cb(data); } catch (e) { console.error('FocusTimer listener error:', e); }
     });
   }
 
@@ -78,14 +78,18 @@ export class FocusTimer {
   setSoundscape(soundType) {
     this.selectedSoundscape = soundType;
     if (this.state === 'running') {
-      focusSoundscape.setSoundscape(soundType);
+      try {
+        focusSoundscape.setSoundscape(soundType);
+      } catch (e) {}
     }
     this.notify();
   }
 
   setVolume(vol) {
     this.soundVolume = vol;
-    focusSoundscape.setVolume(vol);
+    try {
+      focusSoundscape.setVolume(vol);
+    } catch (e) {}
     this.notify();
   }
 
@@ -100,9 +104,11 @@ export class FocusTimer {
     this.totalAccumulatedSec = 0;
     this.state = 'running';
 
-    playKyberIgnite();
-    focusSoundscape.setVolume(this.soundVolume);
-    focusSoundscape.setSoundscape(this.selectedSoundscape);
+    try { playKyberIgnite(); } catch (e) {}
+    try {
+      focusSoundscape.setVolume(this.soundVolume);
+      focusSoundscape.setSoundscape(this.selectedSoundscape);
+    } catch (e) {}
 
     this.runTickLoop();
     this.notify();
@@ -119,9 +125,11 @@ export class FocusTimer {
     this.totalAccumulatedSec = 0;
     this.state = 'running';
 
-    playKyberIgnite();
-    focusSoundscape.setVolume(this.soundVolume);
-    focusSoundscape.setSoundscape(this.selectedSoundscape);
+    try { playKyberIgnite(); } catch (e) {}
+    try {
+      focusSoundscape.setVolume(this.soundVolume);
+      focusSoundscape.setSoundscape(this.selectedSoundscape);
+    } catch (e) {}
 
     this.runTickLoop();
     this.notify();
@@ -131,17 +139,19 @@ export class FocusTimer {
     if (this.state !== 'running') return;
     this.state = 'paused';
     this.stopTimerInterval();
-    focusSoundscape.stopAll(0.3);
-    playSelect();
+    try { focusSoundscape.stopAll(0.3); } catch (e) {}
+    try { playSelect(); } catch (e) {}
     this.notify();
   }
 
   resume() {
     if (this.state !== 'paused') return;
     this.state = 'running';
-    playSelect();
-    focusSoundscape.setVolume(this.soundVolume);
-    focusSoundscape.setSoundscape(this.selectedSoundscape);
+    try { playSelect(); } catch (e) {}
+    try {
+      focusSoundscape.setVolume(this.soundVolume);
+      focusSoundscape.setSoundscape(this.selectedSoundscape);
+    } catch (e) {}
     this.runTickLoop();
     this.notify();
   }
@@ -150,8 +160,8 @@ export class FocusTimer {
     this.stopTimerInterval();
     this.state = 'idle';
     this.remainingSec = this.durationSec;
-    focusSoundscape.stopAll(0.2);
-    playDeactivate();
+    try { focusSoundscape.stopAll(0.2); } catch (e) {}
+    try { playDeactivate(); } catch (e) {}
     this.notify();
   }
 
@@ -189,7 +199,7 @@ export class FocusTimer {
    * Superación de inercia: expande a la hora completa (55 min restantes)
    */
   handleInertiaBroken() {
-    playKyberIgnite();
+    try { playKyberIgnite(); } catch (e) {}
 
     // Pequeño estallido de confeti sutil de aliento
     try {
@@ -219,8 +229,8 @@ export class FocusTimer {
   handleSessionCompleted() {
     this.stopTimerInterval();
     this.state = 'completed';
-    focusSoundscape.stopAll(0.5);
-    playMasteryCelebration();
+    try { focusSoundscape.stopAll(0.5); } catch (e) {}
+    try { playMasteryCelebration(); } catch (e) {}
 
     // Gran celebración con confeti
     try {
@@ -232,7 +242,11 @@ export class FocusTimer {
     } catch (e) {}
 
     // Auto-registrar la sesión en Kyber Tracker para el día de hoy
-    this.autoLogSession();
+    try {
+      this.autoLogSession();
+    } catch (e) {
+      console.error('Error auto-logging session:', e);
+    }
 
     this.notify();
 
