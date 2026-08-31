@@ -1,105 +1,117 @@
 /* ==========================================================================
-   KYBER TRACKER // CLEAN 2D PRODUCTIVITY SYSTEM (144 FPS)
-   Light & Dark Mode Support, Laptop Optimization & Responsive Architecture
+   KYBER TRACKER // PROFESSIONAL HUMAN INTERFACE (APPLE HIG INSP.)
+   Ultra-refined Dark/Light Palettes, Liquid Glass & Micro-hairline Borders
    ========================================================================== */
 
 :root {
   color-scheme: light;
   
-  /* Ambient Studio Palette (Light) */
-  --bg-app: linear-gradient(135deg, #f0fdfa 0%, #f8fafc 45%, #f5f3ff 100%);
+  /* Apple Signature Light Palette */
+  --bg-app: #f5f5f7;
   --surface-card: #ffffff;
-  --surface-subtle: #f8fafc;
-  --surface-hover: #f1f5f9;
-  --surface-active: #e2e8f0;
+  --surface-card-subtle: #fafafc;
+  --surface-subtle: #f0f0f2;
+  --surface-hover: #e8e8ed;
+  --surface-active: #dfdfe6;
   
-  /* Borders & Shadows */
-  --border-main: #e2e8f0;
-  --border-subtle: #f1f5f9;
-  --border-focus: #0f172a;
-  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.04);
-  --shadow-md: 0 4px 16px -2px rgba(15, 23, 42, 0.05), 0 2px 6px -1px rgba(15, 23, 42, 0.02);
-  --shadow-lg: 0 12px 32px -4px rgba(15, 23, 42, 0.08), 0 4px 12px -2px rgba(15, 23, 42, 0.03);
-
-  /* Habit Colors (High Contrast WCAG AAA) */
-  --color-english: #0d9488;
-  --color-english-light: #ccfbf1;
-  --color-english-text: #0f766e;
+  /* Glassmorphism & Materials */
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-blur: blur(24px) saturate(180%);
   
-  --color-de: #7c3aed;
-  --color-de-light: #f3e8ff;
-  --color-de-text: #6b21a8;
+  /* Hairline Borders & Shadows */
+  --border-main: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-focus: #0071e3;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 24px -4px rgba(0, 0, 0, 0.06), 0 2px 6px rgba(0, 0, 0, 0.03);
+  --shadow-lg: 0 20px 40px -8px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.04);
 
-  --color-dual: #d97706;
-  --color-dual-light: #fef3c7;
-  --color-dual-text: #92400e;
+  /* Habit Colors (Apple Human Interface Palettes) */
+  --color-english: #0071e3;
+  --color-english-light: rgba(0, 113, 227, 0.09);
+  --color-english-text: #0062c4;
+  
+  --color-de: #5856d6;
+  --color-de-light: rgba(88, 86, 214, 0.09);
+  --color-de-text: #4c4ab3;
 
-  /* Día Pasado No Registrado (Rojo) */
-  --color-missed: #ef4444;
-  --color-missed-light: rgba(239, 68, 68, 0.06);
-  --color-missed-border: rgba(239, 68, 68, 0.28);
-  --color-missed-text: #dc2626;
+  --color-dual: #ff9500;
+  --color-dual-light: rgba(255, 149, 0, 0.1);
+  --color-dual-text: #d97706;
+
+  /* Día Pasado No Registrado */
+  --color-missed: #ff3b30;
+  --color-missed-light: rgba(255, 59, 48, 0.06);
+  --color-missed-border: rgba(255, 59, 48, 0.22);
+  --color-missed-text: #e02e24;
 
   /* Typography */
-  --text-main: #0f172a;
-  --text-muted: #64748b;
-  --text-light: #94a3b8;
-  --danger: #ef4444;
+  --text-main: #1d1d1f;
+  --text-muted: #6e6e73;
+  --text-light: #86868b;
+  --danger: #ff3b30;
 
   /* Calendar Specifics */
   --calendar-empty-bg: #ffffff;
-  --calendar-empty-border: #e2e8f0;
-  --calendar-empty-hover: #f8fafc;
+  --calendar-empty-border: rgba(0, 0, 0, 0.06);
+  --calendar-empty-hover: #fbfbfd;
 
-  --font-title: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-title: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Outfit', sans-serif;
+  --font-body: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Plus Jakarta Sans', sans-serif;
 }
 
 /* ==========================================================================
-   DARK MODE PALETTE (Deep Obsidian, Slate & Vibrant Habit Accents)
+   APPLE PRO DARK MODE (OLED Deep Neutral, Space Gray & Translucent Materials)
    ========================================================================== */
 [data-theme="dark"] {
   color-scheme: dark;
   
-  --bg-app: linear-gradient(135deg, #070a12 0%, #0c1220 45%, #0f172a 100%);
-  --surface-card: #0f172a;
-  --surface-subtle: #162035;
-  --surface-hover: #1e293b;
-  --surface-active: #243452;
+  --bg-app: #000000;
+  --surface-card: #161618;
+  --surface-card-subtle: #1c1c1e;
+  --surface-subtle: #242426;
+  --surface-hover: #2c2c2e;
+  --surface-active: #3a3a3c;
   
-  --border-main: #1e293b;
-  --border-subtle: #162035;
-  --border-focus: #38bdf8;
+  /* Glassmorphism & Materials */
+  --glass-bg: rgba(22, 22, 24, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-blur: blur(24px) saturate(190%);
   
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 16px -2px rgba(0, 0, 0, 0.5), 0 2px 6px -1px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 12px 32px -4px rgba(0, 0, 0, 0.7), 0 4px 12px -2px rgba(0, 0, 0, 0.4);
+  --border-main: rgba(255, 255, 255, 0.1);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-focus: #2997ff;
+  
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.6);
+  --shadow-md: 0 12px 30px -4px rgba(0, 0, 0, 0.7), 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 50px -8px rgba(0, 0, 0, 0.85), 0 8px 20px rgba(0, 0, 0, 0.6);
 
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-light: #64748b;
-  --danger: #f87171;
+  --text-main: #f5f5f7;
+  --text-muted: #a1a1a6;
+  --text-light: #6e6e73;
+  --danger: #ff453a;
 
-  --color-english: #14b8a6;
-  --color-english-light: rgba(20, 184, 166, 0.16);
-  --color-english-text: #5eead4;
+  --color-english: #2997ff;
+  --color-english-light: rgba(41, 151, 255, 0.15);
+  --color-english-text: #70baff;
 
-  --color-de: #a855f7;
-  --color-de-light: rgba(168, 85, 247, 0.16);
-  --color-de-text: #d8b4fe;
+  --color-de: #bf5af2;
+  --color-de-light: rgba(191, 90, 242, 0.15);
+  --color-de-text: #da8fff;
 
-  --color-dual: #f59e0b;
-  --color-dual-light: rgba(245, 158, 11, 0.16);
-  --color-dual-text: #fcd34d;
+  --color-dual: #ff9f0a;
+  --color-dual-light: rgba(255, 159, 10, 0.15);
+  --color-dual-text: #ffbf5c;
 
-  --color-missed: #f87171;
-  --color-missed-light: rgba(239, 68, 68, 0.12);
-  --color-missed-border: rgba(239, 68, 68, 0.38);
-  --color-missed-text: #fca5a5;
+  --color-missed: #ff453a;
+  --color-missed-light: rgba(255, 69, 58, 0.12);
+  --color-missed-border: rgba(255, 69, 58, 0.28);
+  --color-missed-text: #ff867f;
 
-  --calendar-empty-bg: #111a2d;
-  --calendar-empty-border: #1c2840;
-  --calendar-empty-hover: #182338;
+  --calendar-empty-bg: #161618;
+  --calendar-empty-border: rgba(255, 255, 255, 0.06);
+  --calendar-empty-hover: #1c1c1e;
 }
 
 /* Reset */
@@ -273,8 +285,10 @@ body.app-theme {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: var(--surface-card);
-  border: 1px solid var(--border-main);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   padding: 0.85rem 1.75rem;
   box-shadow: var(--shadow-sm);
@@ -293,7 +307,7 @@ body.app-theme {
   height: 36px;
   border-radius: 10px;
   background: var(--color-english-light);
-  border: 1px solid var(--color-english);
+  border: 1px solid var(--border-main);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -307,17 +321,18 @@ body.app-theme {
 
 .app-title {
   font-family: var(--font-title);
-  font-size: 1.18rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: var(--text-main);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.15;
 }
 
 .app-subtitle {
   font-size: 0.72rem;
   color: var(--text-muted);
-  font-weight: 600;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 /* Month Navigator */
@@ -328,50 +343,49 @@ body.app-theme {
   background: var(--surface-subtle);
   border: 1px solid var(--border-main);
   border-radius: 30px;
-  padding: 0.3rem 0.85rem;
+  padding: 0.25rem 0.75rem;
 }
 
 .nav-arrow-btn {
   background: var(--surface-card);
   border: 1px solid var(--border-main);
   color: var(--text-main);
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .nav-arrow-btn:hover {
   background: var(--surface-hover);
-  border-color: var(--border-focus);
-  transform: scale(1.06);
+  transform: scale(1.05);
 }
 
 .month-label-wrap {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  min-width: 140px;
+  min-width: 135px;
   justify-content: center;
 }
 
 .month-label-wrap .month-name {
   font-family: var(--font-title);
-  font-size: 0.96rem;
-  font-weight: 800;
-  color: var(--color-dual);
-  letter-spacing: 0.03em;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: 0.02em;
 }
 
 .month-label-wrap .year-name {
   font-family: var(--font-title);
-  font-size: 0.96rem;
-  font-weight: 800;
-  color: var(--color-dual);
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-muted);
 }
 
 /* Header Action Buttons */
@@ -381,33 +395,38 @@ body.app-theme {
   gap: 0.5rem;
 }
 
+.action-icon-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .pill-action-btn {
   background: var(--surface-card);
   border: 1px solid var(--border-main);
   color: var(--text-main);
   font-family: var(--font-body);
   font-size: 0.76rem;
-  font-weight: 700;
-  padding: 0.45rem 0.9rem;
+  font-weight: 600;
+  padding: 0.42rem 0.85rem;
   border-radius: 20px;
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .pill-action-btn:hover {
-  border-color: var(--text-muted);
   background: var(--surface-hover);
+  border-color: rgba(255, 255, 255, 0.18);
   transform: translateY(-1px);
-  box-shadow: var(--shadow-md);
 }
 
 .pill-action-btn.active {
   background: var(--surface-active);
-  border-color: var(--border-focus);
+  border-color: var(--border-main);
   color: var(--text-main);
 }
 
@@ -416,15 +435,15 @@ body.app-theme {
 }
 
 [data-theme="dark"] .pill-action-btn.theme-toggle-btn {
-  background: rgba(56, 189, 248, 0.12);
-  border-color: rgba(56, 189, 248, 0.35);
-  color: #38bdf8;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-main);
+  color: var(--text-main);
 }
 
 .pill-action-btn.danger-btn {
   color: var(--danger);
-  border-color: rgba(239, 68, 68, 0.3);
-  background: rgba(239, 68, 68, 0.08);
+  border-color: rgba(255, 69, 58, 0.25);
+  background: rgba(255, 69, 58, 0.08);
 }
 
 .pill-action-btn.danger-btn:hover {
@@ -510,61 +529,65 @@ body.app-theme {
 }
 
 [data-theme="dark"] .metrics-scope-btn.active {
-  background: #1e293b;
-  color: #38bdf8;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+  background: #2c2c2e;
+  color: #f5f5f7;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
 }
 
 .metrics-vertical-list {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 0.95rem;
 }
 
 .app-main-content {
   display: flex;
   flex-direction: column;
-  gap: 2.25rem;
+  gap: 2rem;
   min-width: 0;
 }
 
+/* Tarjetas de Métricas Estilo Widgets Apple */
 .metric-ribbon-card {
   background: var(--surface-card);
   border: 1px solid var(--border-main);
-  border-radius: 18px;
-  padding: 1.15rem 1.4rem;
+  border-radius: 20px;
+  padding: 1.1rem 1.35rem;
   box-shadow: var(--shadow-sm);
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  overflow: hidden;
 }
 
 .metric-ribbon-card:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: var(--border-focus);
+  border-color: rgba(255, 255, 255, 0.16);
 }
 
 .ribbon-card-header {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  margin-bottom: 0.55rem;
+  gap: 0.5rem;
+  margin-bottom: 0.65rem;
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
 }
-.teal-dot { background: var(--color-english); }
-.purple-dot { background: var(--color-de); }
-.gold-dot { background: var(--color-dual); }
-.red-dot { background: var(--danger); }
+.teal-dot { background: var(--color-english); box-shadow: 0 0 10px rgba(41, 151, 255, 0.4); }
+.purple-dot { background: var(--color-de); box-shadow: 0 0 10px rgba(191, 90, 242, 0.4); }
+.gold-dot { background: var(--color-dual); box-shadow: 0 0 10px rgba(255, 159, 10, 0.4); }
+.orange-dot { background: #ff453a; box-shadow: 0 0 10px rgba(255, 69, 58, 0.4); }
 
 .ribbon-label {
   font-family: var(--font-title);
-  font-size: 0.82rem;
-  font-weight: 800;
-  color: var(--text-main);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: -0.01em;
 }
 
 .ribbon-stat-row {
@@ -575,45 +598,66 @@ body.app-theme {
 
 .big-metric {
   font-family: var(--font-title);
-  font-size: 1.95rem;
-  font-weight: 800;
+  font-size: 2.1rem;
+  font-weight: 700;
   color: var(--text-main);
   line-height: 1;
+  letter-spacing: -0.03em;
+  font-feature-settings: "tnum";
 }
 
 .sub-label {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  letter-spacing: 0.04em;
-  margin-top: 0.35rem;
+  font-size: 0.64rem;
+  font-weight: 600;
+  color: var(--text-light);
+  letter-spacing: 0.05em;
+  margin-top: 0.4rem;
   display: block;
 }
 
+/* Badge de Racha Estilo Circular/Pill Apple */
 .badge-streak {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.2rem;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-subtle);
   font-family: var(--font-title);
-  font-size: 1.2rem;
-  font-weight: 800;
-  color: #b45309;
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-feature-settings: "tnum";
 }
 
-[data-theme="dark"] .badge-streak {
-  color: #f59e0b;
+.badge-streak .streak-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.streak-teal {
+  color: var(--color-english);
+  background: var(--color-english-light);
+  border-color: rgba(41, 151, 255, 0.2);
 }
 
 .purple-streak {
   color: var(--color-de);
+  background: var(--color-de-light);
+  border-color: rgba(191, 90, 242, 0.2);
 }
 
 .gold-streak {
   color: var(--color-dual);
+  background: var(--color-dual-light);
+  border-color: rgba(255, 159, 10, 0.2);
 }
 
 .fire-streak {
-  color: #ea580c;
+  color: #ff453a;
+  background: rgba(255, 69, 58, 0.12);
+  border-color: rgba(255, 69, 58, 0.22);
 }
 
 /* ==========================================================================
@@ -627,7 +671,7 @@ body.app-theme {
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
-  gap: 1.65rem;
+  gap: 1.5rem;
   transition: all 0.2s ease;
 }
 
@@ -640,7 +684,7 @@ body.app-theme {
 .section-badge {
   font-family: var(--font-title);
   font-size: 0.65rem;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0.08em;
   color: var(--color-english);
   display: block;
@@ -650,30 +694,31 @@ body.app-theme {
 .checkin-date-title {
   font-family: var(--font-title);
   font-size: 1.35rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--text-main);
+  letter-spacing: -0.02em;
 }
 
 .today-status-chip {
-  font-size: 0.76rem;
-  font-weight: 700;
+  font-size: 0.75rem;
+  font-weight: 600;
   background: var(--surface-subtle);
   color: var(--text-muted);
   border: 1px solid var(--border-main);
-  padding: 0.4rem 0.85rem;
-  border-radius: 20px;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
 }
 
 .today-status-chip.active-dual {
   background: var(--color-dual-light);
   color: var(--color-dual-text);
-  border-color: var(--color-dual);
+  border-color: rgba(255, 159, 10, 0.3);
 }
 
 .today-status-chip.active-single {
   background: var(--color-english-light);
   color: var(--color-english-text);
-  border-color: var(--color-english);
+  border-color: rgba(41, 151, 255, 0.3);
 }
 
 /* Checkin Form Habits Row */
@@ -695,19 +740,19 @@ body.app-theme {
 }
 
 .habit-box-content {
-  background: var(--surface-subtle);
-  border: 1.5px solid var(--border-main);
-  border-radius: 16px;
+  background: var(--surface-card-subtle);
+  border: 1px solid var(--border-main);
+  border-radius: 18px;
   padding: 1.25rem 1.4rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .checkin-habit-box:hover .habit-box-content {
   background: var(--surface-hover);
-  border-color: var(--text-muted);
+  border-color: rgba(255, 255, 255, 0.16);
   transform: translateY(-2px);
   box-shadow: var(--shadow-sm);
 }
@@ -746,40 +791,41 @@ body.app-theme {
 
 .habit-name {
   font-family: var(--font-title);
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: 0.98rem;
+  font-weight: 700;
   color: var(--text-main);
+  letter-spacing: -0.01em;
 }
 
 .custom-checkbox {
-  width: 24px;
-  height: 24px;
-  border-radius: 7px;
-  border: 2px solid var(--border-main);
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 1.5px solid var(--border-main);
   background: var(--surface-card);
   position: relative;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   flex-shrink: 0;
 }
 
 .custom-checkbox::after {
   content: '';
   position: absolute;
-  top: 3px;
-  left: 7px;
+  top: 2px;
+  left: 6px;
   width: 5px;
-  height: 10px;
+  height: 9px;
   border: solid #ffffff;
-  border-width: 0 2.5px 2.5px 0;
+  border-width: 0 2px 2px 0;
   transform: rotate(45deg);
   opacity: 0;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.15s ease;
 }
 
 /* Checked States */
 .checkin-habit-box[data-habit="english"] input:checked + .habit-box-content {
   background: var(--color-english-light);
-  border-color: var(--color-english);
+  border-color: rgba(41, 151, 255, 0.4);
 }
 
 .checkin-habit-box[data-habit="english"] input:checked + .habit-box-content .custom-checkbox {
@@ -793,7 +839,7 @@ body.app-theme {
 
 .checkin-habit-box[data-habit="de"] input:checked + .habit-box-content {
   background: var(--color-de-light);
-  border-color: var(--color-de);
+  border-color: rgba(191, 90, 242, 0.4);
 }
 
 .checkin-habit-box[data-habit="de"] input:checked + .habit-box-content .custom-checkbox {
@@ -1024,15 +1070,15 @@ body.app-theme {
 }
 
 .calendar-day-card:hover:not(.empty-offset) {
-  background: var(--calendar-empty-hover);
+  background: var(--surface-hover);
   transform: translateY(-2px);
   box-shadow: var(--shadow-md);
-  border-color: var(--border-focus);
+  border-color: var(--border-main);
 }
 
 .calendar-day-card.is-today {
-  border: 2px solid #0284c7;
-  background: rgba(2, 132, 199, 0.09);
+  border: 1.5px solid var(--color-english);
+  background: var(--color-english-light);
 }
 
 .day-card-header {
@@ -1043,57 +1089,67 @@ body.app-theme {
 
 .day-number {
   font-family: var(--font-title);
-  font-size: 1.18rem;
-  font-weight: 800;
+  font-size: 1.15rem;
+  font-weight: 700;
   color: var(--text-main);
+  font-feature-settings: "tnum";
 }
 
 .today-pill {
   font-family: var(--font-title);
-  font-size: 0.62rem;
-  font-weight: 900;
-  background: #0284c7;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: var(--color-english);
   color: #ffffff;
   padding: 0.15rem 0.45rem;
-  border-radius: 6px;
+  border-radius: 9999px;
 }
 
 .day-card-body {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
 
-/* Day Badges */
+/* Day Badges Estilo Apple */
 .day-badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.3rem 0.55rem;
-  border-radius: 8px;
-  font-size: 0.72rem;
-  font-weight: 800;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: all 0.15s ease;
+}
+
+.day-badge .badge-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .day-badge.badge-english {
   background: var(--color-english-light);
   color: var(--color-english-text);
-  border: 1px solid var(--color-english);
+  border: 1px solid rgba(41, 151, 255, 0.25);
 }
 
 .day-badge.badge-de {
   background: var(--color-de-light);
   color: var(--color-de-text);
-  border: 1px solid var(--color-de);
+  border: 1px solid rgba(191, 90, 242, 0.25);
 }
 
 .day-badge.badge-dual {
   background: var(--color-dual-light);
   color: var(--color-dual-text);
-  border: 1px solid var(--color-dual);
+  border: 1px solid rgba(255, 159, 10, 0.25);
 }
 
-/* Días Pasados No Registrados (Marcados en Rojo) */
+/* Días Pasados No Registrados (Marcados en Rojo Suave) */
 .calendar-day-card.status-missed {
   background: var(--color-missed-light);
   border-color: var(--color-missed-border);
@@ -1485,8 +1541,11 @@ body.app-theme {
 }
 
 .empty-state-icon {
-  font-size: 1.75rem;
-  margin-bottom: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-light);
+  margin-bottom: 0.5rem;
 }
 
 .empty-state-title {
@@ -1514,13 +1573,16 @@ body.app-theme {
 }
 
 .modern-dialog::backdrop {
-  background: rgba(0, 0, 0, 0.65);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .dialog-card {
-  background: var(--surface-card);
-  border: 1px solid var(--border-main);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
   box-shadow: var(--shadow-lg);
   overflow: hidden;
@@ -1722,37 +1784,37 @@ body.app-theme {
 
 .btn-primary,
 .btn-primary-action {
-  background: var(--text-main);
-  color: var(--surface-card);
-  border: none;
-  font-family: var(--font-title);
-  font-weight: 800;
-  font-size: 0.9rem;
-  padding: 0.75rem 1.6rem;
+  background: #0071e3;
+  border: 1px solid transparent;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.86rem;
+  padding: 0.72rem 1.4rem;
   border-radius: 14px;
   cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 113, 227, 0.25);
   transition: all 0.2s ease;
-  box-shadow: var(--shadow-sm);
 }
 
 .btn-primary:hover,
 .btn-primary-action:hover {
-  background: var(--color-english);
+  background: #0077ed;
   color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.3);
+  box-shadow: 0 4px 14px rgba(0, 113, 227, 0.35);
 }
 
 [data-theme="dark"] .btn-primary,
 [data-theme="dark"] .btn-primary-action {
-  background: #38bdf8;
-  color: #090d16;
+  background: #0071e3;
+  color: #ffffff;
 }
 
 [data-theme="dark"] .btn-primary:hover,
 [data-theme="dark"] .btn-primary-action:hover {
-  background: #7dd3fc;
-  color: #090d16;
+  background: #40a2ff;
+  color: #ffffff;
 }
 
 .btn-secondary,
@@ -1809,14 +1871,16 @@ body.app-theme {
   width: 440px;
   max-width: 90vw;
   height: 100vh;
-  background: var(--surface-card);
-  border-left: 1px solid var(--border-main);
-  box-shadow: -10px 0 30px rgba(0, 0, 0, 0.25);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-left: 1px solid var(--glass-border);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.4);
   z-index: 90;
   display: flex;
   flex-direction: column;
   transform: translateX(0);
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .history-drawer.hidden {
@@ -2656,13 +2720,13 @@ body.app-theme {
   }
 
   .calendar-day-card.is-today {
-    border: 1.5px solid #0284c7;
-    background: rgba(2, 132, 199, 0.14);
+    border: 1.5px solid var(--color-english);
+    background: var(--color-english-light);
   }
 
   [data-theme="dark"] .calendar-day-card.is-today {
-    border: 1.5px solid #38bdf8;
-    background: rgba(56, 189, 248, 0.18);
+    border: 1.5px solid var(--color-english);
+    background: var(--color-english-light);
   }
 
   .day-card-body {
@@ -2928,10 +2992,12 @@ body.app-theme {
   top: calc(100% + 10px);
   right: 0;
   width: 250px;
-  background: var(--surface-card);
-  border: 1px solid var(--border-main);
-  border-radius: 16px;
-  box-shadow: 0 16px 36px -4px rgba(0, 0, 0, 0.45), 0 4px 12px rgba(0, 0, 0, 0.25);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 18px;
+  box-shadow: var(--shadow-lg);
   padding: 0.75rem;
   z-index: 999;
   animation: dropdownSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -3039,9 +3105,9 @@ body.app-theme {
 .auth-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 7, 15, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -3061,11 +3127,13 @@ body.app-theme {
 .auth-card {
   width: 100%;
   max-width: 440px;
-  background: var(--surface-card);
-  border: 1px solid var(--border-main);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
   border-radius: 24px;
   padding: 2.25rem 2rem;
-  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-subtle);
+  box-shadow: var(--shadow-lg);
   animation: authCardPop 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   display: flex;
   flex-direction: column;

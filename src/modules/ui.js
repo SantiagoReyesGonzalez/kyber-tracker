@@ -334,9 +334,11 @@ export class UIManager {
 
   updateAudioButtonState() {
     const on = isAudioOn();
-    if (this.audioToggleBtn) {
+    if (this.audioToggleBtn && this.audioIcon && this.audioLabel) {
       this.audioToggleBtn.classList.toggle('active', on);
-      this.audioIcon.textContent = on ? '🔊' : '🔇';
+      this.audioIcon.innerHTML = on 
+        ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`
+        : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
       this.audioLabel.textContent = on ? 'Audio' : 'Silencio';
     }
   }
@@ -355,11 +357,11 @@ export class UIManager {
     document.documentElement.setAttribute('data-theme', theme);
     if (this.themeToggleBtn && this.themeIcon && this.themeLabel) {
       if (theme === 'dark') {
-        this.themeIcon.textContent = '🌙';
+        this.themeIcon.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`;
         this.themeLabel.textContent = 'Oscuro';
         this.themeToggleBtn.classList.add('active');
       } else {
-        this.themeIcon.textContent = '☀️';
+        this.themeIcon.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`;
         this.themeLabel.textContent = 'Claro';
         this.themeToggleBtn.classList.remove('active');
       }
@@ -411,13 +413,13 @@ export class UIManager {
 
       const isDual = session.englishCompleted && session.dataEngCompleted;
       if (isDual) {
-        this.todayStatusSummary.textContent = '⭐ Dual Master (2h)';
+        this.todayStatusSummary.textContent = 'Dual Master (2h)';
         this.todayStatusSummary.className = 'today-status-chip active-dual';
       } else if (session.englishCompleted) {
-        this.todayStatusSummary.textContent = '🇬🇧 Inglés (1h)';
+        this.todayStatusSummary.textContent = 'Inglés (1h)';
         this.todayStatusSummary.className = 'today-status-chip active-single';
       } else if (session.dataEngCompleted) {
-        this.todayStatusSummary.textContent = '⚡ Data Eng (1h)';
+        this.todayStatusSummary.textContent = 'Data Eng (1h)';
         this.todayStatusSummary.className = 'today-status-chip active-single';
       } else {
         this.todayStatusSummary.textContent = 'Sin registrar';
@@ -595,7 +597,9 @@ export class UIManager {
     if (filtered.length === 0) {
       this.journalFeedList.innerHTML = `
         <div class="empty-state-clean">
-          <div class="empty-state-icon">📋</div>
+          <div class="empty-state-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>
+          </div>
           <div class="empty-state-title">Aún no hay sesiones registradas</div>
           <div class="empty-state-desc">Usa el panel de registro diario para marcar tu primera hora de estudio en Inglés o Data Engineering.</div>
         </div>
@@ -608,16 +612,16 @@ export class UIManager {
       card.className = 'journal-item-card';
 
       const isDual = session.englishCompleted && session.dataEngCompleted;
-      const badgeText = isDual ? '⭐ Dual Master (2h)' :
-                        session.englishCompleted ? '🇬🇧 Inglés (1h)' :
-                        session.dataEngCompleted ? '⚡ Data Eng (1h)' : '0h';
+      const badgeText = isDual ? 'Dual Master (2h)' :
+                        session.englishCompleted ? 'Inglés (1h)' :
+                        session.dataEngCompleted ? 'Data Eng (1h)' : '0h';
 
       card.innerHTML = `
         <div class="journal-item-top">
           <span class="j-date">${formatReadableDate(session.date)}</span>
           <span class="day-badge ${isDual ? 'badge-dual' : session.englishCompleted ? 'badge-english' : 'badge-de'}">${badgeText}</span>
         </div>
-        ${session.topics ? `<div class="j-topics">📌 ${session.topics}</div>` : ''}
+        ${session.topics ? `<div class="j-topics">Topic: ${session.topics}</div>` : ''}
         ${session.notes ? `<div class="j-notes">"${session.notes}"</div>` : ''}
       `;
 
@@ -656,7 +660,9 @@ export class UIManager {
     if (filtered.length === 0) {
       this.historyList.innerHTML = `
         <div class="empty-state-clean">
-          <div class="empty-state-icon">📭</div>
+          <div class="empty-state-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3h-4l-2-3H2"/><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg>
+          </div>
           <div class="empty-state-title">Sin registros</div>
           <div class="empty-state-desc">Tus sesiones de estudio aparecerán aquí cuando las vayas completando.</div>
         </div>

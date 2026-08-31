@@ -61,7 +61,7 @@ export class Calendar2D {
         statusClass = 'status-both';
         badgeHtml = `
           <div class="day-badge badge-dual">
-            <span class="badge-icon">⭐</span>
+            <span class="badge-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
             <span class="badge-text">Dual Master</span>
           </div>
         `;
@@ -69,7 +69,7 @@ export class Calendar2D {
         statusClass = 'status-de';
         badgeHtml = `
           <div class="day-badge badge-de">
-            <span class="badge-icon">⚡</span>
+            <span class="badge-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></span>
             <span class="badge-text">Data Eng</span>
           </div>
         `;
@@ -77,7 +77,7 @@ export class Calendar2D {
         statusClass = 'status-english';
         badgeHtml = `
           <div class="day-badge badge-english">
-            <span class="badge-icon">💬</span>
+            <span class="badge-icon"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
             <span class="badge-text">Inglés</span>
           </div>
         `;
@@ -85,7 +85,7 @@ export class Calendar2D {
         statusClass = 'status-missed';
         badgeHtml = `
           <div class="day-badge badge-missed">
-            <span class="badge-icon">✕</span>
+            <span class="badge-icon"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></span>
             <span class="badge-text">Sin registro</span>
           </div>
         `;
