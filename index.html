@@ -309,16 +309,63 @@
             </div>
             
             <div class="focus-header-controls">
-              <!-- Selector de Paisaje Sonoro -->
-              <div class="soundscape-selector-pill" title="Paisaje Sonoro para Concentración">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                <select id="soundscape-select" class="soundscape-select">
-                  <option value="brown">🌊 Ruido Marrón (Código & Lógica)</option>
-                  <option value="rain">🌧️ Lluvia Suave (Lectura & Inglés)</option>
-                  <option value="binaural">🌌 Frecuencia Alfa 10Hz (Flujo Profundo)</option>
-                  <option value="none">🔇 Silencio (Solo Temporizador)</option>
-                </select>
-                <input type="range" id="soundscape-volume" class="sound-volume-slider" min="0" max="1" step="0.05" value="0.6" title="Volumen de Sonido Ambiente" />
+              <!-- Selector Personalizado de Paisaje Sonoro (Liquid Glass Dropdown) -->
+              <div class="soundscape-dropdown-container">
+                <div class="soundscape-selector-pill">
+                  <button type="button" id="soundscape-dropdown-btn" class="soundscape-trigger-btn" aria-expanded="false" title="Seleccionar Paisaje Sonoro">
+                    <svg class="soundscape-note-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    <span id="soundscape-current-label" class="soundscape-current-label">🌊 Ruido Marrón</span>
+                    <svg class="soundscape-dropdown-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <input type="range" id="soundscape-volume" class="sound-volume-slider" min="0" max="1" step="0.05" value="0.6" title="Volumen de Sonido Ambiente" />
+                </div>
+
+                <!-- Menú Desplegable con Estilo Liquid Glass -->
+                <div id="soundscape-dropdown-menu" class="soundscape-dropdown-menu hidden">
+                  <div class="soundscape-dropdown-header">
+                    <span class="soundscape-dropdown-title">PAISAJES SONOROS</span>
+                    <span class="soundscape-dropdown-subtitle">Sonido procedural 100% nativo</span>
+                  </div>
+                  <div class="soundscape-dropdown-divider"></div>
+                  
+                  <button type="button" class="soundscape-option-item active" data-soundscape="brown">
+                    <span class="soundscape-opt-icon">🌊</span>
+                    <div class="soundscape-opt-details">
+                      <span class="soundscape-opt-name">Ruido Marrón</span>
+                      <span class="soundscape-opt-desc">Código, Algoritmos & Lógica</span>
+                    </div>
+                    <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+
+                  <button type="button" class="soundscape-option-item" data-soundscape="rain">
+                    <span class="soundscape-opt-icon">🌧️</span>
+                    <div class="soundscape-opt-details">
+                      <span class="soundscape-opt-name">Lluvia Suave</span>
+                      <span class="soundscape-opt-desc">Lectura, Listening & Calma</span>
+                    </div>
+                    <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+
+                  <button type="button" class="soundscape-option-item" data-soundscape="binaural">
+                    <span class="soundscape-opt-icon">🌌</span>
+                    <div class="soundscape-opt-details">
+                      <span class="soundscape-opt-name">Frecuencia Alfa 10Hz</span>
+                      <span class="soundscape-opt-desc">Flujo Profundo & Memoria</span>
+                    </div>
+                    <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+
+                  <div class="soundscape-dropdown-divider"></div>
+
+                  <button type="button" class="soundscape-option-item" data-soundscape="none">
+                    <span class="soundscape-opt-icon">🔇</span>
+                    <div class="soundscape-opt-details">
+                      <span class="soundscape-opt-name">Silencio</span>
+                      <span class="soundscape-opt-desc">Solo temporizador visual</span>
+                    </div>
+                    <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                  </button>
+                </div>
               </div>
 
               <!-- Botón Modo Zen -->

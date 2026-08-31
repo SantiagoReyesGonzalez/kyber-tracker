@@ -89,7 +89,10 @@ export class UIManager {
     this.tagChips = document.querySelectorAll('.tag-chip');
 
     // Focus Mode & Soundscape Elements
-    this.soundscapeSelect = document.getElementById('soundscape-select');
+    this.soundscapeDropdownBtn = document.getElementById('soundscape-dropdown-btn');
+    this.soundscapeDropdownMenu = document.getElementById('soundscape-dropdown-menu');
+    this.soundscapeCurrentLabel = document.getElementById('soundscape-current-label');
+    this.soundscapeOptionItems = document.querySelectorAll('.soundscape-option-item');
     this.soundscapeVolume = document.getElementById('soundscape-volume');
     this.toggleZenBtn = document.getElementById('toggle-zen-btn');
     this.focusHabitBtns = document.querySelectorAll('.focus-habit-btn');
@@ -1303,11 +1306,56 @@ export class UIManager {
       });
     }
 
-    // 4. Selector de Paisaje Sonoro & Volumen
-    if (this.soundscapeSelect) {
-      this.soundscapeSelect.addEventListener('change', (e) => {
-        this.ctx.focusTimer.setSoundscape(e.target.value);
-        playSelect();
+    // 4. Selector Personalizado de Paisaje Sonoro (Liquid Glass Dropdown)
+    if (this.soundscapeDropdownBtn && this.soundscapeDropdownMenu) {
+      this.soundscapeDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isClosed = this.soundscapeDropdownMenu.classList.contains('hidden');
+        this.soundscapeDropdownMenu.classList.toggle('hidden', !isClosed);
+        this.soundscapeDropdownBtn.setAttribute('aria-expanded', String(isClosed));
+        playHover();
+      });
+
+      // Cerrar al hacer clic fuera
+      document.addEventListener('click', (e) => {
+        if (!this.soundscapeDropdownMenu.classList.contains('hidden') &&
+            !this.soundscapeDropdownMenu.contains(e.target) &&
+            !this.soundscapeDropdownBtn.contains(e.target)) {
+          this.soundscapeDropdownMenu.classList.add('hidden');
+          this.soundscapeDropdownBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    if (this.soundscapeOptionItems) {
+      const labelMap = {
+        brown: '🌊 Ruido Marrón',
+        rain: '🌧️ Lluvia Suave',
+        binaural: '🌌 Frecuencia Alfa',
+        none: '🔇 Silencio'
+      };
+
+      this.soundscapeOptionItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const soundType = item.dataset.soundscape;
+          this.soundscapeOptionItems.forEach(opt => opt.classList.remove('active'));
+          item.classList.add('active');
+
+          if (this.soundscapeCurrentLabel && labelMap[soundType]) {
+            this.soundscapeCurrentLabel.textContent = labelMap[soundType];
+          }
+
+          if (this.soundscapeDropdownMenu) {
+            this.soundscapeDropdownMenu.classList.add('hidden');
+            if (this.soundscapeDropdownBtn) this.soundscapeDropdownBtn.setAttribute('aria-expanded', 'false');
+          }
+
+          if (this.ctx && this.ctx.focusTimer) {
+            this.ctx.focusTimer.setSoundscape(soundType);
+          }
+          playSelect();
+        });
       });
     }
 

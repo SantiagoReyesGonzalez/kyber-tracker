@@ -3715,47 +3715,181 @@ body.app-theme {
   flex-wrap: wrap;
 }
 
+/* Contenedor del Dropdown de Sonido */
+.soundscape-dropdown-container {
+  position: relative;
+  display: inline-flex;
+}
+
 .soundscape-selector-pill {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   background: var(--surface-subtle);
   border: 1px solid var(--border-main);
-  padding: 0.35rem 0.75rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 9999px;
   font-size: 0.82rem;
   color: var(--text-muted);
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .soundscape-selector-pill:hover {
   border-color: var(--border-focus);
+  background: var(--surface-hover);
 }
 
-.soundscape-select {
+.soundscape-trigger-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
   background: transparent;
   border: none;
   color: var(--text-main);
   font-family: var(--font-body);
   font-size: 0.82rem;
   font-weight: 600;
-  outline: none;
   cursor: pointer;
-  padding: 0.2rem 0.4rem;
-  border-radius: 8px;
+  padding: 0 0.15rem;
+  outline: none;
+  transition: all 0.2s ease;
 }
 
-.soundscape-select option {
-  background-color: #121214 !important;
-  color: #f1f5f9 !important;
+.soundscape-note-icon {
+  color: var(--color-english);
+  flex-shrink: 0;
+}
+
+.soundscape-current-label {
+  white-space: nowrap;
+}
+
+.soundscape-dropdown-arrow {
+  color: var(--text-muted);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.soundscape-trigger-btn[aria-expanded="true"] .soundscape-dropdown-arrow {
+  transform: rotate(180deg);
+}
+
+/* Menú Desplegable con Estilo Liquid Glass */
+.soundscape-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 290px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--shadow-lg);
+  padding: 0.75rem;
+  z-index: 1000;
+  animation: dropdownSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.soundscape-dropdown-menu.hidden {
+  display: none !important;
+}
+
+.soundscape-dropdown-header {
+  padding: 0.4rem 0.5rem 0.5rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.soundscape-dropdown-title {
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--color-english);
+}
+
+.soundscape-dropdown-subtitle {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.soundscape-dropdown-divider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 0.3rem 0;
+}
+
+/* Elementos de Opción */
+.soundscape-option-item {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-main);
   font-family: var(--font-body);
-  font-size: 0.85rem;
-  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-[data-theme="light"] .soundscape-select option {
-  background-color: #ffffff !important;
-  color: #0f172a !important;
+.soundscape-option-item:hover {
+  background: var(--surface-hover);
+  border-color: var(--border-main);
+  transform: translateX(2px);
+}
+
+.soundscape-opt-icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.soundscape-opt-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  flex-grow: 1;
+}
+
+.soundscape-opt-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.soundscape-opt-desc {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.soundscape-check-icon {
+  color: var(--color-english);
+  opacity: 0;
+  transform: scale(0.7);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.soundscape-option-item.active {
+  background: var(--surface-card);
+  border-color: var(--color-english);
+  box-shadow: 0 0 12px var(--color-english-light);
+}
+
+.soundscape-option-item.active .soundscape-opt-name {
+  color: var(--color-english);
+}
+
+.soundscape-option-item.active .soundscape-check-icon {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .sound-volume-slider {
