@@ -65,7 +65,19 @@ class KyberApp {
   }
 }
 
-// Inicializar la aplicación cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', () => {
-  window.kyberApp = new KyberApp();
-});
+// Inicializar la aplicación de forma robusta e inmediata
+function initApp() {
+  if (!window.kyberApp) {
+    try {
+      window.kyberApp = new KyberApp();
+    } catch (e) {
+      console.error('Error inicializando KyberApp:', e);
+    }
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}

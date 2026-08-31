@@ -211,20 +211,26 @@ export class UIManager {
 
   bindEvents() {
     // 1. Navegación de Mes
-    this.prevMonthBtn.addEventListener('click', () => {
-      playSelect();
-      this.ctx.changeMonth(-1);
-    });
+    if (this.prevMonthBtn) {
+      this.prevMonthBtn.addEventListener('click', () => {
+        playSelect();
+        this.ctx.changeMonth(-1);
+      });
+    }
 
-    this.nextMonthBtn.addEventListener('click', () => {
-      playSelect();
-      this.ctx.changeMonth(1);
-    });
+    if (this.nextMonthBtn) {
+      this.nextMonthBtn.addEventListener('click', () => {
+        playSelect();
+        this.ctx.changeMonth(1);
+      });
+    }
 
-    this.todayJumpBtn.addEventListener('click', () => {
-      playSelect();
-      this.ctx.jumpToToday();
-    });
+    if (this.todayJumpBtn) {
+      this.todayJumpBtn.addEventListener('click', () => {
+        playSelect();
+        this.ctx.jumpToToday();
+      });
+    }
 
     // 2. Theme Toggle (Modo Oscuro / Claro)
     if (this.themeToggleBtn) {
@@ -234,20 +240,24 @@ export class UIManager {
     }
 
     // 3. Audio Toggle
-    this.audioToggleBtn.addEventListener('click', () => {
-      const active = toggleAudio();
-      this.updateAudioButtonState();
-      if (active) playKyberIgnite();
-    });
+    if (this.audioToggleBtn) {
+      this.audioToggleBtn.addEventListener('click', () => {
+        const active = toggleAudio();
+        this.updateAudioButtonState();
+        if (active) playKyberIgnite();
+      });
+    }
 
     // 3b. Selector de Alcance de Métricas (Semana | Mes | General)
-    this.metricsScopeBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const scope = btn.dataset.scope;
-        this.switchMetricsScope(scope);
-        playSelect();
+    if (this.metricsScopeBtns) {
+      this.metricsScopeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const scope = btn.dataset.scope;
+          this.switchMetricsScope(scope);
+          playSelect();
+        });
       });
-    });
+    }
 
     // 4. Quick Check-In (Soporta Hoy o Día Pasado Seleccionado)
     if (this.quickDateInput) {
@@ -257,61 +267,75 @@ export class UIManager {
       });
     }
 
-    this.quickForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.handleQuickCheckinSubmit();
-    });
+    if (this.quickForm) {
+      this.quickForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleQuickCheckinSubmit();
+      });
+    }
 
     // Chips de etiquetas rápidas (#Speaking, #SQL, etc.)
-    this.tagChips.forEach(chip => {
-      chip.addEventListener('click', (e) => {
-        e.preventDefault();
-        const tag = chip.dataset.tag;
-        const forHabit = chip.dataset.for;
+    if (this.tagChips) {
+      this.tagChips.forEach(chip => {
+        chip.addEventListener('click', (e) => {
+          e.preventDefault();
+          const tag = chip.dataset.tag;
+          const forHabit = chip.dataset.for;
 
-        // Activar el checkbox correspondiente
-        if (forHabit === 'english') this.quickEnglishCheck.checked = true;
-        if (forHabit === 'de') this.quickDeCheck.checked = true;
+          // Activar el checkbox correspondiente
+          if (forHabit === 'english' && this.quickEnglishCheck) this.quickEnglishCheck.checked = true;
+          if (forHabit === 'de' && this.quickDeCheck) this.quickDeCheck.checked = true;
 
-        // Añadir etiqueta al input si no existe
-        const currentVal = this.quickTopicsInput.value.trim();
-        if (!currentVal.includes(`#${tag}`)) {
-          this.quickTopicsInput.value = currentVal ? `${currentVal}, #${tag}` : `#${tag}`;
-        }
-        playHover();
+          // Añadir etiqueta al input si no existe
+          if (this.quickTopicsInput) {
+            const currentVal = this.quickTopicsInput.value.trim();
+            if (!currentVal.includes(`#${tag}`)) {
+              this.quickTopicsInput.value = currentVal ? `${currentVal}, #${tag}` : `#${tag}`;
+            }
+          }
+          playHover();
+        });
       });
-    });
+    }
 
     // 4b. View Switcher Tabs (Calendario | Heatmap | Semanal)
-    this.viewTabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const view = btn.dataset.view;
-        this.switchView(view);
-        playSelect();
+    if (this.viewTabBtns) {
+      this.viewTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const view = btn.dataset.view;
+          this.switchView(view);
+          playSelect();
+        });
       });
-    });
+    }
 
     // Filtros del Heatmap Anual
-    this.hmFilterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        this.hmFilterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        const filter = btn.dataset.hmfilter;
-        this.ctx.calendar2D.setHeatmapFilter(filter, this.ctx.currentYear, (day) => this.openDayModal(day));
-        playHover();
+    if (this.hmFilterBtns) {
+      this.hmFilterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.hmFilterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const filter = btn.dataset.hmfilter;
+          if (this.ctx && this.ctx.calendar2D) {
+            this.ctx.calendar2D.setHeatmapFilter(filter, this.ctx.currentYear, (day) => this.openDayModal(day));
+          }
+          playHover();
+        });
       });
-    });
+    }
 
     // 5. Botón Planificar Otra Fecha
-    this.openPlanModalBtn.addEventListener('click', () => {
-      playSelect();
-      const targetDate = (this.quickDateInput && this.quickDateInput.value) ? this.quickDateInput.value : getTodayStr();
-      this.openDayModal({ dateStr: targetDate, session: getSession(targetDate) });
-    });
+    if (this.openPlanModalBtn) {
+      this.openPlanModalBtn.addEventListener('click', () => {
+        playSelect();
+        const targetDate = (this.quickDateInput && this.quickDateInput.value) ? this.quickDateInput.value : getTodayStr();
+        this.openDayModal({ dateStr: targetDate, session: getSession(targetDate) });
+      });
+    }
 
     // 6. Modal de Día
-    this.closeDialogBtn.addEventListener('click', () => this.closeDayModal());
-    this.modalCancelBtn.addEventListener('click', () => this.closeDayModal());
+    if (this.closeDialogBtn) this.closeDialogBtn.addEventListener('click', () => this.closeDayModal());
+    if (this.modalCancelBtn) this.modalCancelBtn.addEventListener('click', () => this.closeDayModal());
 
     if (this.modalDateInput) {
       this.modalDateInput.addEventListener('change', () => {
@@ -319,59 +343,75 @@ export class UIManager {
       });
     }
 
-    this.dialogForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      this.handleModalFormSubmit();
-    });
+    if (this.dialogForm) {
+      this.dialogForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.handleModalFormSubmit();
+      });
+    }
 
-    this.modalDeleteBtn.addEventListener('click', () => {
-      this.handleModalDelete();
-    });
+    if (this.modalDeleteBtn) {
+      this.modalDeleteBtn.addEventListener('click', () => {
+        this.handleModalDelete();
+      });
+    }
 
     // 7. Drawer de Historial
-    this.openHistoryBtn.addEventListener('click', () => {
-      playSelect();
-      this.openHistoryDrawer();
-    });
-
-    this.closeDrawerBtn.addEventListener('click', () => {
-      this.closeHistoryDrawer();
-    });
-
-    this.filterTabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        this.filterTabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        this.historyFilter = tab.dataset.filter;
-        this.renderHistoryList();
+    if (this.openHistoryBtn) {
+      this.openHistoryBtn.addEventListener('click', () => {
         playSelect();
+        this.openHistoryDrawer();
       });
-    });
+    }
+
+    if (this.closeDrawerBtn) {
+      this.closeDrawerBtn.addEventListener('click', () => {
+        this.closeHistoryDrawer();
+      });
+    }
+
+    if (this.filterTabs) {
+      this.filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          this.filterTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+          this.historyFilter = tab.dataset.filter;
+          this.renderHistoryList();
+          playSelect();
+        });
+      });
+    }
 
     // 8. Búsqueda en Bitácora
-    this.journalSearchInput.addEventListener('input', (e) => {
-      this.renderJournalFeed(e.target.value.trim().toLowerCase());
-    });
+    if (this.journalSearchInput) {
+      this.journalSearchInput.addEventListener('input', (e) => {
+        this.renderJournalFeed(e.target.value.trim().toLowerCase());
+      });
+    }
 
     // 9. Respaldo y Limpieza de Datos
-    this.exportJsonBtn.addEventListener('click', () => {
-      exportDataAsJSON();
-      playSelect();
-    });
+    if (this.exportJsonBtn) {
+      this.exportJsonBtn.addEventListener('click', () => {
+        exportDataAsJSON();
+        playSelect();
+      });
+    }
 
-    this.importJsonInput.addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        try {
-          await importDataFromJSON(file);
-          playMasteryCelebration();
-          this.ctx.refreshAll();
-          this.showToast('¡Datos de estudio importados con éxito!', 'success');
-        } catch (err) {
-          this.showToast('Error al importar el archivo JSON.', 'error');
+    if (this.importJsonInput) {
+      this.importJsonInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          try {
+            await importDataFromJSON(file);
+            playMasteryCelebration();
+            this.ctx.refreshAll();
+            this.showToast('¡Datos de estudio importados con éxito!', 'success');
+          } catch (err) {
+            this.showToast('Error al importar el archivo JSON.', 'error');
+          }
         }
-      }
-    });
+      });
+    }
 
     if (this.clearAllDataBtn) {
       this.clearAllDataBtn.addEventListener('click', async () => {
