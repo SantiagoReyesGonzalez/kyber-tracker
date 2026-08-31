@@ -121,6 +121,10 @@
   padding: 0;
 }
 
+.hidden {
+  display: none !important;
+}
+
 body.app-theme {
   min-height: 100vh;
   background: var(--bg-app);
@@ -3945,6 +3949,10 @@ body.app-theme {
   border-color: rgba(255, 59, 48, 0.25);
 }
 
+.focus-running-controls.hidden {
+  display: none !important;
+}
+
 .focus-ctrl-btn.ctrl-stop:hover {
   background: var(--color-missed-light);
 }
@@ -3961,6 +3969,10 @@ body.app-theme {
   align-items: center;
   justify-content: center;
   animation: kyberScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.zen-overlay.hidden {
+  display: none !important;
 }
 
 .zen-container {

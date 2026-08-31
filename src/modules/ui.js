@@ -1236,6 +1236,13 @@ export class UIManager {
       });
     }
 
+    // Atajo de teclado Escape para salir de Modo Zen
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.zenOverlay && !this.zenOverlay.classList.contains('hidden')) {
+        this.closeZenMode();
+      }
+    });
+
     if (this.zenPauseBtn) {
       this.zenPauseBtn.addEventListener('click', () => {
         const state = this.ctx.focusTimer.getState();
@@ -1243,12 +1250,22 @@ export class UIManager {
           this.ctx.focusTimer.pause();
         } else if (state.state === 'paused') {
           this.ctx.focusTimer.resume();
+        } else {
+          // Estado idle: iniciar disparador de 5 min directamente
+          if (this.focusGoalInput) this.ctx.focusTimer.setGoal(this.focusGoalInput.value.trim());
+          this.ctx.focusTimer.start5MinJumpstart();
         }
       });
     }
 
     if (this.zenStopBtn) {
       this.zenStopBtn.addEventListener('click', async () => {
+        const state = this.ctx.focusTimer.getState();
+        if (state.state === 'idle' || state.state === 'completed') {
+          this.closeZenMode();
+          return;
+        }
+
         const confirmed = await this.showConfirm({
           title: 'Detener Sesión',
           message: '¿Deseas detener la sesión de concentración actual?',
@@ -1294,21 +1311,27 @@ export class UIManager {
     if (this.start60minBtn) this.start60minBtn.classList.toggle('hidden', isRunningOrPaused);
     if (this.focusRunningControls) this.focusRunningControls.classList.toggle('hidden', !isRunningOrPaused);
 
-    // 4. Botón de Pausa / Reanudar
+    // 4. Botón de Pausa / Reanudar en Widget
     const isPaused = state.state === 'paused';
     if (this.focusPauseLabel) this.focusPauseLabel.textContent = isPaused ? 'Reanudar' : 'Pausa';
-    if (this.zenPauseText) this.zenPauseText.textContent = isPaused ? 'Reanudar' : 'Pausar';
-
     if (this.focusPauseIcon) {
       this.focusPauseIcon.innerHTML = isPaused
         ? `<polygon points="5 3 19 12 5 21 5 3"/>`
         : `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`;
     }
 
-    if (this.zenPauseIcon) {
-      this.zenPauseIcon.innerHTML = isPaused
-        ? `<polygon points="5 3 19 12 5 21 5 3"/>`
-        : `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`;
+    // 4b. Botón de Pausa / Iniciar en Modo Zen
+    if (this.zenPauseText) {
+      if (state.state === 'idle' || state.state === 'completed') {
+        this.zenPauseText.textContent = 'Iniciar 5 min';
+        if (this.zenPauseIcon) this.zenPauseIcon.innerHTML = `<polygon points="5 3 19 12 5 21 5 3"/>`;
+      } else if (isPaused) {
+        this.zenPauseText.textContent = 'Reanudar';
+        if (this.zenPauseIcon) this.zenPauseIcon.innerHTML = `<polygon points="5 3 19 12 5 21 5 3"/>`;
+      } else {
+        this.zenPauseText.textContent = 'Pausar';
+        if (this.zenPauseIcon) this.zenPauseIcon.innerHTML = `<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>`;
+      }
     }
 
     // 5. Zen labels
