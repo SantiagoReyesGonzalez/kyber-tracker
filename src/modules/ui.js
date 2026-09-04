@@ -1,7 +1,7 @@
 // ==========================================================================
-// KYBER UI MANAGER - Control Integral de la Aplicación 2D
-// Quick Check-in, Calendario, Heatmap, Métricas, Bitácora y Modales
-// ==========================================================================
+// KAIDIN UI MANAGER - Control Integral de la Aplicación 2D
+// Navegación, Modales, Formulario Diario, Bitácora y Métricas
+// =============================================================================
 
 import {
   formatDate,
@@ -2194,7 +2194,7 @@ export class UIManager {
 
   async deleteHabitPrompt(habit) {
     if (habit.id === 'english' || habit.id === 'data_engineering') {
-      this.showToast('Los hábitos base de Kyber no se pueden eliminar.', 'warning');
+      this.showToast('Los hábitos base de Kaidin no se pueden eliminar.', 'warning');
       return;
     }
 

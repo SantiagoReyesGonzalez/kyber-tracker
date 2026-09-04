@@ -1,5 +1,5 @@
 // ==========================================================================
-// KYBER FOCUS TIMER - Motor de Temporización, Superación de Inercia y Auto-Registro
+// KAIDIN FOCUS TIMER - Motor de Temporización, Superación de Inercia y Auto-Registro
 // ==========================================================================
 
 import { focusSoundscape } from './focusSoundscape.js';
@@ -241,7 +241,7 @@ export class FocusTimer {
       });
     } catch (e) {}
 
-    // Auto-registrar la sesión en Kyber Tracker para el día de hoy
+    // Auto-registrar la sesión en Kaidin Tracker para el día de hoy
     try {
       this.autoLogSession();
     } catch (e) {
@@ -276,7 +276,7 @@ export class FocusTimer {
       englishCompleted: Boolean(existing.englishCompleted || isEnglish),
       dataEngCompleted: Boolean(existing.dataEngCompleted || isDE),
       topics: combinedTopics,
-      notes: existing.notes || 'Completado mediante el Modo Enfoque Kyber.'
+      notes: existing.notes || 'Completado mediante el Modo Enfoque Kaidin.'
     });
 
     if (this.ctx && this.ctx.refreshAll) {

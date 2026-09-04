@@ -1,5 +1,5 @@
 // ==========================================================================
-// KYBER TRACKER - Aplicación 2D Principal (Clean Tech, 144 FPS)
+// KAIDIN TRACKER - Aplicación 2D Principal (Clean Tech, 144 FPS)
 // Orquestador de Calendario, Heatmap, Métricas y Registro Diario
 // ==========================================================================
 
@@ -8,7 +8,7 @@ import { Calendar2D } from './modules/calendar2D.js';
 import { UIManager } from './modules/ui.js';
 import { FocusTimer } from './modules/focusTimer.js';
 
-class KyberApp {
+class KaidinApp {
   constructor() {
     const today = new Date();
     this.currentYear = today.getFullYear();
@@ -68,11 +68,13 @@ class KyberApp {
 
 // Inicializar la aplicación de forma robusta e inmediata
 function initApp() {
-  if (!window.kyberApp) {
+  if (!window.kaidinApp && !window.kyberApp) {
     try {
-      window.kyberApp = new KyberApp();
+      const app = new KaidinApp();
+      window.kaidinApp = app;
+      window.kyberApp = app; // Retrocompatibilidad para scripts y testing
     } catch (e) {
-      console.error('Error inicializando KyberApp:', e);
+      console.error('Error inicializando KaidinApp:', e);
     }
   }
 }

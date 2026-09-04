@@ -1,4 +1,4 @@
-# ⚡ Kyber Tracker // Control Diario de Hábitos
+# ⚡ Kaidin // Control Diario de Hábitos
 
 Sistema de seguimiento y auditoría diaria de estudio enfocado en **Inglés** y **Data Engineering**. Construido con **Vite**, **Vanilla JavaScript (ES Modules)**, **HTML5/CSS3** y **Web Audio API**, optimizado para 144 FPS estables, descanso visual y alta ergonomía en cualquier dispositivo.
 
