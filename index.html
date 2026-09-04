@@ -21,7 +21,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
   
-  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="stylesheet" href="./src/style.css" />
 </head>
 <body class="app-theme">
@@ -30,7 +30,18 @@
     <header class="app-header">
       <div class="header-left">
         <div class="app-logo-badge">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 8.5 12 15 22 8.5 12 2"/><polygon points="2 15.5 12 22 22 15.5 12 9 2 15.5"/></svg>
+          <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="headerLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#10B981"/>
+                <stop offset="45%" stop-color="#06B6D4"/>
+                <stop offset="100%" stop-color="#2563EB"/>
+              </linearGradient>
+            </defs>
+            <rect x="5" y="4" width="4" height="24" rx="2" fill="url(#headerLogoGrad)"/>
+            <polygon points="11,13 22,4 27,4 14,15" fill="url(#headerLogoGrad)"/>
+            <polygon points="12,18 18,25 28,13 25.5,11 17.5,20.5 14,16.5" fill="url(#headerLogoGrad)"/>
+          </svg>
         </div>
         <div class="logo-titles">
           <h1 class="app-title">Kaidin</h1>
@@ -833,7 +844,18 @@
       <!-- Encabezado de la Tarjeta Auth -->
       <div class="auth-header">
         <div class="auth-logo-badge">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 8.5 12 15 22 8.5 12 2"/><polygon points="2 15.5 12 22 22 15.5 12 9 2 15.5"/></svg>
+          <svg width="30" height="30" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="authLogoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#10B981"/>
+                <stop offset="45%" stop-color="#06B6D4"/>
+                <stop offset="100%" stop-color="#2563EB"/>
+              </linearGradient>
+            </defs>
+            <rect x="5" y="4" width="4" height="24" rx="2" fill="url(#authLogoGrad)"/>
+            <polygon points="11,13 22,4 27,4 14,15" fill="url(#authLogoGrad)"/>
+            <polygon points="12,18 18,25 28,13 25.5,11 17.5,20.5 14,16.5" fill="url(#authLogoGrad)"/>
+          </svg>
         </div>
         <h2 id="auth-card-title" class="auth-title">Kaidin</h2>
         <p class="auth-subtitle">Ingresa tus credenciales para acceder a tus hábitos y métricas</p>

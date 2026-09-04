@@ -310,12 +310,19 @@ body.app-theme {
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: var(--color-english-light);
-  border: 1px solid var(--border-main);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.22);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-english);
+  box-shadow: 0 2px 10px rgba(6, 182, 212, 0.12);
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.app-logo-badge:hover {
+  transform: translateY(-1px);
+  border-color: rgba(6, 182, 212, 0.45);
+  box-shadow: 0 4px 14px rgba(6, 182, 212, 0.22);
 }
 
 .logo-titles {
@@ -3413,12 +3420,12 @@ body.app-theme {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, var(--color-english) 0%, var(--color-de) 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.3);
+  width: 54px;
+  height: 54px;
+  border-radius: 15px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  box-shadow: 0 4px 22px rgba(6, 182, 212, 0.18);
   margin-bottom: 0.85rem;
 }
 
