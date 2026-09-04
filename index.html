@@ -28,7 +28,7 @@
   <div class="app-layout">
     <!-- Header Principal -->
     <header class="app-header">
-      <div class="header-left">
+      <div class="header-left brand-clickable" id="brand-info-trigger" role="button" tabindex="0" title="Descubre la Filosofía Kaidin">
         <div class="app-logo-badge">
           <svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -45,7 +45,7 @@
         </div>
         <div class="logo-titles">
           <h1 class="app-title">Kaidin</h1>
-          <span class="app-subtitle">Inglés & Data Engineering</span>
+          <span class="app-subtitle">1% Mejor Cada Día</span>
         </div>
       </div>
 
@@ -991,6 +991,67 @@
       </div>
     </div>
   </div>
+
+  <!-- Modal de Filosofía y Marca Kaidin -->
+  <dialog id="brand-modal" class="modern-dialog brand-dialog">
+    <div class="brand-dialog-card">
+      <button type="button" id="close-brand-modal-btn" class="brand-dialog-close" title="Cerrar modal">&times;</button>
+
+      <div class="brand-hero-emblem" id="brand-hero-emblem" title="Haz clic para revivir la animación">
+        <div class="brand-hero-glow"></div>
+        <svg class="brand-animated-svg" viewBox="0 0 32 32" fill="none">
+          <defs>
+            <linearGradient id="modalHeroGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10B981"/>
+              <stop offset="45%" stop-color="#06B6D4"/>
+              <stop offset="100%" stop-color="#2563EB"/>
+            </linearGradient>
+          </defs>
+          <!-- Spine -->
+          <rect class="logo-spine" x="5" y="4" width="4" height="24" rx="2" fill="url(#modalHeroGrad)"/>
+          <!-- Beam -->
+          <polygon class="logo-beam" points="11,13 22,4 27,4 14,15" fill="url(#modalHeroGrad)"/>
+          <!-- Check -->
+          <polygon class="logo-check" points="12,18 18,25 28,13 25.5,11 17.5,20.5 14,16.5" fill="url(#modalHeroGrad)"/>
+        </svg>
+      </div>
+
+      <span class="brand-badge">✦ FILOSOFÍA & PROPÓSITO</span>
+      <h2 class="brand-title">Kaidin // 1% Mejor Cada Día</h2>
+      <p class="brand-quote">"Las grandes metas no se conquistan en un día, sino mediante la <em>acumulación implacable</em> de pequeñas victorias diarias."</p>
+
+      <div class="brand-pillars">
+        <div class="pillar-card">
+          <div class="pillar-icon kai">改</div>
+          <div class="pillar-content">
+            <h4>KAI (改) • Filosofía Kaizen</h4>
+            <p>Mejora continua paso a paso. Si mejoras un 1% cada día, al final del año serás 37 veces mejor. La constancia vence al talento.</p>
+          </div>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon din">⚡</div>
+          <div class="pillar-content">
+            <h4>DIN • Dinamismo & Foco</h4>
+            <p>La fuerza que destruye la inercia diaria. No esperes la motivación: actúa con bloques de enfoque y avanza sin fricción.</p>
+          </div>
+        </div>
+
+        <div class="pillar-card">
+          <div class="pillar-icon check">✓</div>
+          <div class="pillar-content">
+            <h4>El Emblema • La Prueba Visible</h4>
+            <p>La columna vertical de la disciplina, el haz ascendente del progreso y el checkmark que certifica cada hábito cumplido.</p>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" id="brand-action-btn" class="brand-action-btn">
+        <span>Continuar Creciendo</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </button>
+    </div>
+  </dialog>
 
   <!-- Modal de Confirmación Personalizado -->
   <dialog id="confirm-modal" class="modern-dialog confirm-dialog">

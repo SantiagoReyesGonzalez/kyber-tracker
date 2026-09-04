@@ -204,6 +204,13 @@ export class UIManager {
     this.btnCancelHabitForm = document.getElementById('btn-cancel-habit-form');
     this.btnCancelCategoryForm = document.getElementById('btn-cancel-category-form');
 
+    // Modal de Filosofía y Marca Kaidin
+    this.brandTrigger = document.getElementById('brand-info-trigger');
+    this.brandModal = document.getElementById('brand-modal');
+    this.closeBrandModalBtn = document.getElementById('close-brand-modal-btn');
+    this.brandActionBtn = document.getElementById('brand-action-btn');
+    this.brandHeroEmblem = document.getElementById('brand-hero-emblem');
+
     // Drawer Historial
     this.historyDrawer = document.getElementById('history-drawer');
     this.closeDrawerBtn = document.getElementById('close-drawer-btn');
@@ -495,6 +502,48 @@ export class UIManager {
     }
 
     this.initHabitsManager();
+
+    // 9c. Modal de Filosofía y Marca Kaidin
+    if (this.brandTrigger) {
+      this.brandTrigger.addEventListener('click', () => {
+        this.openBrandModal();
+      });
+      this.brandTrigger.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          this.openBrandModal();
+        }
+      });
+    }
+
+    if (this.closeBrandModalBtn) {
+      this.closeBrandModalBtn.addEventListener('click', () => {
+        this.closeBrandModal();
+      });
+    }
+
+    if (this.brandActionBtn) {
+      this.brandActionBtn.addEventListener('click', () => {
+        this.closeBrandModal();
+      });
+    }
+
+    if (this.brandHeroEmblem) {
+      this.brandHeroEmblem.addEventListener('click', () => {
+        this.replayBrandAnimation();
+      });
+    }
+
+    if (this.brandModal) {
+      this.brandModal.addEventListener('click', (e) => {
+        const rect = this.brandModal.getBoundingClientRect();
+        const isInDialog = (rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
+          rect.left <= e.clientX && e.clientX <= rect.left + rect.width);
+        if (!isInDialog) {
+          this.closeBrandModal();
+        }
+      });
+    }
 
     // 10. Eventos del Sistema de Autenticación
     this.bindAuthEvents();
@@ -1863,6 +1912,29 @@ export class UIManager {
         }
       }
     }
+  }
+
+  // ==========================================================================
+  // FILOSOFÍA Y MARCA KAIDIN (BRAND MODAL)
+  // ==========================================================================
+  openBrandModal() {
+    if (!this.brandModal) return;
+    this.brandModal.showModal();
+    this.replayBrandAnimation();
+    playSelect();
+  }
+
+  closeBrandModal() {
+    if (!this.brandModal) return;
+    this.brandModal.close();
+  }
+
+  replayBrandAnimation() {
+    if (!this.brandHeroEmblem) return;
+    this.brandHeroEmblem.classList.remove('animating');
+    // Forzar reflujo de renderizado para reiniciar las keyframes
+    void this.brandHeroEmblem.offsetWidth;
+    this.brandHeroEmblem.classList.add('animating');
   }
 
   // ==========================================================================
