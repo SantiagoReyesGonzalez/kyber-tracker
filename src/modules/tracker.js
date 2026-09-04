@@ -390,6 +390,58 @@ export function calculateWeeklyStreak(data, habitId, targetDaysPerWeek) {
 }
 
 /**
+ * Calcula la racha activa de un hábito respetando los días de descanso permitidos:
+ * - Si es diario (7 d/sem): racha de días consecutivos continuos.
+ * - Si tiene meta semanal (ej. Gym 5 d/sem): cada sesión suma a la racha acumulada,
+ *   y se toleran hasta (7 - targetDays) días de descanso seguidos sin perder la racha.
+ */
+export function calculateFlexibleStreak(data, habitId, targetDaysPerWeek = 7) {
+  const targetDays = Number(targetDaysPerWeek) || 7;
+  const maxRestGap = Math.max(0, 7 - targetDays);
+
+  const today = new Date();
+  let currentCheck = new Date(today);
+
+  let foundRecent = false;
+  let initialGap = 0;
+
+  while (initialGap <= maxRestGap + 1) {
+    const dStr = formatDate(currentCheck);
+    if (data[dStr] && isHabitCompleted(data[dStr], habitId)) {
+      foundRecent = true;
+      break;
+    }
+    currentCheck.setDate(currentCheck.getDate() - 1);
+    initialGap++;
+  }
+
+  if (!foundRecent) {
+    return 0;
+  }
+
+  let streak = 0;
+  let consecutiveRest = 0;
+
+  while (true) {
+    const checkStr = formatDate(currentCheck);
+    const entry = data[checkStr];
+
+    if (entry && isHabitCompleted(entry, habitId)) {
+      streak++;
+      consecutiveRest = 0;
+    } else {
+      consecutiveRest++;
+      if (consecutiveRest > maxRestGap) {
+        break;
+      }
+    }
+    currentCheck.setDate(currentCheck.getDate() - 1);
+  }
+
+  return streak;
+}
+
+/**
  * Calcula el desglose semanal (cuántos días se completó alguna sesión de estudio o entreno)
  */
 export function getWeeklyBreakdown() {
@@ -496,10 +548,9 @@ export function calculateMetrics(selectedYear, selectedMonth, scope = 'month') {
   const habitsMetrics = {};
   habitsConfig.forEach(habit => {
     const habitSessions = filteredSessions.filter(s => isHabitCompleted(s, habit.id));
-    const isDaily = (Number(habit.targetDaysPerWeek) || 7) === 7;
-    const streak = isDaily
-      ? calculateStreak(data, (s) => isHabitCompleted(s, habit.id))
-      : calculateWeeklyStreak(data, habit.id, Number(habit.targetDaysPerWeek) || 5);
+    const targetDays = Number(habit.targetDaysPerWeek) || 7;
+    const isDaily = targetDays === 7;
+    const streak = calculateFlexibleStreak(data, habit.id, targetDays);
 
     const weeklyProgress = getWeeklyHabitProgress(habit.id, new Date(), data, habit);
 
