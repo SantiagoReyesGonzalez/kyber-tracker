@@ -342,6 +342,29 @@
               </div>
             </div>
 
+            <!-- Gym / Entrenamiento -->
+            <div class="metric-ribbon-card card-gym-ribbon">
+              <div class="ribbon-card-header">
+                <span class="status-dot green-dot"></span>
+                <span class="ribbon-label">Gym / Entrenamiento</span>
+              </div>
+              <div class="ribbon-stat-row">
+                <div class="stat-block">
+                  <span class="big-metric" id="stats-gym-days">0</span>
+                  <span class="sub-label" id="stats-gym-sublabel">DÍAS (MES)</span>
+                </div>
+                <div class="stat-block align-right">
+                  <div class="badge-streak green-streak">
+                    <span class="streak-num" id="stats-gym-streak">0</span>
+                    <span class="streak-icon">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 5v14M18 5v14M4 8v8M20 8v8M6 12h12"/></svg>
+                    </span>
+                  </div>
+                  <span class="sub-label">RACHA</span>
+                </div>
+              </div>
+            </div>
+
             <!-- Dual Master -->
             <div class="metric-ribbon-card card-dual-ribbon">
               <div class="ribbon-card-header">
@@ -403,54 +426,17 @@
                 <input type="date" id="quick-date-input" class="date-picker-input" title="Cambiar fecha a registrar o editar" />
               </div>
             </div>
-            <span id="today-status-summary" class="today-status-chip">Sin registrar</span>
+            <div class="checkin-header-actions">
+              <button type="button" id="btn-manage-habits-shortcut" class="btn-manage-habits-shortcut" title="Administrar Planes y Temas">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                <span>Planes y Temas</span>
+              </button>
+            </div>
           </div>
 
           <form id="quick-checkin-form" class="checkin-form">
-            <div class="checkin-habits-row">
-              <!-- Hábito: Inglés -->
-              <label class="checkin-habit-box" data-habit="english">
-                <input type="checkbox" id="quick-english-check" />
-                <div class="habit-box-content">
-                  <div class="habit-box-top">
-                    <div class="habit-icon-pill english-pill">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                    </div>
-                    <div class="habit-titles">
-                      <span class="habit-name">Inglés</span>
-                    </div>
-                    <div class="custom-checkbox"></div>
-                  </div>
-                  <div class="quick-tags-group">
-                    <span class="tag-chip" data-for="english" data-tag="Speaking">#Speaking</span>
-                    <span class="tag-chip" data-for="english" data-tag="Listening">#Listening</span>
-                    <span class="tag-chip" data-for="english" data-tag="Reading">#Reading</span>
-                    <span class="tag-chip" data-for="english" data-tag="Grammar">#Grammar</span>
-                  </div>
-                </div>
-              </label>
-
-              <!-- Hábito: Data Engineering -->
-              <label class="checkin-habit-box" data-habit="de">
-                <input type="checkbox" id="quick-de-check" />
-                <div class="habit-box-content">
-                  <div class="habit-box-top">
-                    <div class="habit-icon-pill de-pill">
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-                    </div>
-                    <div class="habit-titles">
-                      <span class="habit-name">Data Engineering</span>
-                    </div>
-                    <div class="custom-checkbox"></div>
-                  </div>
-                  <div class="quick-tags-group">
-                    <span class="tag-chip" data-for="de" data-tag="SQL">#SQL</span>
-                    <span class="tag-chip" data-for="de" data-tag="Python">#Python</span>
-                    <span class="tag-chip" data-for="de" data-tag="Spark">#Spark</span>
-                    <span class="tag-chip" data-for="de" data-tag="Modeling">#Modeling</span>
-                  </div>
-                </div>
-              </label>
+            <div class="checkin-habits-row" id="quick-habits-container">
+              <!-- Renderizado dinámicamente con estilo y color exacto de cada hábito -->
             </div>
 
             <!-- Input de notas y botón de guardar -->
@@ -504,11 +490,12 @@
               <h3>Mapa Anual de Consistencia (<span id="heatmap-year-label">2026</span>)</h3>
               <p>52 semanas de estudio continuo.</p>
             </div>
-            <div class="heatmap-filter-tabs">
+            <div class="heatmap-filter-tabs" id="heatmap-filter-tabs">
               <button class="hm-filter-btn active" data-hmfilter="all">Todos</button>
               <button class="hm-filter-btn" data-hmfilter="english">Inglés</button>
               <button class="hm-filter-btn" data-hmfilter="de">Data Eng</button>
               <button class="hm-filter-btn" data-hmfilter="both">Dual Master</button>
+              <button class="hm-filter-btn" data-hmfilter="gym">Gym</button>
             </div>
           </div>
           <div id="annual-heatmap-grid" class="annual-heatmap-container">
@@ -523,6 +510,8 @@
             <span class="legend-cell cell-de" title="Data Eng (1h)"></span>
             <span class="legend-cell cell-both" title="Dual Master (2h)"></span>
             <span class="legend-note">Dual Master</span>
+            <span class="legend-cell cell-gym" title="Gym (Entrenamiento)"></span>
+            <span class="legend-note">Gym</span>
           </div>
         </div>
 
@@ -534,6 +523,16 @@
           </div>
           <div id="weekly-chart-bars" class="weekly-chart-container">
             <!-- Poblado dinámicamente -->
+          </div>
+
+          <div class="weekly-goals-section">
+            <div class="weekly-goals-header">
+              <h4>Metas Semanales & Consistencia</h4>
+              <p>Seguimiento semanal con descansos programados.</p>
+            </div>
+            <div id="weekly-goals-container" class="weekly-goals-grid">
+              <!-- Tarjetas dinámicas con tiras de Lun a Dom -->
+            </div>
           </div>
         </div>
       </section>
@@ -579,32 +578,8 @@
 
         <div class="dialog-form-group">
           <label class="group-label">HÁBITOS COMPLETADOS</label>
-          <div class="dialog-habits-grid">
-            <label class="dialog-habit-toggle">
-              <input type="checkbox" id="modal-english-check" />
-              <div class="toggle-box">
-                <div class="habit-icon-pill english-pill">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                </div>
-                <div class="toggle-text">
-                  <span class="t-main">Inglés</span>
-                </div>
-                <div class="toggle-switch"></div>
-              </div>
-            </label>
-
-            <label class="dialog-habit-toggle">
-              <input type="checkbox" id="modal-de-check" />
-              <div class="toggle-box">
-                <div class="habit-icon-pill de-pill">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-                </div>
-                <div class="toggle-text">
-                  <span class="t-main">Data Engineering</span>
-                </div>
-                <div class="toggle-switch"></div>
-              </div>
-            </label>
+          <div class="dialog-habits-grid" id="modal-habits-container">
+            <!-- Poblado dinámicamente con checkboxes y colores propios de cada hábito -->
           </div>
         </div>
 
@@ -627,6 +602,192 @@
           <button type="submit" id="modal-save-btn" class="btn-primary">Guardar</button>
         </div>
       </form>
+    </div>
+  </dialog>
+
+  <!-- Modal de Gestión de Planes y Metas Semanales -->
+  <dialog id="habits-modal" class="modern-dialog habits-mgr-dialog">
+    <div class="dialog-card habits-mgr-card">
+      <div class="dialog-header">
+        <div>
+          <span class="dialog-badge">CONFIGURACIÓN</span>
+          <h2 class="dialog-title">Planes y Temas</h2>
+        </div>
+        <button id="close-habits-modal-btn" class="dialog-close-icon">&times;</button>
+      </div>
+
+      <!-- Pestañas de Gestión: Temas / Hábitos vs Planes de Enfoque -->
+      <div class="habits-mgr-tabs">
+        <button type="button" class="mgr-tab-btn active" data-mgr-tab="habits">Temas y Hábitos</button>
+        <button type="button" class="mgr-tab-btn" data-mgr-tab="categories">Planes de Enfoque</button>
+      </div>
+
+      <!-- Tab 1: Hábitos / Subtemas -->
+      <div id="mgr-tab-habits" class="mgr-tab-panel">
+        <div class="mgr-list-header">
+          <h4>Hábitos Activos</h4>
+          <button type="button" id="btn-show-add-habit" class="btn-primary-mini">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nuevo Hábito</span>
+          </button>
+        </div>
+
+        <!-- Lista de Hábitos -->
+        <div id="mgr-habits-list" class="mgr-items-list">
+          <!-- Poblado dinámicamente -->
+        </div>
+
+        <!-- Formulario para Crear / Editar Hábito -->
+        <form id="mgr-habit-form" class="mgr-form-box hidden">
+          <input type="hidden" id="mgr-habit-id-input" />
+          <h4 id="mgr-habit-form-title">Crear Nuevo Hábito</h4>
+          
+          <div class="mgr-form-grid">
+            <div class="dialog-form-group">
+              <label for="mgr-habit-name-input" class="group-label">NOMBRE DEL HÁBITO / TEMA *</label>
+              <input type="text" id="mgr-habit-name-input" class="dialog-input" placeholder="Ej: Lectura Técnica, Gym..." required />
+            </div>
+
+            <div class="dialog-form-group">
+              <label class="group-label">PLAN ASIGNADO *</label>
+              <div class="mgr-select-dropdown" id="mgr-cat-custom-dropdown">
+                <button type="button" class="mgr-select-trigger" id="mgr-cat-dropdown-btn" aria-expanded="false">
+                  <span class="mgr-select-current" id="mgr-cat-selected-text">Crecimiento Profesional</span>
+                  <svg class="mgr-select-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="mgr-select-menu hidden" id="mgr-cat-dropdown-menu">
+                  <!-- Opciones dinámicas -->
+                </div>
+              </div>
+              <input type="hidden" id="mgr-habit-category-val" value="growth" />
+            </div>
+          </div>
+
+          <div class="dialog-form-group">
+            <div class="target-days-header">
+              <label class="group-label">META SEMANAL (<span id="target-days-val" class="target-days-val">7 días</span>)</label>
+              <span class="target-days-hint">Los días no entrenados cuentan como descanso permitido.</span>
+            </div>
+            <div class="target-days-picker" id="mgr-target-days-picker">
+              <button type="button" class="target-day-opt" data-days="1">1d</button>
+              <button type="button" class="target-day-opt" data-days="2">2d</button>
+              <button type="button" class="target-day-opt" data-days="3">3d</button>
+              <button type="button" class="target-day-opt" data-days="4">4d</button>
+              <button type="button" class="target-day-opt" data-days="5">5d</button>
+              <button type="button" class="target-day-opt" data-days="6">6d</button>
+              <button type="button" class="target-day-opt active" data-days="7">7d (Diario)</button>
+            </div>
+            <input type="hidden" id="mgr-target-days-val" value="7" />
+          </div>
+
+          <div class="dialog-form-group">
+            <label class="group-label">COLOR DISTINTIVO</label>
+            <div class="color-palette-row" id="mgr-habit-colors">
+              <span class="color-dot-opt active" data-color="#0071e3" style="background: #0071e3;"></span>
+              <span class="color-dot-opt" data-color="#5856d6" style="background: #5856d6;"></span>
+              <span class="color-dot-opt" data-color="#ff9500" style="background: #ff9500;"></span>
+              <span class="color-dot-opt" data-color="#30d158" style="background: #30d158;"></span>
+              <span class="color-dot-opt" data-color="#ff2d55" style="background: #ff2d55;"></span>
+              <span class="color-dot-opt" data-color="#64d2ff" style="background: #64d2ff;"></span>
+              <span class="color-dot-opt" data-color="#ffd60a" style="background: #ffd60a;"></span>
+            </div>
+            <input type="hidden" id="mgr-habit-color-val" value="#0071e3" />
+          </div>
+
+          <div class="dialog-form-group">
+            <label for="mgr-habit-tags-input" class="group-label">ETIQUETAS RÁPIDAS (SEPARADAS POR COMA)</label>
+            <input type="text" id="mgr-habit-tags-input" class="dialog-input" placeholder="Ej: Fuerza, Cardio, Pierna..." />
+          </div>
+
+          <div class="mgr-form-actions">
+            <button type="button" id="btn-cancel-habit-form" class="btn-secondary">Cancelar</button>
+            <button type="submit" id="btn-save-habit-form" class="btn-primary">Guardar Hábito</button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tab 2: Planes de Enfoque / Categorías -->
+      <div id="mgr-tab-categories" class="mgr-tab-panel hidden">
+        <div class="mgr-list-header">
+          <h4>Planes de Enfoque</h4>
+          <button type="button" id="btn-show-add-category" class="btn-primary-mini">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Nuevo Plan</span>
+          </button>
+        </div>
+
+        <!-- Lista de Categorías -->
+        <div id="mgr-categories-list" class="mgr-items-list">
+          <!-- Poblado dinámicamente -->
+        </div>
+
+        <!-- Formulario Crear / Editar Categoría -->
+        <form id="mgr-category-form" class="mgr-form-box hidden">
+          <input type="hidden" id="mgr-cat-id-input" />
+          <h4 id="mgr-cat-form-title">Crear Nuevo Plan</h4>
+
+          <div class="dialog-form-group">
+            <label for="mgr-cat-name-input" class="group-label">NOMBRE DEL PLAN *</label>
+            <input type="text" id="mgr-cat-name-input" class="dialog-input" placeholder="Ej: Crecimiento Profesional, Cuidado Físico..." required />
+          </div>
+
+          <div class="dialog-form-group">
+            <label for="mgr-cat-desc-input" class="group-label">DESCRIPCIÓN (OPCIONAL)</label>
+            <input type="text" id="mgr-cat-desc-input" class="dialog-input" placeholder="Breve descripción del propósito de este plan..." />
+          </div>
+
+          <div class="mgr-form-grid">
+            <div class="dialog-form-group">
+              <label class="group-label">COLOR DISTINTIVO</label>
+              <div class="color-palette-row" id="mgr-cat-colors">
+                <span class="color-dot-opt active" data-color="#0071e3" style="background: #0071e3;"></span>
+                <span class="color-dot-opt" data-color="#5856d6" style="background: #5856d6;"></span>
+                <span class="color-dot-opt" data-color="#ff9500" style="background: #ff9500;"></span>
+                <span class="color-dot-opt" data-color="#30d158" style="background: #30d158;"></span>
+                <span class="color-dot-opt" data-color="#ff2d55" style="background: #ff2d55;"></span>
+                <span class="color-dot-opt" data-color="#64d2ff" style="background: #64d2ff;"></span>
+                <span class="color-dot-opt" data-color="#ffd60a" style="background: #ffd60a;"></span>
+              </div>
+              <input type="hidden" id="mgr-cat-color-val" value="#0071e3" />
+            </div>
+
+            <div class="dialog-form-group">
+              <label class="group-label">ÍCONO</label>
+              <div class="icon-selector-row" id="mgr-cat-icons">
+                <button type="button" class="icon-btn-opt active" data-icon="briefcase" title="Profesional / Carrera">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                </button>
+                <button type="button" class="icon-btn-opt" data-icon="heart" title="Cuidado Físico / Salud">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                </button>
+                <button type="button" class="icon-btn-opt" data-icon="dumbbell" title="Deporte / Entrenamiento">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 5v14M18 5v14M4 8v8M20 8v8M6 12h12"/></svg>
+                </button>
+                <button type="button" class="icon-btn-opt" data-icon="rocket" title="Proyectos / Emprendimiento">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>
+                </button>
+                <button type="button" class="icon-btn-opt" data-icon="book" title="Educación / Aprendizaje">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+                </button>
+                <button type="button" class="icon-btn-opt" data-icon="target" title="Metas y Objetivos">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+                </button>
+              </div>
+              <input type="hidden" id="mgr-cat-icon-val" value="briefcase" />
+            </div>
+          </div>
+
+          <div class="mgr-form-actions">
+            <button type="button" id="btn-cancel-cat-form" class="btn-secondary">Cancelar</button>
+            <button type="submit" id="btn-save-cat-form" class="btn-primary">Guardar Plan</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="dialog-actions">
+        <div class="flex-spacer"></div>
+        <button type="button" id="btn-close-habits-modal-footer" class="btn-secondary">Listo / Cerrar</button>
+      </div>
     </div>
   </dialog>
 

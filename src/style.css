@@ -789,11 +789,35 @@ body.app-theme {
   border-color: rgba(41, 151, 255, 0.3);
 }
 
+/* Shortcut Button for Habits / Plans Management */
+.btn-manage-habits-shortcut {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 20px;
+  padding: 0.38rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-manage-habits-shortcut:hover {
+  background: var(--surface-hover);
+  color: var(--text-main);
+  border-color: var(--border-focus);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
 /* Checkin Form Habits Row */
 .checkin-habits-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 1.25rem;
 }
 
 .checkin-habit-box {
@@ -876,6 +900,83 @@ body.app-theme {
   flex-shrink: 0;
 }
 
+.toggle-box {
+  background: var(--surface-subtle);
+  border: 1.5px solid var(--border-main);
+  border-radius: 16px;
+  padding: 0.85rem 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transition: all 0.2s ease;
+  height: 100%;
+  min-height: 64px;
+  box-sizing: border-box;
+}
+
+.dialog-habit-toggle:hover .toggle-box {
+  background: var(--surface-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dialog-habit-toggle input:checked + .toggle-box {
+  background: var(--habit-bg, rgba(0, 113, 227, 0.12));
+  border-color: var(--habit-color, var(--color-english));
+}
+
+.toggle-switch {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  border: 2px solid var(--border-main);
+  background: var(--surface-card);
+  margin-left: auto;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 5px;
+  width: 5px;
+  height: 9px;
+  border: solid #ffffff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.dialog-habit-toggle input:checked + .toggle-box .toggle-switch {
+  background: var(--habit-color, var(--color-english));
+  border-color: var(--habit-color, var(--color-english));
+}
+
+.dialog-habit-toggle input:checked + .toggle-box .toggle-switch::after {
+  opacity: 1;
+}
+
+.toggle-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.toggle-title {
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.2;
+  white-space: normal;
+  word-break: break-word;
+}
+
 .custom-checkbox::after {
   content: '';
   position: absolute;
@@ -890,7 +991,21 @@ body.app-theme {
   transition: opacity 0.15s ease;
 }
 
-/* Checked States */
+/* Dynamic and Checked States */
+.checkin-habit-box input:checked + .habit-box-content {
+  background: var(--habit-bg, rgba(255, 255, 255, 0.05));
+  border-color: var(--habit-border, rgba(255, 255, 255, 0.3));
+}
+
+.checkin-habit-box input:checked + .habit-box-content .custom-checkbox {
+  background: var(--habit-color, var(--color-primary));
+  border-color: var(--habit-color, var(--color-primary));
+}
+
+.checkin-habit-box input:checked + .habit-box-content .custom-checkbox::after {
+  opacity: 1;
+}
+
 .checkin-habit-box[data-habit="english"] input:checked + .habit-box-content {
   background: var(--color-english-light);
   border-color: rgba(41, 151, 255, 0.4);
@@ -943,12 +1058,12 @@ body.app-theme {
   border-color: var(--text-main);
 }
 
-/* Submit Row */
+/* Submit Row - Con espaciado amplio y limpio hacia los hábitos */
 .checkin-submit-row {
   display: flex;
   align-items: center;
   gap: 1.15rem;
-  margin-top: 0.35rem;
+  margin-top: 1.35rem;
 }
 
 .input-with-icon {
@@ -1635,8 +1750,8 @@ body.app-theme {
   border: none;
   background: transparent;
   padding: 0;
-  max-width: 500px;
-  width: 90vw;
+  max-width: 540px;
+  width: 92vw;
   margin: auto;
 }
 
@@ -1721,8 +1836,8 @@ body.app-theme {
 
 .dialog-habits-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 0.85rem;
   align-items: stretch;
 }
 
@@ -1753,14 +1868,14 @@ body.app-theme {
   box-sizing: border-box;
 }
 
-.dialog-habit-toggle input:checked + .toggle-box {
-  background: var(--color-english-light);
-  border-color: var(--color-english);
+.dialog-habit-toggle:hover .toggle-box {
+  background: var(--surface-hover);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
-.dialog-habit-toggle:last-child input:checked + .toggle-box {
-  background: var(--color-de-light);
-  border-color: var(--color-de);
+.dialog-habit-toggle input:checked + .toggle-box {
+  background: var(--habit-bg, rgba(0, 113, 227, 0.12));
+  border-color: var(--habit-color, var(--color-english));
 }
 
 .toggle-switch {
@@ -1790,13 +1905,8 @@ body.app-theme {
 }
 
 .dialog-habit-toggle input:checked + .toggle-box .toggle-switch {
-  background: var(--color-english);
-  border-color: var(--color-english);
-}
-
-.dialog-habit-toggle:last-child input:checked + .toggle-box .toggle-switch {
-  background: var(--color-de);
-  border-color: var(--color-de);
+  background: var(--habit-color, var(--color-english));
+  border-color: var(--habit-color, var(--color-english));
 }
 
 .dialog-habit-toggle input:checked + .toggle-box .toggle-switch::after {
@@ -4543,5 +4653,599 @@ body.app-theme {
   background: var(--color-missed-light);
 }
 
+/* ==========================================================================
+   WEEKLY GOALS & CONSISTENCY STRIPS
+   ========================================================================== */
+.weekly-goals-section {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-main);
+}
 
+.weekly-goals-header {
+  margin-bottom: 1.25rem;
+}
 
+.weekly-goals-header h4 {
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  margin: 0 0 0.25rem 0;
+}
+
+.weekly-goals-header p {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.weekly-goals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.25rem;
+}
+
+.weekly-goal-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 18px;
+  padding: 1.2rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.weekly-goal-card:hover {
+  border-color: var(--border-focus);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.weekly-goal-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.weekly-goal-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.weekly-goal-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.weekly-goal-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.weekly-goal-title {
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.weekly-goal-category {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.weekly-goal-badge {
+  font-size: 0.76rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 12px;
+  background: var(--surface-subtle);
+  color: var(--text-muted);
+  border: 1px solid var(--border-main);
+}
+
+.weekly-goal-badge.reached {
+  background: rgba(48, 209, 88, 0.15);
+  color: #30d158;
+  border-color: rgba(48, 209, 88, 0.3);
+}
+
+.week-days-strip {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.45rem;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-main);
+  border-radius: 14px;
+  padding: 0.6rem;
+}
+
+.strip-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.2rem;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: transparent;
+}
+
+.strip-day:hover {
+  background: var(--surface-hover);
+}
+
+.strip-day.today {
+  outline: 1.5px solid var(--border-focus);
+}
+
+.strip-day-name {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.strip-day-num {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.strip-day-indicator {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.strip-day.completed .strip-day-indicator {
+  background: var(--habit-color, #30d158);
+  color: #ffffff;
+  box-shadow: 0 0 10px var(--habit-color, rgba(48, 209, 88, 0.5));
+}
+
+.strip-day.rest-day .strip-day-indicator {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-muted);
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
+   HABITS & PLANS MANAGER MODAL
+   ========================================================================== */
+.habits-mgr-dialog {
+  max-width: 580px;
+  width: 92vw;
+}
+
+.habits-mgr-card {
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.habits-mgr-tabs {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 0 1.75rem;
+  border-bottom: 1px solid var(--border-main);
+  background: var(--surface-subtle);
+}
+
+.mgr-tab-btn {
+  background: none;
+  border: none;
+  padding: 0.85rem 0.2rem;
+  font-family: var(--font-title);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  position: relative;
+  transition: color 0.18s ease;
+}
+
+.mgr-tab-btn:hover {
+  color: var(--text-main);
+}
+
+.mgr-tab-btn.active {
+  color: var(--color-english);
+}
+
+.mgr-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background: var(--color-english);
+  border-radius: 3px;
+}
+
+.mgr-tab-panel {
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.mgr-list-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mgr-list-header h4 {
+  font-family: var(--font-title);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.btn-primary-mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--color-english);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.4rem 0.85rem;
+  font-family: var(--font-title);
+  font-size: 0.76rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary-mini:hover {
+  background: var(--color-english-text);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 113, 227, 0.3);
+}
+
+.mgr-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.mgr-item-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 15px;
+  padding: 0.85rem 1.1rem;
+  transition: all 0.18s ease;
+}
+
+.mgr-item-card:hover {
+  border-color: var(--border-focus);
+  background: var(--surface-hover);
+  box-shadow: var(--shadow-sm);
+}
+
+.mgr-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.mgr-item-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.mgr-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.mgr-item-title {
+  font-family: var(--font-title);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.mgr-item-meta {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.mgr-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.mgr-action-btn {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-main);
+  color: var(--text-muted);
+  border-radius: 9px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mgr-action-btn:hover {
+  color: var(--text-main);
+  border-color: var(--border-focus);
+  background: var(--surface-hover);
+}
+
+.mgr-action-btn.delete:hover {
+  color: #ff453a;
+  border-color: rgba(255, 69, 58, 0.4);
+  background: rgba(255, 69, 58, 0.12);
+}
+
+/* Forms inside Habits Manager */
+.mgr-form-box {
+  background: var(--surface-card);
+  border: 1px solid var(--border-focus);
+  border-radius: 18px;
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  box-shadow: var(--shadow-md);
+}
+
+.mgr-form-box h4 {
+  margin: 0;
+  font-family: var(--font-title);
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.mgr-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.mgr-form-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Custom Glassmorphic Select Dropdown */
+.mgr-select-dropdown {
+  position: relative;
+  width: 100%;
+}
+
+.mgr-select-trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-subtle);
+  border: 1.5px solid var(--border-main);
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.mgr-select-trigger:hover,
+.mgr-select-trigger:focus {
+  border-color: var(--border-focus);
+  background: var(--surface-card);
+}
+
+.mgr-select-arrow {
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.mgr-select-trigger[aria-expanded="true"] .mgr-select-arrow {
+  transform: rotate(180deg);
+}
+
+.mgr-select-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: 14px;
+  padding: 0.4rem;
+  box-shadow: var(--shadow-lg);
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.mgr-select-menu.hidden {
+  display: none;
+}
+
+.mgr-select-option {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 9px;
+  font-size: 0.83rem;
+  font-weight: 600;
+  color: var(--text-main);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.mgr-select-option:hover,
+.mgr-select-option.selected {
+  background: var(--surface-hover);
+  color: var(--color-english);
+}
+
+/* Target Days Picker (1d to 7d) */
+.target-days-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.target-days-val {
+  color: var(--color-english);
+  font-weight: 700;
+}
+
+.target-days-hint {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.target-days-picker {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.target-day-opt {
+  flex: 1;
+  min-width: 38px;
+  padding: 0.5rem 0.25rem;
+  background: var(--surface-subtle);
+  border: 1.5px solid var(--border-main);
+  border-radius: 10px;
+  font-family: var(--font-title);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.15s ease;
+}
+
+.target-day-opt:hover {
+  background: var(--surface-hover);
+  color: var(--text-main);
+  border-color: var(--border-focus);
+}
+
+.target-day-opt.active {
+  background: var(--color-english-light);
+  border-color: var(--color-english);
+  color: var(--color-english);
+}
+
+/* Color Palette Row */
+.color-palette-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.color-dot-opt {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.color-dot-opt:hover {
+  transform: scale(1.15);
+}
+
+.color-dot-opt.active {
+  transform: scale(1.25);
+  border-color: #ffffff;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+}
+
+/* Icon Selector Row */
+.icon-selector-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.icon-btn-opt {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--surface-subtle);
+  border: 1.5px solid var(--border-main);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.icon-btn-opt:hover {
+  background: var(--surface-hover);
+  color: var(--text-main);
+  border-color: var(--border-focus);
+}
+
+.icon-btn-opt.active {
+  border-color: var(--color-english);
+  color: var(--color-english);
+  background: var(--color-english-light);
+}

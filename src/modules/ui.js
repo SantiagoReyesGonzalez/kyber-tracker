@@ -9,7 +9,11 @@ import {
   getTodayStr,
   formatReadableDate,
   calculateMetrics,
-  MONTH_NAMES_ES
+  MONTH_NAMES_ES,
+  isHabitCompleted,
+  getWeeklyHabitProgress,
+  getWeekDaysForDate,
+  getIconSvg
 } from './tracker.js';
 
 import {
@@ -25,7 +29,17 @@ import {
   getThemeMode,
   setThemeMode,
   getMetricsScope,
-  setMetricsScope
+  setMetricsScope,
+  loadCategoriesConfig,
+  saveCategoriesConfig,
+  loadHabitsConfig,
+  saveHabitsConfig,
+  addCategory,
+  updateCategory,
+  deleteCategory,
+  addHabit,
+  updateHabit,
+  deleteHabit
 } from '../store/storage.js';
 
 import {
@@ -83,8 +97,8 @@ export class UIManager {
     this.quickDateInput = document.getElementById('quick-date-input');
     this.todayStatusSummary = document.getElementById('today-status-summary');
     this.quickForm = document.getElementById('quick-checkin-form');
-    this.quickEnglishCheck = document.getElementById('quick-english-check');
-    this.quickDeCheck = document.getElementById('quick-de-check');
+    this.quickHabitsContainer = document.getElementById('quick-habits-container');
+    this.btnManageHabitsShortcut = document.getElementById('btn-manage-habits-shortcut');
     this.quickTopicsInput = document.getElementById('quick-topics-input');
     this.tagChips = document.querySelectorAll('.tag-chip');
 
@@ -135,6 +149,9 @@ export class UIManager {
     this.statsDeDays = document.getElementById('stats-de-days');
     this.statsDeStreak = document.getElementById('stats-de-streak');
     this.statsDeSublabel = document.getElementById('stats-de-sublabel');
+    this.statsGymDays = document.getElementById('stats-gym-days');
+    this.statsGymStreak = document.getElementById('stats-gym-streak');
+    this.statsGymSublabel = document.getElementById('stats-gym-sublabel');
     this.statsDualDays = document.getElementById('stats-dual-days');
     this.statsMonthProgress = document.getElementById('stats-month-progress');
     this.statsDualSublabel = document.getElementById('stats-dual-sublabel');
@@ -148,6 +165,7 @@ export class UIManager {
     this.viewCalendarPanel = document.getElementById('view-calendar-panel');
     this.viewHeatmapPanel = document.getElementById('view-heatmap-panel');
     this.viewWeeklyPanel = document.getElementById('view-weekly-panel');
+    this.weeklyGoalsContainer = document.getElementById('weekly-goals-container');
     this.openPlanModalBtn = document.getElementById('open-plan-modal-btn');
 
     // Heatmap Panel Controls
@@ -163,14 +181,28 @@ export class UIManager {
     this.modalDialogDate = document.getElementById('modal-dialog-date');
     this.dialogDateHidden = document.getElementById('dialog-date-hidden');
     this.modalDateInput = document.getElementById('modal-date-input');
-    this.modalEnglishCheck = document.getElementById('modal-english-check');
-    this.modalDeCheck = document.getElementById('modal-de-check');
+    this.modalHabitsContainer = document.getElementById('modal-habits-container');
     this.modalTopicsInput = document.getElementById('modal-topics-input');
     this.modalNotesTextarea = document.getElementById('modal-notes-textarea');
     this.modalDeleteBtn = document.getElementById('modal-delete-btn');
     this.modalCancelBtn = document.getElementById('modal-cancel-btn');
     this.closeDialogBtn = document.getElementById('close-dialog-btn');
     this.dialogForm = document.getElementById('dialog-form');
+
+    // Habits & Plans Manager Modal
+    this.habitsModal = document.getElementById('habits-modal');
+    this.closeHabitsModalBtn = document.getElementById('close-habits-modal-btn');
+    this.mgrTabBtns = document.querySelectorAll('.mgr-tab-btn');
+    this.mgrTabHabits = document.getElementById('mgr-tab-habits');
+    this.mgrTabCategories = document.getElementById('mgr-tab-categories');
+    this.mgrHabitsList = document.getElementById('mgr-habits-list');
+    this.mgrCategoriesList = document.getElementById('mgr-categories-list');
+    this.btnShowAddHabit = document.getElementById('btn-show-add-habit');
+    this.btnShowAddCategory = document.getElementById('btn-show-add-category');
+    this.mgrHabitForm = document.getElementById('mgr-habit-form');
+    this.mgrCategoryForm = document.getElementById('mgr-category-form');
+    this.btnCancelHabitForm = document.getElementById('btn-cancel-habit-form');
+    this.btnCancelCategoryForm = document.getElementById('btn-cancel-category-form');
 
     // Drawer Historial
     this.historyDrawer = document.getElementById('history-drawer');
@@ -448,6 +480,22 @@ export class UIManager {
       });
     }
 
+    // 9b. Botones y eventos de Planes y Temas
+    if (this.btnManageHabitsShortcut) {
+      this.btnManageHabitsShortcut.addEventListener('click', () => {
+        playSelect();
+        this.openHabitsModal();
+      });
+    }
+
+    if (this.closeHabitsModalBtn) {
+      this.closeHabitsModalBtn.addEventListener('click', () => {
+        this.closeHabitsModal();
+      });
+    }
+
+    this.initHabitsManager();
+
     // 10. Eventos del Sistema de Autenticación
     this.bindAuthEvents();
 
@@ -596,6 +644,7 @@ export class UIManager {
       this.ctx.calendar2D.renderHeatmap(this.ctx.currentYear, (day) => this.openDayModal(day));
     } else if (viewName === 'weekly') {
       this.ctx.calendar2D.renderWeeklyChart();
+      this.renderWeeklyGoalsProgress();
     }
   }
 
@@ -617,41 +666,115 @@ export class UIManager {
     }
 
     const session = getSession(activeDateStr);
-    if (session) {
-      this.quickEnglishCheck.checked = Boolean(session.englishCompleted);
-      this.quickDeCheck.checked = Boolean(session.dataEngCompleted);
-      this.quickTopicsInput.value = session.topics || '';
+    const habits = loadHabitsConfig();
 
+    if (this.quickHabitsContainer) {
+      this.quickHabitsContainer.innerHTML = '';
+      habits.forEach(habit => {
+        const isChecked = session ? isHabitCompleted(session, habit.id) : false;
+        const box = document.createElement('label');
+        box.className = 'checkin-habit-box';
+        box.dataset.habit = habit.id;
+        box.style.setProperty('--habit-color', habit.color);
+        box.style.setProperty('--habit-bg', `${habit.color}18`);
+        box.style.setProperty('--habit-border', `${habit.color}50`);
+
+        const tagsHtml = (habit.tags || []).map(tag => 
+          `<button type="button" class="tag-chip dynamic-tag-chip" data-tag="${tag}" data-habit="${habit.id}">#${tag}</button>`
+        ).join('');
+
+        box.innerHTML = `
+          <input type="checkbox" id="quick-habit-${habit.id}" data-habit-id="${habit.id}" ${isChecked ? 'checked' : ''} />
+          <div class="habit-box-content">
+            <div class="habit-box-top">
+              <div class="habit-icon-pill" style="background: ${habit.color}20; color: ${habit.color};">
+                ${getIconSvg(habit.icon || 'star', 18)}
+              </div>
+              <div class="habit-titles">
+                <span class="habit-name">${habit.name}</span>
+              </div>
+              <span class="custom-checkbox"></span>
+            </div>
+            ${tagsHtml ? `<div class="quick-tags-group">${tagsHtml}</div>` : ''}
+          </div>
+        `;
+
+        box.querySelectorAll('.dynamic-tag-chip').forEach(chip => {
+          chip.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const tag = chip.dataset.tag;
+            const chk = box.querySelector('input[type="checkbox"]');
+            if (chk) {
+              chk.checked = true;
+              chk.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            if (this.quickTopicsInput) {
+              const cur = this.quickTopicsInput.value.trim();
+              if (!cur.includes(`#${tag}`)) {
+                this.quickTopicsInput.value = cur ? `${cur}, #${tag}` : `#${tag}`;
+              }
+            }
+            playHover();
+          });
+        });
+
+        this.quickHabitsContainer.appendChild(box);
+      });
+    }
+
+    if (session) {
+      if (this.quickTopicsInput) this.quickTopicsInput.value = session.topics || '';
       const isDual = session.englishCompleted && session.dataEngCompleted;
-      if (isDual) {
-        this.todayStatusSummary.textContent = 'Dual Master (2h)';
-        this.todayStatusSummary.className = 'today-status-chip active-dual';
-      } else if (session.englishCompleted) {
-        this.todayStatusSummary.textContent = 'Inglés (1h)';
-        this.todayStatusSummary.className = 'today-status-chip active-single';
-      } else if (session.dataEngCompleted) {
-        this.todayStatusSummary.textContent = 'Data Eng (1h)';
-        this.todayStatusSummary.className = 'today-status-chip active-single';
-      } else {
+      const isGym = isHabitCompleted(session, 'gym');
+      if (this.todayStatusSummary) {
+        if (isDual && isGym) {
+          this.todayStatusSummary.textContent = 'Dual + Gym (2h + Gym)';
+          this.todayStatusSummary.className = 'today-status-chip active-dual';
+        } else if (isDual) {
+          this.todayStatusSummary.textContent = 'Dual Master (2h)';
+          this.todayStatusSummary.className = 'today-status-chip active-dual';
+        } else if (session.englishCompleted) {
+          this.todayStatusSummary.textContent = 'Inglés (1h)';
+          this.todayStatusSummary.className = 'today-status-chip active-single';
+        } else if (session.dataEngCompleted) {
+          this.todayStatusSummary.textContent = 'Data Eng (1h)';
+          this.todayStatusSummary.className = 'today-status-chip active-single';
+        } else if (isGym) {
+          this.todayStatusSummary.textContent = 'Gym Completado';
+          this.todayStatusSummary.className = 'today-status-chip active-single';
+        } else {
+          this.todayStatusSummary.textContent = 'Sin registrar';
+          this.todayStatusSummary.className = 'today-status-chip';
+        }
+      }
+    } else {
+      if (this.quickTopicsInput) this.quickTopicsInput.value = '';
+      if (this.todayStatusSummary) {
         this.todayStatusSummary.textContent = 'Sin registrar';
         this.todayStatusSummary.className = 'today-status-chip';
       }
-    } else {
-      this.quickEnglishCheck.checked = false;
-      this.quickDeCheck.checked = false;
-      this.quickTopicsInput.value = '';
-      this.todayStatusSummary.textContent = 'Sin registrar';
-      this.todayStatusSummary.className = 'today-status-chip';
     }
   }
 
   handleQuickCheckinSubmit() {
     const activeDateStr = (this.quickDateInput && this.quickDateInput.value) ? this.quickDateInput.value : getTodayStr();
-    const isEng = this.quickEnglishCheck.checked;
-    const isDE = this.quickDeCheck.checked;
-    const topics = this.quickTopicsInput.value.trim();
+    const habits = loadHabitsConfig();
+    const habitsState = {};
+    let anyChecked = false;
 
-    if (!isEng && !isDE) {
+    habits.forEach(habit => {
+      const chk = document.getElementById(`quick-habit-${habit.id}`);
+      const val = chk ? chk.checked : false;
+      habitsState[habit.id] = val;
+      if (val) anyChecked = true;
+    });
+
+    const isEng = Boolean(habitsState['english']);
+    const isDE = Boolean(habitsState['data_engineering']);
+    const topics = this.quickTopicsInput ? this.quickTopicsInput.value.trim() : '';
+
+    if (!anyChecked) {
       deleteSession(activeDateStr);
       playDeactivate();
       this.showToast(`Registro de ${formatReadableDate(activeDateStr)} borrado.`, 'info');
@@ -662,6 +785,7 @@ export class UIManager {
         dataEngCompleted: isDE,
         englishHours: isEng ? 1 : 0,
         dataEngHours: isDE ? 1 : 0,
+        habits: habitsState,
         topics,
         notes: ''
       });
@@ -671,8 +795,7 @@ export class UIManager {
         this.showToast(`¡Doble estudio guardado para ${formatReadableDate(activeDateStr)}! (2h)`, 'success');
       } else {
         playKyberIgnite();
-        const habitName = isEng ? 'Inglés' : 'Data Engineering';
-        this.showToast(`¡Sesión de ${habitName} guardada para ${formatReadableDate(activeDateStr)}! (1h)`, 'success');
+        this.showToast(`¡Registro guardado para ${formatReadableDate(activeDateStr)}!`, 'success');
       }
     }
 
@@ -698,18 +821,39 @@ export class UIManager {
     if (this.modalDateInput) this.modalDateInput.value = dateStr;
     this.modalDialogDate.textContent = formatReadableDate(dateStr);
 
+    const habits = loadHabitsConfig();
+    if (this.modalHabitsContainer) {
+      this.modalHabitsContainer.innerHTML = '';
+      habits.forEach(habit => {
+        const isChecked = session ? isHabitCompleted(session, habit.id) : false;
+        const toggle = document.createElement('label');
+        toggle.className = 'dialog-habit-toggle';
+        toggle.style.setProperty('--habit-color', habit.color);
+        toggle.style.setProperty('--habit-bg', `${habit.color}18`);
+        toggle.innerHTML = `
+          <input type="checkbox" id="modal-habit-${habit.id}" data-habit-id="${habit.id}" ${isChecked ? 'checked' : ''} />
+          <div class="toggle-box">
+            <div class="toggle-icon-wrap" style="color: ${habit.color};">
+              ${getIconSvg(habit.icon || 'star', 18)}
+            </div>
+            <div class="toggle-text">
+              <span class="toggle-title">${habit.name}</span>
+            </div>
+            <span class="toggle-switch"></span>
+          </div>
+        `;
+        this.modalHabitsContainer.appendChild(toggle);
+      });
+    }
+
     if (session) {
-      this.modalEnglishCheck.checked = Boolean(session.englishCompleted);
-      this.modalDeCheck.checked = Boolean(session.dataEngCompleted);
-      this.modalTopicsInput.value = session.topics || '';
-      this.modalNotesTextarea.value = session.notes || '';
-      this.modalDeleteBtn.classList.remove('hidden');
+      if (this.modalTopicsInput) this.modalTopicsInput.value = session.topics || '';
+      if (this.modalNotesTextarea) this.modalNotesTextarea.value = session.notes || '';
+      if (this.modalDeleteBtn) this.modalDeleteBtn.classList.remove('hidden');
     } else {
-      this.modalEnglishCheck.checked = false;
-      this.modalDeCheck.checked = false;
-      this.modalTopicsInput.value = '';
-      this.modalNotesTextarea.value = '';
-      this.modalDeleteBtn.classList.add('hidden');
+      if (this.modalTopicsInput) this.modalTopicsInput.value = '';
+      if (this.modalNotesTextarea) this.modalNotesTextarea.value = '';
+      if (this.modalDeleteBtn) this.modalDeleteBtn.classList.add('hidden');
     }
   }
 
@@ -724,12 +868,23 @@ export class UIManager {
 
   handleModalFormSubmit() {
     const dateStr = (this.modalDateInput && this.modalDateInput.value) || this.dialogDateHidden.value;
-    const isEng = this.modalEnglishCheck.checked;
-    const isDE = this.modalDeCheck.checked;
-    const topics = this.modalTopicsInput.value.trim();
-    const notes = this.modalNotesTextarea.value.trim();
+    const habits = loadHabitsConfig();
+    const habitsState = {};
+    let anyChecked = false;
 
-    if (!isEng && !isDE) {
+    habits.forEach(habit => {
+      const chk = document.getElementById(`modal-habit-${habit.id}`);
+      const val = chk ? chk.checked : false;
+      habitsState[habit.id] = val;
+      if (val) anyChecked = true;
+    });
+
+    const isEng = Boolean(habitsState['english']);
+    const isDE = Boolean(habitsState['data_engineering']);
+    const topics = this.modalTopicsInput ? this.modalTopicsInput.value.trim() : '';
+    const notes = this.modalNotesTextarea ? this.modalNotesTextarea.value.trim() : '';
+
+    if (!anyChecked) {
       deleteSession(dateStr);
       playDeactivate();
       this.showToast(`Registro del ${formatReadableDate(dateStr)} borrado.`, 'info');
@@ -740,6 +895,7 @@ export class UIManager {
         dataEngCompleted: isDE,
         englishHours: isEng ? 1 : 0,
         dataEngHours: isDE ? 1 : 0,
+        habits: habitsState,
         topics,
         notes
       });
@@ -749,8 +905,7 @@ export class UIManager {
         this.showToast(`¡Doble estudio guardado para ${formatReadableDate(dateStr)}! (2h)`, 'success');
       } else {
         playKyberIgnite();
-        const habitName = isEng ? 'Inglés' : 'Data Engineering';
-        this.showToast(`¡Sesión de ${habitName} guardada para ${formatReadableDate(dateStr)}! (1h)`, 'success');
+        this.showToast(`¡Registro guardado para ${formatReadableDate(dateStr)}!`, 'success');
       }
     }
 
@@ -794,6 +949,10 @@ export class UIManager {
     if (this.statsDeDays) this.statsDeDays.textContent = metrics.dataEngineering.days;
     if (this.statsDeStreak) this.statsDeStreak.textContent = metrics.dataEngineering.streak;
 
+    // Gym (Cuidado Físico)
+    if (this.statsGymDays) this.statsGymDays.textContent = metrics.gym ? metrics.gym.days : 0;
+    if (this.statsGymStreak) this.statsGymStreak.textContent = metrics.gym ? metrics.gym.streak : 0;
+
     // Dual Master & Cobertura
     if (this.statsDualDays) this.statsDualDays.textContent = metrics.global.dualDays;
     if (this.statsMonthProgress) this.statsMonthProgress.textContent = `${metrics.global.coveragePercent}%`;
@@ -806,6 +965,7 @@ export class UIManager {
     const suffix = metrics.periodLabel; // 'SEMANA' | 'MES' | 'TOTAL'
     if (this.statsEnglishSublabel) this.statsEnglishSublabel.textContent = `DÍAS (${suffix})`;
     if (this.statsDeSublabel) this.statsDeSublabel.textContent = `DÍAS (${suffix})`;
+    if (this.statsGymSublabel) this.statsGymSublabel.textContent = `DÍAS (${suffix})`;
     if (this.statsDualSublabel) this.statsDualSublabel.textContent = `DÍAS (2H)`;
     if (this.statsCoverageSublabel) {
       this.statsCoverageSublabel.textContent = scope === 'week' ? '% SEMANA' : scope === 'month' ? '% MES' : '% GLOBAL';
@@ -816,6 +976,83 @@ export class UIManager {
     if (this.monthDisplay && MONTH_NAMES_ES[currentM]) this.monthDisplay.textContent = MONTH_NAMES_ES[currentM];
     if (this.yearDisplay) this.yearDisplay.textContent = currentY;
     if (this.heatmapYearLabel) this.heatmapYearLabel.textContent = currentY;
+  }
+
+  /**
+   * Renderiza la tira de 7 días de cada hábito en la vista semanal
+   */
+  renderWeeklyGoalsProgress() {
+    if (!this.weeklyGoalsContainer) return;
+    this.weeklyGoalsContainer.innerHTML = '';
+
+    const studyData = loadStudyData();
+    const habits = loadHabitsConfig();
+    const categories = loadCategoriesConfig();
+    const catMap = Object.fromEntries(categories.map(c => [c.id, c]));
+    const targetDate = (this.quickDateInput && this.quickDateInput.value) || getTodayStr();
+
+    const dayLabels = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+    habits.forEach(habit => {
+      const progress = getWeeklyHabitProgress(habit.id, targetDate, studyData, habit);
+      const cat = catMap[habit.category] || { name: 'General', color: habit.color };
+
+      const card = document.createElement('div');
+      card.className = 'weekly-goal-card';
+      card.style.setProperty('--habit-color', habit.color);
+
+      const daysList = progress.days || [];
+      const daysHtml = daysList.map(d => {
+        const classes = [
+          'strip-day',
+          d.completed ? 'completed' : '',
+          d.isRest ? 'rest-day' : '',
+          d.isToday ? 'today' : ''
+        ].filter(Boolean).join(' ');
+
+        const indicator = d.completed ? '✓' : d.isRest ? '—' : '';
+        const dayLabel = d.dayNameShort || dayLabels[d.dayIndex] || '';
+
+        return `
+          <div class="${classes}" data-date="${d.dateStr}" title="${d.dateStr}: ${d.completed ? 'Completado' : d.isRest ? 'Descanso permitido' : 'Pendiente'}">
+            <span class="strip-day-name">${dayLabel}</span>
+            <span class="strip-day-num">${d.dayNumber}</span>
+            <span class="strip-day-indicator">${indicator}</span>
+          </div>
+        `;
+      }).join('');
+
+      card.innerHTML = `
+        <div class="weekly-goal-top">
+          <div class="weekly-goal-info">
+            <div class="weekly-goal-icon" style="background: ${habit.color}18; color: ${habit.color};">
+              ${getIconSvg(habit.icon || 'star', 18)}
+            </div>
+            <div class="weekly-goal-titles">
+              <span class="weekly-goal-title">${habit.name}</span>
+              <span class="weekly-goal-category">${cat.name}</span>
+            </div>
+          </div>
+          <span class="weekly-goal-badge ${progress.isGoalMet ? 'reached' : ''}">
+            ${progress.completedCount}/${progress.targetDays}d ${progress.isGoalMet ? '✓ Meta' : ''}
+          </span>
+        </div>
+        <div class="week-days-strip">
+          ${daysHtml}
+        </div>
+      `;
+
+      card.querySelectorAll('.strip-day').forEach(el => {
+        el.addEventListener('click', () => {
+          const dateStr = el.dataset.date;
+          if (dateStr) {
+            this.openDayModal({ dateStr, session: getSession(dateStr) });
+          }
+        });
+      });
+
+      this.weeklyGoalsContainer.appendChild(card);
+    });
   }
 
   /**
@@ -1626,6 +1863,513 @@ export class UIManager {
         }
       }
     }
+  }
+
+  // ==========================================================================
+  // GESTIÓN DE PLANES Y TEMAS (HABITS & CATEGORIES MANAGER)
+  // ==========================================================================
+  openHabitsModal() {
+    if (!this.habitsModal) return;
+    this.renderMgrHabitsList();
+    this.renderMgrCategoriesList();
+    this.hideHabitForm();
+    this.hideCategoryForm();
+    this.habitsModal.showModal();
+  }
+
+  closeHabitsModal() {
+    if (!this.habitsModal) return;
+    this.habitsModal.close();
+  }
+
+  initHabitsManager() {
+    // 1. Tabs de Navegación: Hábitos vs Categorías
+    if (this.mgrTabBtns) {
+      this.mgrTabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          this.mgrTabBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const tab = btn.dataset.mgrTab;
+          if (this.mgrTabHabits) this.mgrTabHabits.classList.toggle('hidden', tab !== 'habits');
+          if (this.mgrTabCategories) this.mgrTabCategories.classList.toggle('hidden', tab !== 'categories');
+          playSelect();
+        });
+      });
+    }
+
+    // 2. Mostrar / Ocultar Formularios
+    if (this.btnShowAddHabit) {
+      this.btnShowAddHabit.addEventListener('click', () => this.showHabitForm());
+    }
+    if (this.btnCancelHabitForm) {
+      this.btnCancelHabitForm.addEventListener('click', () => this.hideHabitForm());
+    }
+
+    if (this.btnShowAddCategory) {
+      this.btnShowAddCategory.addEventListener('click', () => this.showCategoryForm());
+    }
+    if (this.btnCancelCategoryForm) {
+      this.btnCancelCategoryForm.addEventListener('click', () => this.hideCategoryForm());
+    }
+
+    // 3. Dropdown Personalizado de Categorías para Hábitos
+    const catDropdownBtn = document.getElementById('mgr-cat-dropdown-btn');
+    const catDropdownMenu = document.getElementById('mgr-cat-dropdown-menu');
+    if (catDropdownBtn && catDropdownMenu) {
+      catDropdownBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isOpen = !catDropdownMenu.classList.contains('hidden');
+        if (isOpen) {
+          catDropdownMenu.classList.add('hidden');
+          catDropdownBtn.setAttribute('aria-expanded', 'false');
+        } else {
+          this.renderCategoryDropdownOptions();
+          catDropdownMenu.classList.remove('hidden');
+          catDropdownBtn.setAttribute('aria-expanded', 'true');
+        }
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!catDropdownBtn.contains(e.target) && !catDropdownMenu.contains(e.target)) {
+          catDropdownMenu.classList.add('hidden');
+          catDropdownBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
+    // 4. Target Days Picker (1d a 7d)
+    const targetDaysPicker = document.getElementById('mgr-target-days-picker');
+    const targetDaysValLabel = document.getElementById('target-days-val');
+    const targetDaysValInput = document.getElementById('mgr-target-days-val');
+    if (targetDaysPicker) {
+      targetDaysPicker.querySelectorAll('.target-day-opt').forEach(opt => {
+        opt.addEventListener('click', () => {
+          targetDaysPicker.querySelectorAll('.target-day-opt').forEach(b => b.classList.remove('active'));
+          opt.classList.add('active');
+          const days = parseInt(opt.dataset.days, 10);
+          if (targetDaysValInput) targetDaysValInput.value = days;
+          if (targetDaysValLabel) targetDaysValLabel.textContent = days === 7 ? '7 días (Diario)' : `${days} días`;
+          playHover();
+        });
+      });
+    }
+
+    // 5. Paleta de Colores de Hábitos
+    const habitColors = document.getElementById('mgr-habit-colors');
+    const habitColorVal = document.getElementById('mgr-habit-color-val');
+    if (habitColors) {
+      habitColors.querySelectorAll('.color-dot-opt').forEach(dot => {
+        dot.addEventListener('click', () => {
+          habitColors.querySelectorAll('.color-dot-opt').forEach(d => d.classList.remove('active'));
+          dot.classList.add('active');
+          if (habitColorVal) habitColorVal.value = dot.dataset.color;
+          playHover();
+        });
+      });
+    }
+
+    // 6. Paleta de Colores e Íconos de Categorías
+    const catColors = document.getElementById('mgr-cat-colors');
+    const catColorVal = document.getElementById('mgr-cat-color-val');
+    if (catColors) {
+      catColors.querySelectorAll('.color-dot-opt').forEach(dot => {
+        dot.addEventListener('click', () => {
+          catColors.querySelectorAll('.color-dot-opt').forEach(d => d.classList.remove('active'));
+          dot.classList.add('active');
+          if (catColorVal) catColorVal.value = dot.dataset.color;
+          playHover();
+        });
+      });
+    }
+
+    const catIcons = document.getElementById('mgr-cat-icons');
+    if (catIcons) {
+      catIcons.querySelectorAll('.icon-btn-opt').forEach(btn => {
+        btn.addEventListener('click', () => {
+          catIcons.querySelectorAll('.icon-btn-opt').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          playHover();
+        });
+      });
+    }
+
+    // 7. Submit de Formularios
+    if (this.mgrHabitForm) {
+      this.mgrHabitForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveHabitFromForm();
+      });
+    }
+
+    if (this.mgrCategoryForm) {
+      this.mgrCategoryForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        this.saveCategoryFromForm();
+      });
+    }
+  }
+
+  renderCategoryDropdownOptions() {
+    const menu = document.getElementById('mgr-cat-dropdown-menu');
+    const selectedValInput = document.getElementById('mgr-habit-category-val');
+    const selectedText = document.getElementById('mgr-cat-selected-text');
+    if (!menu) return;
+
+    const categories = loadCategoriesConfig();
+    const currentVal = selectedValInput ? selectedValInput.value : (categories[0] ? categories[0].id : '');
+
+    menu.innerHTML = '';
+    categories.forEach(cat => {
+      const opt = document.createElement('div');
+      opt.className = `mgr-select-option ${cat.id === currentVal ? 'selected' : ''}`;
+      opt.innerHTML = `
+        <span style="display:inline-block; width:10px; height:10px; border-radius:50%; background:${cat.color};"></span>
+        <span>${cat.name}</span>
+      `;
+      opt.addEventListener('click', () => {
+        if (selectedValInput) selectedValInput.value = cat.id;
+        if (selectedText) selectedText.textContent = cat.name;
+        menu.classList.add('hidden');
+        const trigger = document.getElementById('mgr-cat-dropdown-btn');
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        playSelect();
+      });
+      menu.appendChild(opt);
+    });
+  }
+
+  renderMgrHabitsList() {
+    if (!this.mgrHabitsList) return;
+    this.mgrHabitsList.innerHTML = '';
+
+    const habits = loadHabitsConfig();
+    const categories = loadCategoriesConfig();
+    const catMap = Object.fromEntries(categories.map(c => [c.id, c]));
+
+    habits.forEach(habit => {
+      const cat = catMap[habit.category] || { name: 'General', color: habit.color };
+      const card = document.createElement('div');
+      card.className = 'mgr-item-card';
+      card.innerHTML = `
+        <div class="mgr-item-left">
+          <div class="mgr-item-icon" style="background: ${habit.color}18; color: ${habit.color};">
+            ${getIconSvg(habit.icon || 'star', 18)}
+          </div>
+          <div class="mgr-item-text">
+            <span class="mgr-item-title">${habit.name}</span>
+            <span class="mgr-item-meta">${cat.name} • ${habit.targetDaysPerWeek || 7}d/sem</span>
+          </div>
+        </div>
+        <div class="mgr-item-actions">
+          <button type="button" class="mgr-action-btn edit" title="Editar Hábito">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </button>
+          <button type="button" class="mgr-action-btn delete" title="Eliminar Hábito">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      `;
+
+      card.querySelector('.edit').addEventListener('click', () => this.editHabit(habit));
+      card.querySelector('.delete').addEventListener('click', () => this.deleteHabitPrompt(habit));
+
+      this.mgrHabitsList.appendChild(card);
+    });
+  }
+
+  renderMgrCategoriesList() {
+    if (!this.mgrCategoriesList) return;
+    this.mgrCategoriesList.innerHTML = '';
+
+    const categories = loadCategoriesConfig();
+    categories.forEach(cat => {
+      const card = document.createElement('div');
+      card.className = 'mgr-item-card';
+      card.innerHTML = `
+        <div class="mgr-item-left">
+          <div class="mgr-item-icon" style="background: ${cat.color}18; color: ${cat.color};">
+            ${getIconSvg(cat.icon || 'briefcase', 18)}
+          </div>
+          <div class="mgr-item-text">
+            <span class="mgr-item-title">${cat.name}</span>
+            <span class="mgr-item-meta">${cat.description || 'Sin descripción'}</span>
+          </div>
+        </div>
+        <div class="mgr-item-actions">
+          <button type="button" class="mgr-action-btn edit" title="Editar Plan">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          </button>
+          <button type="button" class="mgr-action-btn delete" title="Eliminar Plan">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          </button>
+        </div>
+      `;
+
+      card.querySelector('.edit').addEventListener('click', () => this.editCategory(cat));
+      card.querySelector('.delete').addEventListener('click', () => this.deleteCategoryPrompt(cat));
+
+      this.mgrCategoriesList.appendChild(card);
+    });
+  }
+
+  showHabitForm(habit = null) {
+    if (!this.mgrHabitForm) return;
+    this.mgrHabitForm.classList.remove('hidden');
+
+    const titleEl = document.getElementById('mgr-habit-form-title');
+    const idInput = document.getElementById('mgr-habit-id-input');
+    const nameInput = document.getElementById('mgr-habit-name-input');
+    const catValInput = document.getElementById('mgr-habit-category-val');
+    const catTextEl = document.getElementById('mgr-cat-selected-text');
+    const targetDaysInput = document.getElementById('mgr-target-days-val');
+    const targetDaysLabel = document.getElementById('target-days-val');
+    const colorInput = document.getElementById('mgr-habit-color-val');
+    const tagsInput = document.getElementById('mgr-habit-tags-input');
+
+    const categories = loadCategoriesConfig();
+    const catMap = Object.fromEntries(categories.map(c => [c.id, c]));
+
+    if (habit) {
+      if (titleEl) titleEl.textContent = 'Editar Hábito';
+      if (idInput) idInput.value = habit.id;
+      if (nameInput) nameInput.value = habit.name;
+      if (catValInput) catValInput.value = habit.category;
+      if (catTextEl) catTextEl.textContent = (catMap[habit.category] && catMap[habit.category].name) || 'Plan asignado';
+      if (targetDaysInput) targetDaysInput.value = habit.targetDaysPerWeek || 7;
+      if (targetDaysLabel) targetDaysLabel.textContent = (habit.targetDaysPerWeek === 7) ? '7 días (Diario)' : `${habit.targetDaysPerWeek || 7} días`;
+      if (colorInput) colorInput.value = habit.color;
+      if (tagsInput) tagsInput.value = (habit.tags || []).join(', ');
+
+      const targetDaysPicker = document.getElementById('mgr-target-days-picker');
+      if (targetDaysPicker) {
+        targetDaysPicker.querySelectorAll('.target-day-opt').forEach(b => {
+          b.classList.toggle('active', parseInt(b.dataset.days, 10) === (habit.targetDaysPerWeek || 7));
+        });
+      }
+
+      const habitColors = document.getElementById('mgr-habit-colors');
+      if (habitColors) {
+        habitColors.querySelectorAll('.color-dot-opt').forEach(d => {
+          d.classList.toggle('active', d.dataset.color.toLowerCase() === habit.color.toLowerCase());
+        });
+      }
+    } else {
+      if (titleEl) titleEl.textContent = 'Crear Nuevo Hábito';
+      if (idInput) idInput.value = '';
+      if (nameInput) nameInput.value = '';
+      const firstCat = categories[0] || { id: 'growth', name: 'Crecimiento Profesional' };
+      if (catValInput) catValInput.value = firstCat.id;
+      if (catTextEl) catTextEl.textContent = firstCat.name;
+      if (targetDaysInput) targetDaysInput.value = 7;
+      if (targetDaysLabel) targetDaysLabel.textContent = '7 días (Diario)';
+      if (colorInput) colorInput.value = '#0071e3';
+      if (tagsInput) tagsInput.value = '';
+
+      const targetDaysPicker = document.getElementById('mgr-target-days-picker');
+      if (targetDaysPicker) {
+        targetDaysPicker.querySelectorAll('.target-day-opt').forEach(b => {
+          b.classList.toggle('active', b.dataset.days === '7');
+        });
+      }
+
+      const habitColors = document.getElementById('mgr-habit-colors');
+      if (habitColors) {
+        habitColors.querySelectorAll('.color-dot-opt').forEach((d, idx) => {
+          d.classList.toggle('active', idx === 0);
+        });
+      }
+    }
+
+    if (nameInput) nameInput.focus();
+  }
+
+  hideHabitForm() {
+    if (this.mgrHabitForm) this.mgrHabitForm.classList.add('hidden');
+  }
+
+  editHabit(habit) {
+    this.showHabitForm(habit);
+    playSelect();
+  }
+
+  async deleteHabitPrompt(habit) {
+    if (habit.id === 'english' || habit.id === 'data_engineering') {
+      this.showToast('Los hábitos base de Kyber no se pueden eliminar.', 'warning');
+      return;
+    }
+
+    const confirmed = await this.showConfirm({
+      title: 'Eliminar Hábito',
+      message: `¿Deseas eliminar el hábito "${habit.name}"? Los datos pasados no se perderán.`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (confirmed) {
+      deleteHabit(habit.id);
+      this.renderMgrHabitsList();
+      this.ctx.refreshAll();
+      this.showToast(`Hábito "${habit.name}" eliminado.`, 'info');
+    }
+  }
+
+  saveHabitFromForm() {
+    const idInput = document.getElementById('mgr-habit-id-input');
+    const nameInput = document.getElementById('mgr-habit-name-input');
+    const catValInput = document.getElementById('mgr-habit-category-val');
+    const targetDaysInput = document.getElementById('mgr-target-days-val');
+    const colorInput = document.getElementById('mgr-habit-color-val');
+    const tagsInput = document.getElementById('mgr-habit-tags-input');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    if (!name) return;
+
+    const habitId = idInput && idInput.value ? idInput.value : '';
+    const category = catValInput ? catValInput.value : 'growth';
+    const targetDaysPerWeek = targetDaysInput ? parseInt(targetDaysInput.value, 10) : 7;
+    const color = colorInput ? colorInput.value : '#0071e3';
+    const tags = tagsInput ? tagsInput.value.split(',').map(t => t.trim().replace(/^#/, '')).filter(Boolean) : [];
+
+    let icon = 'star';
+    if (name.toLowerCase().includes('gym') || name.toLowerCase().includes('ejercicio') || name.toLowerCase().includes('físico')) {
+      icon = 'dumbbell';
+    } else if (name.toLowerCase().includes('inglés') || name.toLowerCase().includes('english')) {
+      icon = 'speech';
+    } else if (name.toLowerCase().includes('data') || name.toLowerCase().includes('datos') || name.toLowerCase().includes('sql')) {
+      icon = 'database';
+    } else if (name.toLowerCase().includes('código') || name.toLowerCase().includes('code') || name.toLowerCase().includes('dev')) {
+      icon = 'code';
+    } else if (name.toLowerCase().includes('leer') || name.toLowerCase().includes('libro')) {
+      icon = 'book';
+    }
+
+    if (habitId) {
+      updateHabit(habitId, { name, category, targetDaysPerWeek, color, icon, tags });
+      this.showToast(`Hábito "${name}" actualizado.`, 'success');
+    } else {
+      addHabit({ name, category, targetDaysPerWeek, color, icon, tags });
+      this.showToast(`Hábito "${name}" creado con éxito.`, 'success');
+    }
+
+    this.hideHabitForm();
+    this.renderMgrHabitsList();
+    this.ctx.refreshAll();
+  }
+
+  showCategoryForm(category = null) {
+    if (!this.mgrCategoryForm) return;
+    this.mgrCategoryForm.classList.remove('hidden');
+
+    const titleEl = document.getElementById('mgr-cat-form-title');
+    const idInput = document.getElementById('mgr-cat-id-input');
+    const nameInput = document.getElementById('mgr-cat-name-input');
+    const descInput = document.getElementById('mgr-cat-desc-input');
+    const colorInput = document.getElementById('mgr-cat-color-val');
+
+    if (category) {
+      if (titleEl) titleEl.textContent = 'Editar Plan';
+      if (idInput) idInput.value = category.id;
+      if (nameInput) nameInput.value = category.name;
+      if (descInput) descInput.value = category.description || '';
+      if (colorInput) colorInput.value = category.color;
+
+      const catColors = document.getElementById('mgr-cat-colors');
+      if (catColors) {
+        catColors.querySelectorAll('.color-dot-opt').forEach(d => {
+          d.classList.toggle('active', d.dataset.color.toLowerCase() === category.color.toLowerCase());
+        });
+      }
+
+      const catIcons = document.getElementById('mgr-cat-icons');
+      if (catIcons) {
+        catIcons.querySelectorAll('.icon-btn-opt').forEach(b => {
+          b.classList.toggle('active', b.dataset.icon === category.icon);
+        });
+      }
+    } else {
+      if (titleEl) titleEl.textContent = 'Crear Nuevo Plan';
+      if (idInput) idInput.value = '';
+      if (nameInput) nameInput.value = '';
+      if (descInput) descInput.value = '';
+      if (colorInput) colorInput.value = '#0071e3';
+
+      const catColors = document.getElementById('mgr-cat-colors');
+      if (catColors) {
+        catColors.querySelectorAll('.color-dot-opt').forEach((d, idx) => {
+          d.classList.toggle('active', idx === 0);
+        });
+      }
+
+      const catIcons = document.getElementById('mgr-cat-icons');
+      if (catIcons) {
+        catIcons.querySelectorAll('.icon-btn-opt').forEach((b, idx) => {
+          b.classList.toggle('active', idx === 0);
+        });
+      }
+    }
+
+    if (nameInput) nameInput.focus();
+  }
+
+  hideCategoryForm() {
+    if (this.mgrCategoryForm) this.mgrCategoryForm.classList.add('hidden');
+  }
+
+  editCategory(cat) {
+    this.showCategoryForm(cat);
+    playSelect();
+  }
+
+  async deleteCategoryPrompt(cat) {
+    if (cat.id === 'growth') {
+      this.showToast('El plan base de Crecimiento Profesional no se puede eliminar.', 'warning');
+      return;
+    }
+
+    const confirmed = await this.showConfirm({
+      title: 'Eliminar Plan',
+      message: `¿Deseas eliminar el plan "${cat.name}"? Los hábitos asignados pasarán al plan general.`,
+      confirmText: 'Eliminar',
+      cancelText: 'Cancelar',
+      type: 'danger'
+    });
+
+    if (confirmed) {
+      deleteCategory(cat.id);
+      this.renderMgrCategoriesList();
+      this.renderMgrHabitsList();
+      this.ctx.refreshAll();
+      this.showToast(`Plan "${cat.name}" eliminado.`, 'info');
+    }
+  }
+
+  saveCategoryFromForm() {
+    const idInput = document.getElementById('mgr-cat-id-input');
+    const nameInput = document.getElementById('mgr-cat-name-input');
+    const descInput = document.getElementById('mgr-cat-desc-input');
+    const colorInput = document.getElementById('mgr-cat-color-val');
+    const activeIconBtn = document.querySelector('#mgr-cat-icons .icon-btn-opt.active');
+
+    const name = nameInput ? nameInput.value.trim() : '';
+    if (!name) return;
+
+    const catId = idInput && idInput.value ? idInput.value : '';
+    const description = descInput ? descInput.value.trim() : '';
+    const color = colorInput ? colorInput.value : '#0071e3';
+    const icon = activeIconBtn ? activeIconBtn.dataset.icon : 'briefcase';
+
+    if (catId) {
+      updateCategory(catId, { name, description, color, icon });
+      this.showToast(`Plan "${name}" actualizado.`, 'success');
+    } else {
+      addCategory({ name, description, color, icon });
+      this.showToast(`Plan "${name}" creado con éxito.`, 'success');
+    }
+
+    this.hideCategoryForm();
+    this.renderMgrCategoriesList();
+    this.ctx.refreshAll();
   }
 }
 

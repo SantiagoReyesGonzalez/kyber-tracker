@@ -61,6 +61,7 @@ class KyberApp {
       this.ui.updateTodayWidget();
       this.ui.updateMetricsDisplay();
       this.ui.renderJournalFeed();
+      this.ui.renderWeeklyGoalsProgress();
     }
   }
 }
