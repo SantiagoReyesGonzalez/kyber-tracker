@@ -58,26 +58,166 @@
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
           <span>Hoy</span>
         </button>
-        <button id="theme-toggle-btn" class="pill-action-btn theme-toggle-btn" title="Alternar tema oscuro / claro">
-          <span id="theme-icon" class="action-icon-wrap">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-          </span>
-          <span id="theme-label">Oscuro</span>
-        </button>
-        <button id="audio-toggle-btn" class="pill-action-btn active" title="Sonido">
-          <span id="audio-icon" class="action-icon-wrap">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-          </span>
-          <span id="audio-label">Audio</span>
-        </button>
-        <button id="open-history-btn" class="pill-action-btn" title="Historial y Opciones">
-          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
-          <span>Historial</span>
-        </button>
+
+        <!-- Widget Desplegable: Modo Enfoque & Temporizador (Dynamic Control Center) -->
+        <div class="focus-menu-container" id="focus-menu-container">
+          <button id="header-focus-btn" class="pill-action-btn focus-pill-btn" title="Modo Enfoque & Temporizador" aria-expanded="false">
+            <span class="action-icon-wrap focus-pill-icon">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            <span id="header-focus-label">Enfoque</span>
+            <span id="header-focus-badge" class="header-focus-badge hidden">05:00</span>
+          </button>
+
+          <!-- Dropdown Flyout Panel -->
+          <div id="focus-dropdown-panel" class="focus-dropdown-panel hidden">
+            <div class="focus-card" id="focus-card">
+              <div class="focus-header">
+                <div class="focus-title-wrap">
+                  <span class="section-badge focus-badge">MODO ENFOQUE</span>
+                  <h3 class="focus-title">Sesión de Concentración</h3>
+                </div>
+                
+                <div class="focus-header-controls">
+                  <!-- Selector Personalizado de Paisaje Sonoro (Liquid Glass Dropdown) -->
+                  <div class="soundscape-dropdown-container">
+                    <div class="soundscape-selector-pill">
+                      <button type="button" id="soundscape-dropdown-btn" class="soundscape-trigger-btn" aria-expanded="false" title="Seleccionar Paisaje Sonoro">
+                        <svg class="soundscape-note-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                        <span id="soundscape-current-label" class="soundscape-current-label">🌊 Ruido Marrón</span>
+                        <svg class="soundscape-dropdown-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+                      </button>
+                      <input type="range" id="soundscape-volume" class="sound-volume-slider" min="0" max="1" step="0.05" value="0.6" title="Volumen de Sonido Ambiente" />
+                    </div>
+
+                    <!-- Menú Desplegable con Estilo Liquid Glass -->
+                    <div id="soundscape-dropdown-menu" class="soundscape-dropdown-menu hidden">
+                      <div class="soundscape-dropdown-header">
+                        <span class="soundscape-dropdown-title">PAISAJES SONOROS</span>
+                        <span class="soundscape-dropdown-subtitle">Sonido procedural 100% nativo</span>
+                      </div>
+                      <div class="soundscape-dropdown-divider"></div>
+                      
+                      <button type="button" class="soundscape-option-item active" data-soundscape="brown">
+                        <span class="soundscape-opt-icon">🌊</span>
+                        <div class="soundscape-opt-details">
+                          <span class="soundscape-opt-name">Ruido Marrón</span>
+                          <span class="soundscape-opt-desc">Código, Algoritmos & Lógica</span>
+                        </div>
+                        <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      </button>
+
+                      <button type="button" class="soundscape-option-item" data-soundscape="rain">
+                        <span class="soundscape-opt-icon">🌧️</span>
+                        <div class="soundscape-opt-details">
+                          <span class="soundscape-opt-name">Lluvia Suave</span>
+                          <span class="soundscape-opt-desc">Lectura, Listening & Calma</span>
+                        </div>
+                        <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      </button>
+
+                      <button type="button" class="soundscape-option-item" data-soundscape="binaural">
+                        <span class="soundscape-opt-icon">🌌</span>
+                        <div class="soundscape-opt-details">
+                          <span class="soundscape-opt-name">Frecuencia Alfa 10Hz</span>
+                          <span class="soundscape-opt-desc">Flujo Profundo & Memoria</span>
+                        </div>
+                        <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      </button>
+
+                      <div class="soundscape-dropdown-divider"></div>
+
+                      <button type="button" class="soundscape-option-item" data-soundscape="none">
+                        <span class="soundscape-opt-icon">🔇</span>
+                        <div class="soundscape-opt-details">
+                          <span class="soundscape-opt-name">Silencio</span>
+                          <span class="soundscape-opt-desc">Solo temporizador visual</span>
+                        </div>
+                        <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Botón Modo Zen -->
+                  <button id="toggle-zen-btn" class="pill-action-btn zen-btn" title="Modo Zen (Pantalla Completa)">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+                    <span>Zen</span>
+                  </button>
+
+                  <!-- Botón Cerrar Panel -->
+                  <button type="button" id="close-focus-panel-btn" class="focus-panel-close-btn" title="Minimizar panel de concentración">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="focus-body">
+                <!-- Configuración de Hábito y Misión -->
+                <div class="focus-session-config">
+                  <div class="focus-habit-chips">
+                    <button type="button" class="focus-habit-btn active" data-focushabit="english">
+                      <span class="status-dot teal-dot"></span>
+                      <span>Inglés</span>
+                    </button>
+                    <button type="button" class="focus-habit-btn" data-focushabit="de">
+                      <span class="status-dot purple-dot"></span>
+                      <span>Data Engineering</span>
+                    </button>
+                    <button type="button" class="focus-habit-btn" data-focushabit="both">
+                      <span class="status-dot gold-dot"></span>
+                      <span>Dual Master</span>
+                    </button>
+                  </div>
+
+                  <div class="focus-goal-input-wrap">
+                    <input type="text" id="focus-goal-input" class="quick-input" placeholder="Misión de hoy: Ej. #SQL Window Functions o #Listening C1..." />
+                  </div>
+                </div>
+
+                <!-- Panel del Temporizador Activo -->
+                <div class="focus-timer-display-wrap">
+                  <div class="focus-time-center">
+                    <span id="focus-timer-digits" class="focus-digits">05:00</span>
+                    <span id="focus-mode-label" class="focus-mode-pill">⚡ Superar Inercia (5 min)</span>
+                  </div>
+                  
+                  <!-- Barra de Progreso de Concentración -->
+                  <div class="focus-progress-track">
+                    <div id="focus-progress-fill" class="focus-progress-bar" style="width: 0%"></div>
+                  </div>
+                </div>
+
+                <!-- Botones de Acción del Temporizador -->
+                <div class="focus-actions-row">
+                  <button type="button" id="start-5min-btn" class="focus-btn-jumpstart" title="Arrancar 5 minutos para romper la inercia">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                    <span>⚡ Arrancar 5 min (Anti-Pereza)</span>
+                  </button>
+
+                  <button type="button" id="start-60min-btn" class="focus-btn-full" title="Iniciar sesión de 1 hora completa">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>🎯 Hora Completa (60 min)</span>
+                  </button>
+
+                  <div id="focus-running-controls" class="focus-running-controls hidden">
+                    <button type="button" id="focus-pause-btn" class="focus-ctrl-btn" title="Pausar / Reanudar">
+                      <svg id="focus-pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                      <span id="focus-pause-label">Pausa</span>
+                    </button>
+                    <button type="button" id="focus-stop-btn" class="focus-ctrl-btn ctrl-stop" title="Detener">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16"/></svg>
+                      <span>Detener</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- Componente de Perfil / Usuario -->
         <div class="user-profile-menu-container">
-          <button id="user-profile-btn" class="user-pill-btn" title="Perfil de usuario" aria-expanded="false">
+          <button id="user-profile-btn" class="user-pill-btn" title="Perfil y configuración" aria-expanded="false">
             <span class="user-avatar-badge" id="header-user-avatar">KT</span>
             <span class="user-name-label" id="header-user-name">Usuario</span>
             <svg class="user-dropdown-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
@@ -91,18 +231,44 @@
                 <span class="user-dropdown-email" id="dropdown-user-email">usuario@correo.com</span>
               </div>
             </div>
+
             <div class="user-dropdown-divider"></div>
+
+            <div class="user-dropdown-section-label">PREFERENCIAS</div>
+
+            <!-- Sonidos de la App -->
+            <button id="audio-toggle-btn" class="user-dropdown-item active" title="Alternar efectos de sonido">
+              <span id="audio-icon" class="action-icon-wrap dropdown-opt-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+              </span>
+              <span class="dropdown-item-text">Sonido de App</span>
+              <span id="audio-label" class="dropdown-badge-pill">Activado</span>
+            </button>
+
+            <!-- Modo Oscuro / Claro -->
+            <button id="theme-toggle-btn" class="user-dropdown-item theme-toggle-btn" title="Alternar tema oscuro / claro">
+              <span id="theme-icon" class="action-icon-wrap dropdown-opt-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              </span>
+              <span class="dropdown-item-text">Tema</span>
+              <span id="theme-label" class="dropdown-badge-pill">Oscuro</span>
+            </button>
+
+            <div class="user-dropdown-divider"></div>
+
+            <div class="user-dropdown-section-label">DATOS Y GESTIÓN</div>
+
             <button id="dropdown-history-btn" class="user-dropdown-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
+              <svg class="dropdown-opt-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 8v4l3 3"/><circle cx="12" cy="12" r="9"/></svg>
               <span>Mi Historial y Respaldos</span>
             </button>
             <button id="dropdown-export-btn" class="user-dropdown-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              <svg class="dropdown-opt-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               <span>Exportar mis Datos (JSON)</span>
             </button>
             <div class="user-dropdown-divider"></div>
             <button id="logout-btn" class="user-dropdown-item logout-action">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              <svg class="dropdown-opt-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
               <span>Cerrar Sesión</span>
             </button>
           </div>
@@ -300,145 +466,7 @@
           </form>
         </section>
 
-        <!-- 2. Tarjeta Modo de Enfoque (Focus & Soundscape) -->
-        <section class="focus-card" id="focus-card">
-          <div class="focus-header">
-            <div class="focus-title-wrap">
-              <span class="section-badge focus-badge">MODO ENFOQUE</span>
-              <h3 class="focus-title">Sesión de Concentración</h3>
-            </div>
-            
-            <div class="focus-header-controls">
-              <!-- Selector Personalizado de Paisaje Sonoro (Liquid Glass Dropdown) -->
-              <div class="soundscape-dropdown-container">
-                <div class="soundscape-selector-pill">
-                  <button type="button" id="soundscape-dropdown-btn" class="soundscape-trigger-btn" aria-expanded="false" title="Seleccionar Paisaje Sonoro">
-                    <svg class="soundscape-note-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                    <span id="soundscape-current-label" class="soundscape-current-label">🌊 Ruido Marrón</span>
-                    <svg class="soundscape-dropdown-arrow" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-                  </button>
-                  <input type="range" id="soundscape-volume" class="sound-volume-slider" min="0" max="1" step="0.05" value="0.6" title="Volumen de Sonido Ambiente" />
-                </div>
-
-                <!-- Menú Desplegable con Estilo Liquid Glass -->
-                <div id="soundscape-dropdown-menu" class="soundscape-dropdown-menu hidden">
-                  <div class="soundscape-dropdown-header">
-                    <span class="soundscape-dropdown-title">PAISAJES SONOROS</span>
-                    <span class="soundscape-dropdown-subtitle">Sonido procedural 100% nativo</span>
-                  </div>
-                  <div class="soundscape-dropdown-divider"></div>
-                  
-                  <button type="button" class="soundscape-option-item active" data-soundscape="brown">
-                    <span class="soundscape-opt-icon">🌊</span>
-                    <div class="soundscape-opt-details">
-                      <span class="soundscape-opt-name">Ruido Marrón</span>
-                      <span class="soundscape-opt-desc">Código, Algoritmos & Lógica</span>
-                    </div>
-                    <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  </button>
-
-                  <button type="button" class="soundscape-option-item" data-soundscape="rain">
-                    <span class="soundscape-opt-icon">🌧️</span>
-                    <div class="soundscape-opt-details">
-                      <span class="soundscape-opt-name">Lluvia Suave</span>
-                      <span class="soundscape-opt-desc">Lectura, Listening & Calma</span>
-                    </div>
-                    <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  </button>
-
-                  <button type="button" class="soundscape-option-item" data-soundscape="binaural">
-                    <span class="soundscape-opt-icon">🌌</span>
-                    <div class="soundscape-opt-details">
-                      <span class="soundscape-opt-name">Frecuencia Alfa 10Hz</span>
-                      <span class="soundscape-opt-desc">Flujo Profundo & Memoria</span>
-                    </div>
-                    <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  </button>
-
-                  <div class="soundscape-dropdown-divider"></div>
-
-                  <button type="button" class="soundscape-option-item" data-soundscape="none">
-                    <span class="soundscape-opt-icon">🔇</span>
-                    <div class="soundscape-opt-details">
-                      <span class="soundscape-opt-name">Silencio</span>
-                      <span class="soundscape-opt-desc">Solo temporizador visual</span>
-                    </div>
-                    <svg class="soundscape-check-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-                  </button>
-                </div>
-              </div>
-
-              <!-- Botón Modo Zen -->
-              <button id="toggle-zen-btn" class="pill-action-btn zen-btn" title="Modo Zen (Pantalla Completa)">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
-                <span>Zen</span>
-              </button>
-            </div>
-          </div>
-
-          <div class="focus-body">
-            <!-- Configuración de Hábito y Misión -->
-            <div class="focus-session-config">
-              <div class="focus-habit-chips">
-                <button type="button" class="focus-habit-btn active" data-focushabit="english">
-                  <span class="status-dot teal-dot"></span>
-                  <span>Inglés</span>
-                </button>
-                <button type="button" class="focus-habit-btn" data-focushabit="de">
-                  <span class="status-dot purple-dot"></span>
-                  <span>Data Engineering</span>
-                </button>
-                <button type="button" class="focus-habit-btn" data-focushabit="both">
-                  <span class="status-dot gold-dot"></span>
-                  <span>Dual Master</span>
-                </button>
-              </div>
-
-              <div class="focus-goal-input-wrap">
-                <input type="text" id="focus-goal-input" class="quick-input" placeholder="Misión de hoy: Ej. #SQL Window Functions o #Listening C1..." />
-              </div>
-            </div>
-
-            <!-- Panel del Temporizador Activo -->
-            <div class="focus-timer-display-wrap">
-              <div class="focus-time-center">
-                <span id="focus-timer-digits" class="focus-digits">05:00</span>
-                <span id="focus-mode-label" class="focus-mode-pill">⚡ Superar Inercia (5 min)</span>
-              </div>
-              
-              <!-- Barra de Progreso de Concentración -->
-              <div class="focus-progress-track">
-                <div id="focus-progress-fill" class="focus-progress-bar" style="width: 0%"></div>
-              </div>
-            </div>
-
-            <!-- Botones de Acción del Temporizador -->
-            <div class="focus-actions-row">
-              <button type="button" id="start-5min-btn" class="focus-btn-jumpstart" title="Arrancar 5 minutos para romper la inercia">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <span>⚡ Arrancar 5 min (Anti-Pereza)</span>
-              </button>
-
-              <button type="button" id="start-60min-btn" class="focus-btn-full" title="Iniciar sesión de 1 hora completa">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                <span>🎯 Hora Completa (60 min)</span>
-              </button>
-
-              <div id="focus-running-controls" class="focus-running-controls hidden">
-                <button type="button" id="focus-pause-btn" class="focus-ctrl-btn" title="Pausar / Reanudar">
-                  <svg id="focus-pause-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
-                  <span id="focus-pause-label">Pausa</span>
-                </button>
-                <button type="button" id="focus-stop-btn" class="focus-ctrl-btn ctrl-stop" title="Detener">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16"/></svg>
-                  <span>Detener</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-      <!-- 3. Contenedor de Vistas: Calendario, Heatmap y Consistencia -->
+      <!-- 2. Contenedor de Vistas: Calendario, Heatmap y Consistencia -->
       <section class="views-section">
         <div class="views-header">
           <div class="view-tabs">

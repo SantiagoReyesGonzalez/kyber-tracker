@@ -600,6 +600,25 @@ body.app-theme {
   justify-content: space-between;
 }
 
+.stat-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.stat-block.align-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 80px;
+  text-align: center;
+}
+
+.stat-block.align-right .sub-label {
+  text-align: center;
+  width: 100%;
+}
+
 .big-metric {
   font-family: var(--font-title);
   font-size: 2.1rem;
@@ -617,14 +636,16 @@ body.app-theme {
   letter-spacing: 0.05em;
   margin-top: 0.4rem;
   display: block;
+  white-space: nowrap;
 }
 
 /* Badge de Racha Estilo Circular/Pill Apple */
 .badge-streak {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.35rem;
-  padding: 0.25rem 0.6rem;
+  padding: 0.25rem 0.65rem;
   border-radius: 9999px;
   background: var(--surface-subtle);
   border: 1px solid var(--border-subtle);
@@ -632,6 +653,7 @@ body.app-theme {
   font-size: 0.95rem;
   font-weight: 700;
   font-feature-settings: "tnum";
+  min-width: 54px;
 }
 
 .badge-streak .streak-icon {
@@ -2322,15 +2344,27 @@ body.app-theme {
   .header-actions {
     width: 100%;
     display: flex;
-    gap: 0.35rem;
+    align-items: center;
+    gap: 0.5rem;
   }
 
-  .pill-action-btn {
+  .header-actions > * {
     flex: 1;
-    padding: 0.45rem 0.3rem;
-    font-size: 0.72rem;
+  }
+
+  .pill-action-btn,
+  .user-pill-btn {
+    width: 100%;
+    padding: 0.55rem 0.65rem;
+    font-size: 0.82rem;
+    font-weight: 600;
     justify-content: center;
     min-width: 0;
+    border-radius: 9999px;
+  }
+
+  .user-name-label {
+    max-width: 90px;
   }
 
   .app-body-layout {
@@ -2538,17 +2572,28 @@ body.app-theme {
   .header-actions {
     width: 100%;
     display: flex;
-    gap: 0.25rem;
+    align-items: center;
+    gap: 0.4rem;
   }
 
-  .pill-action-btn {
+  .header-actions > * {
     flex: 1;
-    padding: 0.42rem 0.15rem;
-    font-size: 0.68rem;
+  }
+
+  .pill-action-btn,
+  .user-pill-btn {
+    width: 100%;
+    padding: 0.5rem 0.45rem;
+    font-size: 0.78rem;
+    font-weight: 600;
     justify-content: center;
     min-width: 0;
     white-space: nowrap;
-    border-radius: 12px;
+    border-radius: 9999px;
+  }
+
+  .user-name-label {
+    max-width: 70px;
   }
 
   /* Métricas en Móvil: Matriz 2x2 compacta */
@@ -2615,8 +2660,14 @@ body.app-theme {
     font-size: 1.32rem;
   }
 
+  .stat-block.align-right {
+    min-width: auto;
+  }
+
   .badge-streak {
+    min-width: auto;
     font-size: 0.92rem;
+    padding: 0.2rem 0.45rem;
   }
 
   .sub-label {
@@ -3037,13 +3088,11 @@ body.app-theme {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
-  width: 250px;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
-  border-radius: 18px;
-  box-shadow: var(--shadow-lg);
+  width: 270px;
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
   padding: 0.75rem;
   z-index: 999;
   animation: dropdownSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -3051,6 +3100,54 @@ body.app-theme {
 
 .user-dropdown-menu.hidden {
   display: none !important;
+}
+
+.user-dropdown-section-label {
+  font-family: var(--font-title);
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 0.35rem 0.75rem 0.2rem 0.75rem;
+  text-transform: uppercase;
+}
+
+.dropdown-badge-pill {
+  margin-left: auto;
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.15rem 0.55rem;
+  border-radius: 9999px;
+  background: var(--surface-subtle);
+  color: var(--text-muted);
+  border: 1px solid var(--border-subtle);
+  transition: all 0.2s ease;
+}
+
+.user-dropdown-item.active .dropdown-badge-pill {
+  background: rgba(41, 151, 255, 0.15);
+  color: var(--color-english);
+  border-color: rgba(41, 151, 255, 0.3);
+}
+
+[data-theme="light"] .user-dropdown-item.active .dropdown-badge-pill {
+  background: rgba(0, 113, 227, 0.1);
+  color: var(--color-english-text);
+  border-color: rgba(0, 113, 227, 0.25);
+}
+
+.dropdown-opt-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.user-dropdown-item:hover .dropdown-opt-icon {
+  color: var(--text-main);
 }
 
 @keyframes dropdownSlideIn {
@@ -3661,8 +3758,183 @@ body.app-theme {
 }
 
 /* ==========================================================================
-   KYBER FOCUS ENGINE & SOUNDSCAPE STYLES
+   KYBER FOCUS ENGINE - HEADER WIDGET & DROPDOWN FLYOUT (DYNAMIC ISLAND)
    ========================================================================== */
+.focus-menu-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.focus-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.focus-pill-btn .focus-pill-icon {
+  color: var(--color-english);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.focus-pill-btn:hover .focus-pill-icon {
+  transform: rotate(15deg);
+}
+
+.focus-pill-btn[aria-expanded="true"] {
+  background: var(--surface-active);
+  border-color: var(--border-focus);
+}
+
+/* Estado Activo / Corriendo en el Header */
+.focus-pill-btn.is-running {
+  background: rgba(0, 240, 255, 0.12) !important;
+  border-color: rgba(0, 240, 255, 0.5) !important;
+  color: var(--text-main);
+  box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+  animation: pulseFocusPill 2.5s infinite ease-in-out;
+}
+
+.focus-pill-btn.is-running .focus-pill-icon {
+  color: #00f0ff;
+  animation: spinSlow 8s linear infinite;
+}
+
+.focus-pill-btn.is-paused {
+  background: rgba(255, 179, 0, 0.12) !important;
+  border-color: rgba(255, 179, 0, 0.45) !important;
+  box-shadow: 0 0 10px rgba(255, 179, 0, 0.25);
+}
+
+@keyframes pulseFocusPill {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+    border-color: rgba(0, 240, 255, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(0, 240, 255, 0.55), 0 0 8px rgba(168, 85, 247, 0.3);
+    border-color: rgba(0, 240, 255, 0.8);
+  }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Badge de Tiempo en Vivo dentro del Botón del Header */
+.header-focus-badge {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-title);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  background: rgba(0, 240, 255, 0.18);
+  color: #00f0ff;
+  padding: 0.15rem 0.48rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 240, 255, 0.35);
+  margin-left: 0.15rem;
+}
+
+.header-focus-badge.hidden {
+  display: none !important;
+}
+
+/* Panel Desplegable Flotante (Sólido y Nítido) */
+.focus-dropdown-panel {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: -20px;
+  width: 480px;
+  max-width: calc(100vw - 2rem);
+  max-height: calc(100vh - 90px);
+  overflow-y: auto;
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 24px;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.75), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  padding: 1.4rem 1.6rem;
+  z-index: 1000;
+  animation: dropdownSlideIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.focus-dropdown-panel.hidden {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .focus-dropdown-panel {
+    position: fixed;
+    top: 80px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: none;
+    max-height: calc(100vh - 100px);
+    z-index: 10000;
+  }
+}
+
+/* Botón cerrar sutil en el panel */
+.focus-panel-close-btn {
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-main);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.focus-panel-close-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text-main);
+  border-color: var(--border-focus);
+  transform: scale(1.05);
+}
+
+/* Adaptación del Focus Card dentro del Dropdown Panel */
+.focus-dropdown-panel .focus-card {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  border-radius: 0;
+  gap: 1.15rem;
+}
+
+.focus-dropdown-panel .focus-card::before {
+  display: none;
+}
+
+.focus-dropdown-panel .focus-digits {
+  font-size: 2.6rem;
+}
+
+.focus-dropdown-panel .focus-timer-display-wrap {
+  padding: 1rem;
+}
+
+.focus-dropdown-panel .focus-btn-jumpstart,
+.focus-dropdown-panel .focus-btn-full {
+  min-width: 160px;
+  font-size: 0.86rem;
+  padding: 0.72rem 1.1rem;
+}
+
+/* Fallback o uso clásico de .focus-card */
 .focus-card {
   background: var(--surface-card);
   border: 1px solid var(--border-main);
@@ -3780,18 +4052,16 @@ body.app-theme {
   transform: rotate(180deg);
 }
 
-/* Menú Desplegable con Estilo Liquid Glass */
+/* Menú Desplegable con Estilo Nítido y Sólido */
 .soundscape-dropdown-menu {
   position: absolute;
   top: calc(100% + 10px);
   right: 0;
   width: 290px;
-  background: var(--glass-bg);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--glass-border);
+  background: var(--surface-card-subtle);
+  border: 1px solid var(--border-main);
   border-radius: 20px;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08);
   padding: 0.75rem;
   z-index: 9999;
   animation: dropdownSlideIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;

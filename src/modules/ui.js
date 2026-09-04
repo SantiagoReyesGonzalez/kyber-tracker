@@ -89,6 +89,11 @@ export class UIManager {
     this.tagChips = document.querySelectorAll('.tag-chip');
 
     // Focus Mode & Soundscape Elements
+    this.headerFocusBtn = document.getElementById('header-focus-btn');
+    this.headerFocusLabel = document.getElementById('header-focus-label');
+    this.headerFocusBadge = document.getElementById('header-focus-badge');
+    this.focusDropdownPanel = document.getElementById('focus-dropdown-panel');
+    this.closeFocusPanelBtn = document.getElementById('close-focus-panel-btn');
     this.soundscapeDropdownBtn = document.getElementById('soundscape-dropdown-btn');
     this.soundscapeDropdownMenu = document.getElementById('soundscape-dropdown-menu');
     this.soundscapeCurrentLabel = document.getElementById('soundscape-current-label');
@@ -533,9 +538,9 @@ export class UIManager {
     if (this.audioToggleBtn && this.audioIcon && this.audioLabel) {
       this.audioToggleBtn.classList.toggle('active', on);
       this.audioIcon.innerHTML = on 
-        ? `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`
-        : `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
-      this.audioLabel.textContent = on ? 'Audio' : 'Silencio';
+        ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`
+        : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
+      this.audioLabel.textContent = on ? 'Activado' : 'Silenciado';
     }
   }
 
@@ -1288,6 +1293,47 @@ export class UIManager {
       this.renderFocusTimerState(state);
     });
 
+    // 1b. Control Desplegable del Panel de Concentración desde el Header (Dynamic Flyout)
+    if (this.headerFocusBtn && this.focusDropdownPanel) {
+      this.headerFocusBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isClosed = this.focusDropdownPanel.classList.contains('hidden');
+        this.focusDropdownPanel.classList.toggle('hidden', !isClosed);
+        this.headerFocusBtn.setAttribute('aria-expanded', String(isClosed));
+        playHover();
+      });
+
+      if (this.closeFocusPanelBtn) {
+        this.closeFocusPanelBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          this.focusDropdownPanel.classList.add('hidden');
+          this.headerFocusBtn.setAttribute('aria-expanded', 'false');
+          playHover();
+        });
+      }
+
+      // Cerrar al hacer clic fuera del panel
+      window.addEventListener('click', (e) => {
+        if (this.focusDropdownPanel && !this.focusDropdownPanel.classList.contains('hidden')) {
+          if (!this.focusDropdownPanel.contains(e.target) && !this.headerFocusBtn.contains(e.target)) {
+            this.focusDropdownPanel.classList.add('hidden');
+            this.headerFocusBtn.setAttribute('aria-expanded', 'false');
+          }
+        }
+      }, true);
+
+      // Cerrar al presionar tecla Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && this.focusDropdownPanel && !this.focusDropdownPanel.classList.contains('hidden')) {
+          if (this.soundscapeDropdownMenu && !this.soundscapeDropdownMenu.classList.contains('hidden')) {
+            return;
+          }
+          this.focusDropdownPanel.classList.add('hidden');
+          this.headerFocusBtn.setAttribute('aria-expanded', 'false');
+        }
+      });
+    }
+
     // 2. Selección de Hábito para Foco (Inglés / Data Eng / Dual)
     this.focusHabitBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1482,6 +1528,10 @@ export class UIManager {
 
   openZenMode() {
     if (!this.zenOverlay) return;
+    if (this.focusDropdownPanel) {
+      this.focusDropdownPanel.classList.add('hidden');
+      if (this.headerFocusBtn) this.headerFocusBtn.setAttribute('aria-expanded', 'false');
+    }
     this.zenOverlay.classList.remove('hidden');
     playSelect();
   }
@@ -1551,6 +1601,30 @@ export class UIManager {
         none: '🔇 Silencio'
       };
       this.zenSoundscapeStatus.textContent = soundLabels[state.selectedSoundscape] || 'Sonido Ambiente';
+    }
+
+    // 6. Actualización dinámica del Widget en el Header (Dynamic Island)
+    if (this.headerFocusBadge) {
+      this.headerFocusBadge.textContent = state.timeFormatted;
+      const isLive = state.state === 'running' || state.state === 'paused';
+      this.headerFocusBadge.classList.toggle('hidden', !isLive);
+    }
+
+    if (this.headerFocusBtn) {
+      const isRunning = state.state === 'running';
+      const isPaused = state.state === 'paused';
+      this.headerFocusBtn.classList.toggle('is-running', isRunning);
+      this.headerFocusBtn.classList.toggle('is-paused', isPaused);
+
+      if (this.headerFocusLabel) {
+        if (isRunning) {
+          this.headerFocusLabel.textContent = 'Enfocado';
+        } else if (isPaused) {
+          this.headerFocusLabel.textContent = 'Pausado';
+        } else {
+          this.headerFocusLabel.textContent = 'Enfoque';
+        }
+      }
     }
   }
 }
