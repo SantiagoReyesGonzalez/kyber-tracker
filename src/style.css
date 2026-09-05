@@ -5710,23 +5710,58 @@ body.app-theme {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.kpi-label-group {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-width: 0;
 }
 
 .kpi-label {
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kpi-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.kpi-info-btn:hover {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: scale(1.1);
 }
 
 .kpi-tag {
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   font-weight: 700;
   padding: 2px 7px;
   border-radius: 6px;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .kpi-tag.trend-up {
@@ -5791,6 +5826,35 @@ body.app-theme {
   color: var(--text-muted);
 }
 
+.kpi-mini-pill {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 5px;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.kpi-mini-pill.trend-up {
+  background: rgba(52, 211, 153, 0.15);
+  color: #10b981;
+}
+
+.kpi-mini-pill.trend-down {
+  background: rgba(248, 113, 113, 0.15);
+  color: #ef4444;
+}
+
+.kpi-mini-pill.trend-stable {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+}
+
+.kpi-mini-pill.trend-focus {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+}
+
 .kpi-meter-bar {
   width: 100%;
   height: 5px;
@@ -5853,7 +5917,14 @@ body.app-theme {
 .chart-header-left {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.35rem;
+}
+
+.chart-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
 }
 
 .chart-card-title {
@@ -5866,6 +5937,28 @@ body.app-theme {
   align-items: center;
   gap: 0.5rem;
   margin: 0;
+}
+
+.chart-info-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: #38bdf8;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chart-info-pill-btn:hover {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: #38bdf8;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.25);
 }
 
 .chart-card-desc {
@@ -6148,4 +6241,182 @@ body.app-theme {
   font-weight: 800;
   color: var(--chip-color, #38bdf8);
 }
+
+/* ==========================================================================
+   CURVES GUIDE MODAL - Diálogo Informativo y Explicativo de Métricas y Curvas
+   ========================================================================== */
+
+.curves-guide-dialog {
+  border: none;
+  background: transparent;
+  padding: 0;
+  max-width: 520px;
+  width: 92vw;
+  border-radius: 24px;
+  box-shadow: var(--shadow-lg);
+  overflow: visible;
+  margin: auto;
+}
+
+.curves-guide-dialog::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.curves-guide-card {
+  position: relative;
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 24px;
+  padding: 2.2rem 1.8rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  animation: modalPopIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPopIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.curves-guide-close-btn {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-subtle);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+}
+
+.curves-guide-close-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text-main);
+  transform: rotate(90deg);
+}
+
+.guide-header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+}
+
+.guide-header-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.3rem;
+  border: 1px solid transparent;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.guide-category-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.guide-modal-title {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.guide-modal-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+  max-width: 440px;
+}
+
+.guide-content-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.guide-section-block {
+  background: var(--surface-card-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  padding: 0.95rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.guide-section-block.highlight-block {
+  background: rgba(245, 158, 11, 0.08);
+  border-color: rgba(245, 158, 11, 0.28);
+}
+
+.guide-block-header {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.guide-block-icon {
+  font-size: 0.95rem;
+}
+
+.guide-block-header h4 {
+  font-family: var(--font-title);
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.guide-block-text {
+  font-size: 0.79rem;
+  line-height: 1.45;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.guide-bullets {
+  padding-left: 1.1rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.77rem;
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.guide-bullets strong {
+  color: var(--text-main);
+}
+
 

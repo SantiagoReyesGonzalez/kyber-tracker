@@ -13,11 +13,118 @@ import {
   DAY_NAMES_ES 
 } from './tracker.js';
 
+export const CURVES_GUIDE_DATA = {
+  momentum: {
+    badge: 'MÉTRICA DE VELOCIDAD',
+    title: 'Índice de Momentum (0 a 100)',
+    subtitle: 'Media móvil exponencial (EMA) ponderada de tu consistencia diaria.',
+    iconColor: '#38bdf8',
+    iconSvg: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+    purpose: 'Mide la verdadera aceleración e inercia de tus hábitos, yendo más allá de las rachas tradicionales. Te avisa si estás ganando velocidad o perdiendo ritmo antes de romper una racha.',
+    interpretHtml: `
+      <ul class="guide-bullets">
+        <li><strong>Zona Alta (&gt;80%):</strong> Estás en máxima tracción y disciplina fluida.</li>
+        <li><strong>Zona Estable (50% a 80%):</strong> Ritmo constante y sostenible sin fatiga mental.</li>
+        <li><strong>Zona de Riesgo (&lt;50%):</strong> Desaceleración activa. Requiere atención inmediata.</li>
+      </ul>
+    `,
+    tip: 'No intentes pasar de 40 a 100 en un solo día. Cumple al menos 1 hábito hoy para reactivar la curva hacia arriba.'
+  },
+  kaizen_kpi: {
+    badge: 'FACTOR COMPUESTO',
+    title: 'Aceleración Kaizen 1%',
+    subtitle: 'Relación entre tus sesiones reales acumuladas y la meta exponencial continua.',
+    iconColor: '#f59e0b',
+    iconSvg: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+    purpose: 'Calcula matemáticamente si tu disciplina actual está multiplicando tu progreso a una tasa superior o inferior al 1% diario del modelo Kaizen ($1.01^{365} = 37.78$).',
+    interpretHtml: `
+      <ul class="guide-bullets">
+        <li><strong>Factor &ge; 1.0x (+%):</strong> Tu volumen de estudio/entrenamiento supera la curva de interés compuesto.</li>
+        <li><strong>Factor &lt; 1.0x (-%):</strong> Estás ligeramente por detrás del ritmo óptimo, indicándote cuántas sesiones faltan para converger.</li>
+      </ul>
+    `,
+    tip: 'La constancia vence a la intensidad esporádica. Una sesión de 45 minutos hoy vale más que 5 horas el domingo.'
+  },
+  habit_leader: {
+    badge: 'HÁBITO DOMINANTE',
+    title: 'Hábito Con Mayor Tracción',
+    subtitle: 'El pilar que más sesiones ha acumulado en el periodo seleccionado.',
+    iconColor: '#a855f7',
+    iconSvg: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    purpose: 'Identifica tu ancla de disciplina actual. Saber cuál es tu hábito más fuerte te permite apalancarte en él para arrastrar los demás.',
+    interpretHtml: `
+      <p>Refleja el hábito que ha presentado mayor fidelidad y cumplimiento sin interrupciones durante la ventana de tiempo activa.</p>
+    `,
+    tip: 'Aplica la regla de «Habit Stacking»: realiza tu hábito más débil inmediatamente después de tu hábito dominante.'
+  },
+  volume_accum: {
+    badge: 'CARGA TOTAL',
+    title: 'Volumen Acumulado',
+    subtitle: 'Sumatoria neta de sesiones completadas y horas invertidas.',
+    iconColor: '#10b981',
+    iconSvg: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    purpose: 'Mide la masa de trabajo ejecutada. El esfuerzo deliberado acumulado es la garantía de que estás construyendo dominio real.',
+    interpretHtml: `
+      <p>Contabiliza cada sesión completada de Inglés, Data Engineering y Gym, estimando las horas netas de concentración profunda e hipertrofia.</p>
+    `,
+    tip: 'Celebra cada bloque de volumen; la maestría técnica es el resultado inevitable de 500 horas deliberadas.'
+  },
+  momentum_chart: {
+    badge: 'GRÁFICA PRINCIPAL',
+    title: 'Curva de Momentum & Velocidad de Consistencia',
+    subtitle: 'Onda continua Catmull-Rom Bézier a 144 FPS con seguimiento temporal.',
+    iconColor: '#38bdf8',
+    iconSvg: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`,
+    purpose: 'Te permite visualizar tus picos y valles de energía a lo largo de las semanas, identificando patrones de descanso, días flojos y momentos de alta productividad.',
+    interpretHtml: `
+      <ul class="guide-bullets">
+        <li><strong>Línea Guía 80% (Verde):</strong> Marca el umbral de disciplina de élite.</li>
+        <li><strong>Línea Guía 50% (Cian):</strong> Nivel base para mantener progreso constante.</li>
+        <li><strong>Área Resplandeciente:</strong> Representa la inercia acumulada que te empuja hacia adelante.</li>
+        <li><strong>Mirilla Interactiva:</strong> Pasa el cursor por cualquier fecha para ver exactamente qué hábitos hiciste ese día.</li>
+      </ul>
+    `,
+    tip: 'Si ves la curva descender durante 3 días seguidos, programa una sesión corta de 20 minutos para cortar la caída.'
+  },
+  kaizen_chart: {
+    badge: 'GRÁFICA EXPONENCIAL',
+    title: 'Crecimiento Compuesto Kaizen (1% Diario)',
+    subtitle: 'El modelo matemático del 1% continuo ($y = 1.01^t$) contra tu realidad.',
+    iconColor: '#f59e0b',
+    iconSvg: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+    purpose: 'Te demuestra empíricamente el poder de los pequeños hábitos. Una persona que mejora 1% diario termina el año siendo 37 veces mejor ($1.01^{365} = 37.78$).',
+    interpretHtml: `
+      <ul class="guide-bullets">
+        <li><strong>Curva Punteada Dorada:</strong> La trayectoria exponencial matemática ideal del 1% diario.</li>
+        <li><strong>Curva Sólida Azul / Área Sombreada:</strong> Tus sesiones reales acumuladas hasta la fecha.</li>
+        <li><strong>Distancia entre curvas:</strong> Indica si estás por delante de la curva de aceleración o si necesitas reforzar el volumen.</li>
+      </ul>
+    `,
+    tip: 'El crecimiento compuesto tarda en notarse al principio, pero a partir del día 30 la curva se dispara. No abandones en la fase inicial.'
+  },
+  balance_chart: {
+    badge: 'GRÁFICA DE ARMONÍA',
+    title: 'Sinergia & Balance Multihábito',
+    subtitle: 'Splines individuales superpuestos con aislador interactivo por hábito.',
+    iconColor: '#a855f7',
+    iconSvg: `<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`,
+    purpose: 'Evita que te conviertas en un estudiante saturado con dolor de espalda, o en un atleta que descuida su carrera profesional. Mantiene en equilibrio tus pilares de mente (Inglés + Data Eng) y cuerpo (Gym).',
+    interpretHtml: `
+      <ul class="guide-bullets">
+        <li><strong>Curva Azul / Cian:</strong> Consistencia rodante de 7 días en Inglés.</li>
+        <li><strong>Curva Violeta:</strong> Consistencia rodante de 7 días en Data Engineering.</li>
+        <li><strong>Curva Esmeralda:</strong> Consistencia rodante de 7 días en Gym / Entrenamiento.</li>
+        <li><strong>Botones de Hábito:</strong> Haz clic en cualquiera para activar o desactivar curvas y analizarlas en solitario.</li>
+      </ul>
+    `,
+    tip: 'Si la curva física cae mientras la intelectual sube, programa descansos activos o caminatas mientras escuchas audios en inglés.'
+  }
+};
+
 export class CurveDashboard {
   constructor(containerId = 'view-curves-panel') {
     this.container = document.getElementById(containerId);
     this.timeframe = '30d'; // '14d', '30d', '90d', 'year'
-    this.activeHabitFilter = 'all'; // 'all' o habitId
     this.tooltipEl = null;
     this.cachedData = null;
     this.visibleHabits = new Set(['english', 'de', 'gym']);
@@ -101,7 +208,6 @@ export class CurveDashboard {
 
     const series = dates.map((d, index) => {
       const session = studyData[d.dateStr] || null;
-      let dayScore = 0;
       let completedInDay = 0;
       let totalHabitsCount = habitsConfig.length || 3;
       const dayHabitsStatus = {};
@@ -174,18 +280,26 @@ export class CurveDashboard {
     const momentumDelta = latestMomentum - prevMomentum;
 
     let momentumTrend = 'Estable';
+    let momentumShortDelta = '±0%';
+    let momentumStatusText = 'Estable';
     let momentumTrendClass = 'trend-stable';
     let momentumArrow = '—';
     if (momentumDelta > 3) {
       momentumTrend = `Acelerando (+${momentumDelta}%)`;
+      momentumShortDelta = `+${momentumDelta}%`;
+      momentumStatusText = 'Acelerando';
       momentumTrendClass = 'trend-up';
       momentumArrow = '▲';
     } else if (momentumDelta < -3) {
       momentumTrend = `Desacelerando (${momentumDelta}%)`;
+      momentumShortDelta = `${momentumDelta}%`;
+      momentumStatusText = 'Desacelerando';
       momentumTrendClass = 'trend-down';
       momentumArrow = '▼';
     } else {
       momentumTrend = `Ritmo Constante (±${Math.abs(momentumDelta)}%)`;
+      momentumShortDelta = `±${Math.abs(momentumDelta)}%`;
+      momentumStatusText = 'Constante';
     }
 
     // Factor Kaizen: Real vs Proyectado
@@ -193,6 +307,7 @@ export class CurveDashboard {
     const finalTarget = Math.max(1, series[series.length - 1].totalTargetAccum);
     const kaizenRatio = Math.round((finalActual / finalTarget) * 100) / 100;
     const kaizenDeltaPercent = Math.round(((finalActual - finalTarget) / finalTarget) * 100);
+    const kaizenStatusText = kaizenDeltaPercent >= 0 ? 'En Aceleración' : 'Alineándose';
 
     // Hábito más fuerte
     let bestHabit = null;
@@ -214,10 +329,13 @@ export class CurveDashboard {
       kpis: {
         latestMomentum,
         momentumTrend,
+        momentumShortDelta,
+        momentumStatusText,
         momentumTrendClass,
         momentumArrow,
         kaizenRatio,
         kaizenDeltaPercent,
+        kaizenStatusText,
         bestHabit: bestHabit ? bestHabit.name : 'En progreso',
         bestHabitCount: maxDone,
         totalSessionsAccum,
@@ -262,12 +380,20 @@ export class CurveDashboard {
           </div>
         </div>
 
-        <!-- 2. Tarjetas KPI Ejecutivas (Cero relleno) -->
+        <!-- 2. Tarjetas KPI Ejecutivas (Diseño Optimizado con Info (i)) -->
         <div class="curves-kpi-grid">
+          <!-- KPI 1: Momentum -->
           <div class="curve-kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Índice de Momentum</span>
-              <span class="kpi-tag ${data.kpis.momentumTrendClass}">${data.kpis.momentumArrow} ${data.kpis.momentumTrend}</span>
+              <div class="kpi-label-group">
+                <span class="kpi-label">MOMENTUM</span>
+                <button type="button" class="kpi-info-btn" data-info="momentum" aria-label="Información sobre Índice de Momentum" title="¿Para qué sirve?">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </button>
+              </div>
+              <span class="kpi-tag ${data.kpis.momentumTrendClass}" title="${data.kpis.momentumTrend}">
+                ${data.kpis.momentumArrow} ${data.kpis.momentumShortDelta}
+              </span>
             </div>
             <div class="kpi-value-row">
               <span class="kpi-big-value">${data.kpis.latestMomentum}</span>
@@ -279,10 +405,16 @@ export class CurveDashboard {
             <p class="kpi-subtext">Media exponencial ponderada de cumplimiento diario.</p>
           </div>
 
+          <!-- KPI 2: Kaizen -->
           <div class="curve-kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Aceleración Kaizen 1%</span>
-              <span class="kpi-tag ${data.kpis.kaizenDeltaPercent >= 0 ? 'trend-up' : 'trend-down'}">
+              <div class="kpi-label-group">
+                <span class="kpi-label">KAIZEN 1%</span>
+                <button type="button" class="kpi-info-btn" data-info="kaizen_kpi" aria-label="Información sobre Kaizen 1%" title="¿Para qué sirve?">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </button>
+              </div>
+              <span class="kpi-tag ${data.kpis.kaizenDeltaPercent >= 0 ? 'trend-up' : 'trend-down'}" title="${data.kpis.kaizenStatusText}">
                 ${data.kpis.kaizenDeltaPercent >= 0 ? '+' : ''}${data.kpis.kaizenDeltaPercent}%
               </span>
             </div>
@@ -296,10 +428,16 @@ export class CurveDashboard {
             <p class="kpi-subtext">${data.kpis.kaizenDeltaPercent >= 0 ? 'Por encima de la tasa compuesta continua' : 'A pocas sesiones de alinearse con el 1%'}.</p>
           </div>
 
+          <!-- KPI 3: Hábito Líder -->
           <div class="curve-kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Hábito Con Mayor Tracción</span>
-              <span class="kpi-tag trend-focus">Líder</span>
+              <div class="kpi-label-group">
+                <span class="kpi-label">HÁBITO TOP</span>
+                <button type="button" class="kpi-info-btn" data-info="habit_leader" aria-label="Información sobre Hábito Líder" title="¿Para qué sirve?">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </button>
+              </div>
+              <span class="kpi-tag trend-focus">${data.kpis.bestHabitCount} sesiones</span>
             </div>
             <div class="kpi-value-row">
               <span class="kpi-big-value-text">${data.kpis.bestHabit}</span>
@@ -307,13 +445,19 @@ export class CurveDashboard {
             <div class="kpi-meter-bar">
               <div class="kpi-meter-fill habit-fill" style="width: 100%;"></div>
             </div>
-            <p class="kpi-subtext">${data.kpis.bestHabitCount} sesiones completadas en este periodo.</p>
+            <p class="kpi-subtext">Mayor frecuencia de cumplimiento en este periodo.</p>
           </div>
 
+          <!-- KPI 4: Volumen Total -->
           <div class="curve-kpi-card">
             <div class="kpi-header">
-              <span class="kpi-label">Volumen Acumulado</span>
-              <span class="kpi-tag trend-info">Total</span>
+              <div class="kpi-label-group">
+                <span class="kpi-label">VOLUMEN</span>
+                <button type="button" class="kpi-info-btn" data-info="volume_accum" aria-label="Información sobre Volumen Acumulado" title="¿Para qué sirve?">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </button>
+              </div>
+              <span class="kpi-tag trend-info">${this.timeframe === '14d' ? '14 Días' : this.timeframe === '30d' ? '30 Días' : this.timeframe === '90d' ? '90 Días' : 'Año'}</span>
             </div>
             <div class="kpi-value-row">
               <span class="kpi-big-value">${data.kpis.totalSessionsAccum}</span>
@@ -330,10 +474,16 @@ export class CurveDashboard {
         <div class="curve-card hero-chart-card">
           <div class="curve-card-header">
             <div class="chart-header-left">
-              <h3 class="chart-card-title">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
-                Curva de Momentum & Velocidad de Consistencia
-              </h3>
+              <div class="chart-title-row">
+                <h3 class="chart-card-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2.5"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                  <span>Curva de Momentum & Velocidad de Consistencia</span>
+                </h3>
+                <button type="button" class="chart-info-pill-btn" data-info="momentum_chart" title="¿Para qué sirve esta gráfica?">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  <span>¿Para qué sirve?</span>
+                </button>
+              </div>
               <p class="chart-card-desc">Sigue las ondas de aceleración y estabilidad en tu disciplina diaria.</p>
             </div>
             <div class="chart-legend-pills">
@@ -354,10 +504,16 @@ export class CurveDashboard {
           <div class="curve-card">
             <div class="curve-card-header">
               <div class="chart-header-left">
-                <h3 class="chart-card-title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-                  Crecimiento Compuesto Kaizen (1% Diario)
-                </h3>
+                <div class="chart-title-row">
+                  <h3 class="chart-card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                    <span>Crecimiento Compuesto Kaizen (1% Diario)</span>
+                  </h3>
+                  <button type="button" class="chart-info-pill-btn" data-info="kaizen_chart" title="¿Para qué sirve esta gráfica?">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span>¿Para qué sirve?</span>
+                  </button>
+                </div>
                 <p class="chart-card-desc">Trayectoria real acumulada vs. el avance exponencial matemático ($1.01^t$).</p>
               </div>
             </div>
@@ -370,10 +526,16 @@ export class CurveDashboard {
           <div class="curve-card">
             <div class="curve-card-header">
               <div class="chart-header-left">
-                <h3 class="chart-card-title">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-                  Sinergia & Balance Multihábito
-                </h3>
+                <div class="chart-title-row">
+                  <h3 class="chart-card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#a855f7" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    <span>Sinergia & Balance Multihábito</span>
+                  </h3>
+                  <button type="button" class="chart-info-pill-btn" data-info="balance_chart" title="¿Para qué sirve esta gráfica?">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    <span>¿Para qué sirve?</span>
+                  </button>
+                </div>
                 <p class="chart-card-desc">Curvas simultáneas para balancear intelecto (Inglés y Data) con salud física (Gym).</p>
               </div>
               <div class="chart-habit-toggles" id="habit-toggles-container">
@@ -662,6 +824,44 @@ export class CurveDashboard {
   }
 
   /**
+   * Abre el modal informativo de la métrica o gráfica
+   */
+  openGuideModal(infoKey) {
+    const info = CURVES_GUIDE_DATA[infoKey];
+    if (!info) return;
+
+    const modal = document.getElementById('curves-guide-modal');
+    if (!modal) return;
+
+    const iconEl = document.getElementById('guide-modal-icon');
+    const badgeEl = document.getElementById('guide-modal-badge');
+    const titleEl = document.getElementById('guide-modal-title');
+    const subtitleEl = document.getElementById('guide-modal-subtitle');
+    const purposeEl = document.getElementById('guide-modal-purpose');
+    const interpretEl = document.getElementById('guide-modal-interpret');
+    const tipEl = document.getElementById('guide-modal-tip');
+
+    if (iconEl) {
+      iconEl.innerHTML = info.iconSvg;
+      iconEl.style.backgroundColor = `${info.iconColor}1a`;
+      iconEl.style.borderColor = `${info.iconColor}40`;
+    }
+    if (badgeEl) {
+      badgeEl.textContent = info.badge;
+      badgeEl.style.color = info.iconColor;
+      badgeEl.style.borderColor = `${info.iconColor}40`;
+      badgeEl.style.backgroundColor = `${info.iconColor}14`;
+    }
+    if (titleEl) titleEl.textContent = info.title;
+    if (subtitleEl) subtitleEl.textContent = info.subtitle;
+    if (purposeEl) purposeEl.textContent = info.purpose;
+    if (interpretEl) interpretEl.innerHTML = info.interpretHtml;
+    if (tipEl) tipEl.textContent = info.tip;
+
+    modal.showModal();
+  }
+
+  /**
    * Enlaza eventos de clic en temporalidad, toggles de hábitos e interacción de hover
    */
   bindEvents() {
@@ -696,7 +896,32 @@ export class CurveDashboard {
       });
     });
 
-    // 3. Hover en las columnas hit-column para todas las gráficas
+    // 3. Botones Informativos (i) y ¿Para qué sirve?
+    const infoBtns = this.container.querySelectorAll('.kpi-info-btn, .chart-info-pill-btn');
+    infoBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const infoKey = btn.dataset.info;
+        this.openGuideModal(infoKey);
+      });
+    });
+
+    // Handlers para cerrar el modal guía
+    const guideModal = document.getElementById('curves-guide-modal');
+    if (guideModal && !guideModal.dataset.bound) {
+      guideModal.dataset.bound = 'true';
+      const closeBtn = document.getElementById('curves-guide-close-btn');
+      const okBtn = document.getElementById('guide-modal-ok-btn');
+
+      if (closeBtn) closeBtn.addEventListener('click', () => guideModal.close());
+      if (okBtn) okBtn.addEventListener('click', () => guideModal.close());
+
+      guideModal.addEventListener('click', (e) => {
+        if (e.target === guideModal) guideModal.close();
+      });
+    }
+
+    // 4. Hover en las columnas hit-column para todas las gráficas
     const tooltip = document.getElementById('curve-hover-tooltip');
     this.tooltipEl = tooltip;
 
