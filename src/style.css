@@ -5542,3 +5542,610 @@ body.app-theme {
   transform: translateY(-2px);
   box-shadow: 0 6px 25px rgba(6, 182, 212, 0.45);
 }
+
+/* ==========================================================================
+   KAIDIN CURVES DASHBOARD - Estilos de Alto Rendimiento y Gráficas de Precisión
+   ========================================================================== */
+
+.curves-dashboard-root {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  animation: fadeInCurves 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes fadeInCurves {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Encabezado */
+.curves-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-bottom: 0.25rem;
+}
+
+.curves-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.curves-title-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.1);
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  width: fit-content;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: pulseDot 2s infinite ease-in-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 0.4; transform: scale(0.9); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+
+.curves-main-title {
+  font-family: var(--font-title);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.curves-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Selector de Temporalidad */
+.curves-timeframe-pills {
+  display: inline-flex;
+  background: var(--surface-subtle);
+  padding: 3px;
+  border-radius: 12px;
+  border: 1px solid var(--border-subtle);
+  gap: 2px;
+}
+
+.timeframe-pill {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 9px;
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.timeframe-pill:hover {
+  color: var(--text-main);
+  background: var(--surface-hover);
+}
+
+.timeframe-pill.active {
+  background: var(--surface-card);
+  color: var(--text-main);
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border-main);
+}
+
+[data-theme="dark"] .timeframe-pill.active {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Tarjetas KPI Ejecutivas */
+.curves-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .curves-kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 580px) {
+  .curves-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.curve-kpi-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 16px;
+  padding: 1.1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.curve-kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.kpi-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.kpi-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  white-space: nowrap;
+}
+
+.kpi-tag.trend-up {
+  background: rgba(52, 211, 153, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(52, 211, 153, 0.3);
+}
+
+.kpi-tag.trend-down {
+  background: rgba(248, 113, 113, 0.15);
+  color: #ef4444;
+  border: 1px solid rgba(248, 113, 113, 0.3);
+}
+
+.kpi-tag.trend-stable {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+.kpi-tag.trend-focus {
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+  border: 1px solid rgba(168, 85, 247, 0.3);
+}
+
+.kpi-tag.trend-info {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.kpi-value-row {
+  display: flex;
+  align-items: baseline;
+  gap: 0.45rem;
+}
+
+.kpi-big-value {
+  font-family: var(--font-title);
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.kpi-big-value-text {
+  font-family: var(--font-title);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.kpi-unit {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.kpi-meter-bar {
+  width: 100%;
+  height: 5px;
+  background: var(--surface-subtle);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.kpi-meter-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #38bdf8, #34d399);
+  border-radius: 999px;
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kpi-meter-fill.kaizen-fill {
+  background: linear-gradient(90deg, #f59e0b, #38bdf8);
+}
+
+.kpi-meter-fill.habit-fill {
+  background: linear-gradient(90deg, #a855f7, #38bdf8);
+}
+
+.kpi-meter-fill.volume-fill {
+  background: linear-gradient(90deg, #10b981, #06b6d4);
+}
+
+.kpi-subtext {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  line-height: 1.35;
+  margin: 0;
+}
+
+/* Tarjetas de Gráficas */
+.curve-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-main);
+  border-radius: 20px;
+  padding: 1.4rem;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.hero-chart-card {
+  border-color: rgba(56, 189, 248, 0.22);
+  background: linear-gradient(180deg, var(--surface-card) 0%, var(--surface-card-subtle) 100%);
+}
+
+.curve-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.chart-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.chart-card-title {
+  font-family: var(--font-title);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.chart-card-desc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Leyendas y Píldoras de la gráfica */
+.chart-legend-pills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.legend-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: var(--surface-subtle);
+  color: var(--text-muted);
+}
+
+.pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.zone-optimal .pill-dot { background-color: #34d399; }
+.zone-cruising .pill-dot { background-color: #38bdf8; }
+.zone-alert .pill-dot { background-color: #f87171; }
+
+/* Toggles de Hábitos en el balance */
+.chart-habit-toggles {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.habit-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--surface-subtle);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  padding: 4px 10px;
+  font-family: var(--font-body);
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.habit-toggle-btn:hover {
+  background: var(--surface-hover);
+  color: var(--text-main);
+}
+
+.habit-toggle-btn.active {
+  background: var(--surface-card);
+  border-color: var(--h-color, #38bdf8);
+  color: var(--text-main);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.toggle-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  opacity: 0.4;
+  transition: opacity 0.15s ease;
+}
+
+.habit-toggle-btn.active .toggle-indicator {
+  opacity: 1;
+  box-shadow: 0 0 6px var(--h-color, #38bdf8);
+}
+
+/* Contenedor Dual */
+.curves-dual-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .curves-dual-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Lienzo SVG y Gráficas */
+.curve-canvas-wrap {
+  width: 100%;
+  position: relative;
+  overflow: visible;
+}
+
+.curve-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+/* SVG Typography & Lines */
+.axis-line {
+  stroke: var(--border-main);
+  stroke-width: 1;
+}
+
+.guide-line {
+  stroke: var(--border-subtle);
+  stroke-width: 1;
+}
+
+.guide-line.optimal {
+  stroke: rgba(52, 211, 153, 0.35);
+}
+
+.guide-line.neutral {
+  stroke: rgba(56, 189, 248, 0.3);
+}
+
+.axis-label-x {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--text-light);
+}
+
+.axis-label-y {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--text-light);
+  text-anchor: end;
+}
+
+.mini-legend-text {
+  font-family: var(--font-body);
+  font-size: 10px;
+  font-weight: 600;
+  fill: var(--text-muted);
+}
+
+/* Interacción SVG */
+.hit-column {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.hit-column:hover {
+  fill: rgba(56, 189, 248, 0.04);
+}
+
+.crosshair-line {
+  stroke: #38bdf8;
+  stroke-width: 1.5;
+  stroke-dasharray: 3 3;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+.active-tracker-point {
+  fill: #38bdf8;
+  stroke: #ffffff;
+  stroke-width: 2.5;
+  filter: drop-shadow(0 0 6px #38bdf8);
+  pointer-events: none;
+}
+
+[data-theme="dark"] .active-tracker-point {
+  stroke: #161618;
+}
+
+/* Tooltip Flotante de Curvas */
+.curve-hover-tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: var(--surface-card);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-main);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  pointer-events: none;
+  min-width: 220px;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+[data-theme="dark"] .curve-hover-tooltip {
+  background: rgba(22, 22, 26, 0.85);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.tooltip-date-header {
+  font-family: var(--font-title);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-main);
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.tooltip-metric-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  gap: 0.5rem;
+}
+
+.tooltip-metric-row.mini {
+  font-size: 0.72rem;
+}
+
+.tt-metric-label {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.tt-metric-val {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.tt-metric-val.green { color: #10b981; }
+.tt-metric-val.blue { color: #38bdf8; }
+.tt-metric-val.amber { color: #f59e0b; }
+
+.tooltip-habits-title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-light);
+  margin-top: 0.2rem;
+}
+
+.tooltip-chips-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.tooltip-habit-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 6px;
+  background: var(--surface-subtle);
+  color: var(--text-muted);
+}
+
+.tooltip-habit-chip.done {
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--text-main);
+}
+
+.chip-status-icon {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--chip-color, #38bdf8);
+}
+

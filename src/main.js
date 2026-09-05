@@ -62,6 +62,9 @@ class KaidinApp {
       this.ui.updateMetricsDisplay();
       this.ui.renderJournalFeed();
       this.ui.renderWeeklyGoalsProgress();
+      if (this.ui.currentView === 'curves' && this.ui.curveDashboard) {
+        this.ui.curveDashboard.render();
+      }
     }
   }
 }

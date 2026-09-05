@@ -60,6 +60,8 @@ import {
   onAuthStateChanged
 } from '../store/auth.js';
 
+import { CurveDashboard } from './curveDashboard.js';
+
 export class UIManager {
   constructor(appContext) {
     this.ctx = appContext;
@@ -165,6 +167,8 @@ export class UIManager {
     this.viewCalendarPanel = document.getElementById('view-calendar-panel');
     this.viewHeatmapPanel = document.getElementById('view-heatmap-panel');
     this.viewWeeklyPanel = document.getElementById('view-weekly-panel');
+    this.viewCurvesPanel = document.getElementById('view-curves-panel');
+    this.curveDashboard = new CurveDashboard('view-curves-panel');
     this.weeklyGoalsContainer = document.getElementById('weekly-goals-container');
     this.openPlanModalBtn = document.getElementById('open-plan-modal-btn');
 
@@ -688,12 +692,19 @@ export class UIManager {
     this.viewCalendarPanel.classList.toggle('hidden', viewName !== 'calendar');
     this.viewHeatmapPanel.classList.toggle('hidden', viewName !== 'heatmap');
     this.viewWeeklyPanel.classList.toggle('hidden', viewName !== 'weekly');
+    if (this.viewCurvesPanel) {
+      this.viewCurvesPanel.classList.toggle('hidden', viewName !== 'curves');
+    }
 
     if (viewName === 'heatmap') {
       this.ctx.calendar2D.renderHeatmap(this.ctx.currentYear, (day) => this.openDayModal(day));
     } else if (viewName === 'weekly') {
       this.ctx.calendar2D.renderWeeklyChart();
       this.renderWeeklyGoalsProgress();
+    } else if (viewName === 'curves') {
+      if (this.curveDashboard) {
+        this.curveDashboard.render();
+      }
     }
   }
 
